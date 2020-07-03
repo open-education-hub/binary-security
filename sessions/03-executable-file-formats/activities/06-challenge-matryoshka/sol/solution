@@ -1,0 +1,10 @@
+#!/bin/bash
+
+offset=$((0x$(nm ../src/matryoshka | grep inner_elf | cut -d ' ' -f 1)))
+
+# This is something we know. It can be derived empirically by checking the executable.
+len=6120
+
+dd if=../src/matryoshka of=inner bs=1 count="$len" skip="$offset" 2> /dev/null
+chmod a+x inner
+./inner

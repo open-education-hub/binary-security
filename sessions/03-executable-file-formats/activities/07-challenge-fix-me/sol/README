@@ -1,0 +1,103 @@
+Let's review the solution of the task step by step:
+The solution is based on this graphical representation http://i.imgur.com/m6kL4Lv.png
+as well as the wikipedia article on ELF format
+https://en.wikipedia.org/wiki/Executable_and_Linkable_Format
+
+You can visualize the raw hex values using:
+	hexdump -e '16/1 "%02x " "\n"' -v elfie
+You can also visualize how the header changes by putting a terminal side by side with
+bless and running the command:
+
+watch -n1 readelf -h elfie # For the elf header
+watch -n1 readelf -l elfie # For the program headers
+
+	$ readelf -h elfie
+	$ file elfie
+We notice everything is a mess, so let's start from the first bytes.
+	$ bless elfie
+
+1. We change starting from the 5th byte from "ba" into "01" because we have a
+32 bit binary (a 64 bit binary would be a '02').
+
+2. Change the 6th byte from "ab" to "01" - we are using little endian.
+A "02" value would mean big endian.
+
+3. The 7th byte represents the ELF version which is always 1 so we change
+"9b" to "01".
+
+4. Bytes from the 8th position to the 16th are usually "00". Some of them are
+simply padding, others like the OS ABI seem to be unused.
+
+5. We change starting from 17th byte, the 2 bytes "63 6a" into "02 00",
+These are for the Type of the file - Executable.
+
+6. We change starting from the 19th byte, the 2 bytes "85 30" into "03 00".
+By this, we specify the x86 arhitecture.
+
+7. We change starting from the 21th byte, the 4 bytes " 88 61 a6 e5 24" into "01 00 00 00".
+In this way, we represent the version, which is always 1.
+
+8. Now we know the entry point address, so we change from the 25th bytes, the 4 bytes
+"24 73 44 5f" into our address (little endian representation) " 54 80 04 08" (from the
+note on the wiki)
+
+9.  From byte 29-th, 4 bytes represent the offset of the program header table. The wikipedia
+page states that this value is 0x34 (elf header length) for 32 bit programs, as it follows
+immediatly after the header. We change "5a df 2f 66" into "34 00 00 00".
+
+10. From byte 33th, 4 bytes represent the offset of the section header table. We will try to
+run the binary without having a section header table so we change "08 de c3 c3" into "00 00 00 00".
+
+11. From byte 37th, 4 bytes represent flags (which the x86 ELF lacks as stated here 
+https://wiki.osdev.org/ELF#Header) so we change "d8 c2 32 b4" into "00 00 00 00".
+
+12. From byte 41th, 2 bytes represent the size of the header which is 0x34 for 32bit
+binaries. We change "de e6" into "34 00".
+
+13. From byte 43th, 2 bytes represent the size of the Program Header. The wikipedia states that
+the size is 0x20 bytes so we change "97 11", into "20 00".
+PAY ATTENTION: Program Header is something different from Elf Header.
+
+14. From byte 45th, 2 bytes represent the number of program headers. We need at least a program
+header to load the code into the memory. We change "ca 1d" into "01 00".
+
+15. From byte 47th, 2 bytes represent the size of a section header. We'll try to run the binary
+without a section header so we change "9d 98" into "00 00".
+
+16. From byte 49th, 2 bytes the number of section tables which will be 0 as stated above
+"53 35" => "01 00".
+
+17. The last 2 bytes of the elf header represent the index of the section header which contains
+the section names. We won't be needing that so "76 04" into "00 00".
+
+18. $ readelf -h elfie => no errors
+	$ ./elfie => Segmentation fault, so wee also need to modify the Program Header table,
+	following our picture and the wikipedia page
+
+19. From byte 53th, 4 bytes identify the type of the segment. We need to load the code in memory
+so we define the segment as loadable "b9 29 a1 b9" => "01 00 00 00".
+
+20. From byte 57th, 4 bytes represent the offset from the start of the file that should be mapped
+into the memory. We turn "2b 7f 5a 03" into "00 00 00 00" as we are loading the whole file.
+
+21. From byte 61th, 4bytes we have the virtual address where the program should be loaded. We can
+safely assume the program will be loaded at the start of a memory page we simply memory align the
+starting address (0x8048054) to (0x8048000). We change the value "3f b7 14 f0", into "00 80 04 08"
+
+22. From byte 65th, 4bytes represent the physical page where the program should be loaded. Because
+we are running a simple "application" program this will be ignored.
+
+23. From byte 69th, 4 bytes represent how much should be loaded into the memory. We are loading the
+whole file which is 248 bytes long so we change "fa 09 79 2e" into "f8 00 00 00".
+
+24. From byte 73th, 4 bytes represent the size in memory so we simply match the value above
+"99 31 23 ac" => "f8 00 00 00".
+
+25. From byte 77th, 4 bytes are flags that determine the permission for the mapped page. Just in case
+the code tries to modify itself (it uses the code area for storage) we change
+"ff 29 56 17" => "07 00 00 00" for RWX permissions.
+
+26. We also change from byte 81, 4 bytes represent how the segment should be aligned. We want it page
+aligned so we change "b5 7d 91 66" => "00 10 00 00".
+
+Voila!
