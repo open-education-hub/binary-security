@@ -1,0 +1,1 @@
+strace will reveal the password which is written to the fd 42.
