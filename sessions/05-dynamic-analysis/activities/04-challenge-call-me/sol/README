@@ -1,0 +1,152 @@
+This executable contains a hidden function named "__call_me".
+The function computes the message by shifting '\n' with different
+offsets for each char. The flag is sha256 of msg.
+
+In order to find the flag, we need to execute "__call_me".
+This function is not called in the program flow so we need
+gdb in order to set `eip` register to "__call_me" address.
+
+We use the `call` instruction in GDB for that.
+
+We need to break before `strcmp` in order to get the message hash
+which is the actual flag. The flag will be in the ESI register.
+
+See the GDB PEDA set of commands below:
+
+razvan@einherjar:~/.../activities/06-challenge-call-me/src$ gdb ./call_me 
+GNU gdb (Debian 7.12-6+b1) 7.12.0.20161007-git
+Copyright (C) 2016 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+<http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./call_me...done.
+gdb-peda$ start
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+ [----------------------------------registers-----------------------------------]
+RAX: 0x555555554b72 (<main>:	push   rbp)
+RBX: 0x0 
+RCX: 0x7ffff76d6718 --> 0x7ffff76d7d80 --> 0x0 
+RDX: 0x7fffffffdea8 --> 0x7fffffffe1cf ("LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc"...)
+RSI: 0x7fffffffde98 --> 0x7fffffffe157 ("/home/razvan/projects/ctf/sss/sss-internal.git/sessions/05-dynamic-analysis/activities/06-challenge-call-me/src/call_me")
+RDI: 0x1 
+RBP: 0x7fffffffddb0 --> 0x555555554c60 (<__libc_csu_init>:	push   r15)
+RSP: 0x7fffffffdd70 --> 0x7fffffffde98 --> 0x7fffffffe157 ("/home/razvan/projects/ctf/sss/sss-internal.git/sessions/05-dynamic-analysis/activities/06-challenge-call-me/src/call_me")
+RIP: 0x555555554b82 (<main+16>:	mov    rax,rsp)
+R8 : 0x7ffff76d7d80 --> 0x0 
+R9 : 0x7ffff76d7d80 --> 0x0 
+R10: 0xffebfbff 
+R11: 0xd ('\r')
+R12: 0x555555554820 (<_start>:	xor    ebp,ebp)
+R13: 0x7fffffffde90 --> 0x1 
+R14: 0x0 
+R15: 0x0
+EFLAGS: 0x202 (carry parity adjust zero sign trap INTERRUPT direction overflow)
+[-------------------------------------code-------------------------------------]
+   0x555555554b77 <main+5>:	sub    rsp,0x38
+   0x555555554b7b <main+9>:	mov    DWORD PTR [rbp-0x34],edi
+   0x555555554b7e <main+12>:	mov    QWORD PTR [rbp-0x40],rsi
+=> 0x555555554b82 <main+16>:	mov    rax,rsp
+   0x555555554b85 <main+19>:	mov    rbx,rax
+   0x555555554b88 <main+22>:	cmp    DWORD PTR [rbp-0x34],0x2
+   0x555555554b8c <main+26>:	je     0x555555554bb3 <main+65>
+   0x555555554b8e <main+28>:	mov    rax,QWORD PTR [rbp-0x40]
+[------------------------------------stack-------------------------------------]
+0000| 0x7fffffffdd70 --> 0x7fffffffde98 --> 0x7fffffffe157 ("/home/razvan/projects/ctf/sss/sss-internal.git/sessions/05-dynamic-analysis/activities/06-challenge-call-me/src/call_me")
+0008| 0x7fffffffdd78 --> 0x155554cad 
+0016| 0x7fffffffdd80 --> 0x7ffff7de70e0 (<_dl_fini>:	push   rbp)
+0024| 0x7fffffffdd88 --> 0x0 
+0032| 0x7fffffffdd90 --> 0x555555554c60 (<__libc_csu_init>:	push   r15)
+0040| 0x7fffffffdd98 --> 0x555555554820 (<_start>:	xor    ebp,ebp)
+0048| 0x7fffffffdda0 --> 0x7fffffffde90 --> 0x1 
+0056| 0x7fffffffdda8 --> 0x0 
+[------------------------------------------------------------------------------]
+Legend: code, data, rodata, value
+
+Temporary breakpoint 1, main (argc=0x1, argv=0x7fffffffde98) at call_me.c:92
+92	int main(int argc, char** argv) {
+gdb-peda$ pdis __call_me
+Dump of assembler code for function __call_me:
+   0x0000555555554cd2 <+0>:	push   rbp
+   0x0000555555554cd3 <+1>:	mov    rbp,rsp
+   0x0000555555554cd6 <+4>:	push   r15
+   0x0000555555554cd8 <+6>:	push   r14
+   0x0000555555554cda <+8>:	push   r13
+   0x0000555555554cdc <+10>:	push   r12
+   0x0000555555554cde <+12>:	push   rbx
+   0x0000555555554cdf <+13>:	sub    rsp,0xd8
+   [...]
+   0x0000555555554f5c <+650>:	mov    rax,QWORD PTR [rbp-0x58]
+   0x0000555555554f60 <+654>:	mov    rdx,QWORD PTR [rbp-0xf8]
+   0x0000555555554f67 <+661>:	mov    rsi,rdx
+   0x0000555555554f6a <+664>:	mov    rdi,rax
+   0x0000555555554f6d <+667>:	call   0x5555555547d0 <strcmp@plt>
+   [...]
+End of assembler dump.
+
+gdb-peda$ b *0x0000555555554f6d
+Breakpoint 2 at 0x555555554f6d: file call_me.c, line 32.
+
+gdb-peda$ call __call_me("anaaremere")
+
+ [----------------------------------registers-----------------------------------]
+RAX: 0x7fffffffdb50 ("e859abda016db30e734614738595be40")
+RBX: 0x7fffffffdbd0 --> 0x0 
+RCX: 0x0 
+RDX: 0x7ffff7fb5c00 ("anaaremere")
+RSI: 0x7ffff7fb5c00 ("anaaremere")
+RDI: 0x7fffffffdb50 ("e859abda016db30e734614738595be40")
+RBP: 0x7fffffffdcd0 --> 0x7fffffffdcd8 --> 0x7fffffffdcef --> 0xcc 
+RSP: 0x7fffffffdb50 ("e859abda016db30e734614738595be40")
+RIP: 0x555555554f6d (<__call_me+667>:	call   0x5555555547d0 <strcmp@plt>)
+R8 : 0x800 
+R9 : 0x240000000000 ('')
+R10: 0x0 
+R11: 0x0 
+R12: 0x7fffffffdba0 ("SSS{YOu_can_run_but_yOu_cant_h1de}\032\t\n\n")
+R13: 0x0 
+R14: 0x27 ("'")
+R15: 0x0
+EFLAGS: 0x202 (carry parity adjust zero sign trap INTERRUPT direction overflow)
+[-------------------------------------code-------------------------------------]
+   0x555555554f60 <__call_me+654>:	mov    rdx,QWORD PTR [rbp-0xf8]
+   0x555555554f67 <__call_me+661>:	mov    rsi,rdx
+   0x555555554f6a <__call_me+664>:	mov    rdi,rax
+=> 0x555555554f6d <__call_me+667>:	call   0x5555555547d0 <strcmp@plt>
+   0x555555554f72 <__call_me+672>:	mov    DWORD PTR [rbp-0x5c],eax
+   0x555555554f75 <__call_me+675>:	cmp    DWORD PTR [rbp-0x5c],0x0
+   0x555555554f79 <__call_me+679>:	jne    0x555555554f87 <__call_me+693>
+   0x555555554f7b <__call_me+681>:	lea    rdi,[rip+0x2e]        # 0x555555554fb0
+Guessed arguments:
+arg[0]: 0x7fffffffdb50 ("e859abda016db30e734614738595be40")
+arg[1]: 0x7ffff7fb5c00 ("anaaremere")
+arg[2]: 0x7ffff7fb5c00 ("anaaremere")
+[------------------------------------stack-------------------------------------]
+0000| 0x7fffffffdb50 ("e859abda016db30e734614738595be40")
+0008| 0x7fffffffdb58 ("016db30e734614738595be40")
+0016| 0x7fffffffdb60 ("734614738595be40")
+0024| 0x7fffffffdb68 ("8595be40")
+0032| 0x7fffffffdb70 --> 0x3538653765343900 ('')
+0040| 0x7fffffffdb78 ("5ac7241aba38f746d90c562a")
+0048| 0x7fffffffdb80 ("ba38f746d90c562a")
+0056| 0x7fffffffdb88 ("d90c562a")
+[------------------------------------------------------------------------------]
+Legend: code, data, rodata, value
+
+Breakpoint 2, 0x0000555555554f6d in __call_me (compare=0x7ffff7fb5c00 "anaaremere") at call_me.c:32
+32	  int res = strcmp(hash_string, compare);
+The program being debugged stopped while in a function called from GDB.
+Evaluation of the expression containing the function
+(__call_me) will be abandoned.
+When the function is done executing, GDB will silently stop.
+gdb-peda$ 

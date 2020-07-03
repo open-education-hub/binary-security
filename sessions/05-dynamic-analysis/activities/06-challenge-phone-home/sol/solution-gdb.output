@@ -1,0 +1,376 @@
+gdb-peda$ set follow-fork-mode child
+gdb-peda$ pdis main
+Dump of assembler code for function main:
+   0x080488d7 <+0>:	lea    ecx,[esp+0x4]
+   0x080488db <+4>:	and    esp,0xfffffff0
+   0x080488de <+7>:	push   DWORD PTR [ecx-0x4]
+   0x080488e1 <+10>:	push   ebp
+   0x080488e2 <+11>:	mov    ebp,esp
+   0x080488e4 <+13>:	push   ecx
+   0x080488e5 <+14>:	sub    esp,0x74
+   0x080488e8 <+17>:	sub    esp,0xc
+   0x080488eb <+20>:	lea    eax,[ebp-0x68]
+   0x080488ee <+23>:	push   eax
+   0x080488ef <+24>:	call   0x80485c0 <pipe@plt>
+   0x080488f4 <+29>:	add    esp,0x10
+   0x080488f7 <+32>:	sub    esp,0xc
+   0x080488fa <+35>:	lea    eax,[ebp-0x70]
+   0x080488fd <+38>:	push   eax
+   0x080488fe <+39>:	call   0x80485c0 <pipe@plt>
+   0x08048903 <+44>:	add    esp,0x10
+   0x08048906 <+47>:	call   0x80485d0 <fork@plt>
+   0x0804890b <+52>:	mov    DWORD PTR [ebp-0x10],eax
+   0x0804890e <+55>:	call   0x8048550 <getpid@plt>
+   0x08048913 <+60>:	mov    DWORD PTR [ebp-0x14],eax
+   0x08048916 <+63>:	cmp    DWORD PTR [ebp-0x10],0x0
+   0x0804891a <+67>:	jne    0x80489e6 <main+271>
+   0x08048920 <+73>:	call   0x80485e0 <getppid@plt>
+   0x08048925 <+78>:	mov    ds:0x804a060,eax
+   0x0804892a <+83>:	mov    eax,DWORD PTR [ebp-0x68]
+   0x0804892d <+86>:	sub    esp,0xc
+   0x08048930 <+89>:	push   eax
+   0x08048931 <+90>:	call   0x8048600 <close@plt>
+   0x08048936 <+95>:	add    esp,0x10
+   0x08048939 <+98>:	mov    eax,DWORD PTR [ebp-0x6c]
+   0x0804893c <+101>:	sub    esp,0xc
+   0x0804893f <+104>:	push   eax
+   0x08048940 <+105>:	call   0x8048600 <close@plt>
+   0x08048945 <+110>:	add    esp,0x10
+   0x08048948 <+113>:	nop
+   0x08048949 <+114>:	mov    eax,ds:0x804a060
+   0x0804894e <+119>:	cmp    eax,0x29a
+   0x08048953 <+124>:	jne    0x8048949 <main+114>
+   0x08048955 <+126>:	mov    eax,DWORD PTR [ebp-0x64]
+   0x08048958 <+129>:	sub    esp,0x4
+   0x0804895b <+132>:	push   0x3
+   0x0804895d <+134>:	push   0x8048c73
+   0x08048962 <+139>:	push   eax
+   0x08048963 <+140>:	call   0x8048590 <write@plt>
+   0x08048968 <+145>:	add    esp,0x10
+   0x0804896b <+148>:	lea    eax,[ebp-0x5c]
+   0x0804896e <+151>:	mov    DWORD PTR [ebp-0xc],eax
+   0x08048971 <+154>:	nop
+   0x08048972 <+155>:	lea    eax,[ebp-0x5c]
+   0x08048975 <+158>:	add    eax,0x4
+   0x08048978 <+161>:	mov    edx,eax
+   0x0804897a <+163>:	mov    eax,DWORD PTR [ebp-0xc]
+   0x0804897d <+166>:	sub    edx,eax
+   0x0804897f <+168>:	mov    eax,edx
+   0x08048981 <+170>:	mov    edx,eax
+   0x08048983 <+172>:	mov    eax,DWORD PTR [ebp-0x70]
+   0x08048986 <+175>:	sub    esp,0x4
+   0x08048989 <+178>:	push   edx
+   0x0804898a <+179>:	push   DWORD PTR [ebp-0xc]
+   0x0804898d <+182>:	push   eax
+   0x0804898e <+183>:	call   0x80484f0 <read@plt>
+   0x08048993 <+188>:	add    esp,0x10
+   0x08048996 <+191>:	add    DWORD PTR [ebp-0xc],eax
+   0x08048999 <+194>:	lea    eax,[ebp-0x5c]
+   0x0804899c <+197>:	add    eax,0x4
+   0x0804899f <+200>:	cmp    DWORD PTR [ebp-0xc],eax
+   0x080489a2 <+203>:	jne    0x8048972 <main+155>
+   0x080489a4 <+205>:	sub    esp,0x4
+   0x080489a7 <+208>:	push   0x4
+   0x080489a9 <+210>:	push   0x8048c76
+   0x080489ae <+215>:	lea    eax,[ebp-0x5c]
+   0x080489b1 <+218>:	push   eax
+   0x080489b2 <+219>:	call   0x80485f0 <strncmp@plt>
+   0x080489b7 <+224>:	add    esp,0x10
+   0x080489ba <+227>:	test   eax,eax
+   0x080489bc <+229>:	je     0x80489dc <main+261>
+   0x080489be <+231>:	sub    esp,0x4
+   0x080489c1 <+234>:	push   0x18
+   0x080489c3 <+236>:	push   0x8048c40
+   0x080489c8 <+241>:	push   0x2
+   0x080489ca <+243>:	call   0x8048590 <write@plt>
+   0x080489cf <+248>:	add    esp,0x10
+   0x080489d2 <+251>:	sub    esp,0xc
+   0x080489d5 <+254>:	push   0x3
+   0x080489d7 <+256>:	call   0x8048560 <exit@plt>
+   0x080489dc <+261>:	call   0x8048736 <gen_flag>
+   0x080489e1 <+266>:	jmp    0x8048bb0 <main+729>
+   0x080489e6 <+271>:	mov    eax,DWORD PTR [ebp-0x64]
+   0x080489e9 <+274>:	sub    esp,0xc
+   0x080489ec <+277>:	push   eax
+   0x080489ed <+278>:	call   0x8048600 <close@plt>
+   0x080489f2 <+283>:	add    esp,0x10
+   0x080489f5 <+286>:	mov    eax,DWORD PTR [ebp-0x70]
+   0x080489f8 <+289>:	sub    esp,0xc
+   0x080489fb <+292>:	push   eax
+   0x080489fc <+293>:	call   0x8048600 <close@plt>
+   0x08048a01 <+298>:	add    esp,0x10
+   0x08048a04 <+301>:	lea    eax,[ebp-0x5c]
+   0x08048a07 <+304>:	mov    DWORD PTR [ebp-0xc],eax
+   0x08048a0a <+307>:	nop
+   0x08048a0b <+308>:	lea    eax,[ebp-0x5c]
+   0x08048a0e <+311>:	add    eax,0x3
+   0x08048a11 <+314>:	mov    edx,eax
+   0x08048a13 <+316>:	mov    eax,DWORD PTR [ebp-0xc]
+   0x08048a16 <+319>:	sub    edx,eax
+   0x08048a18 <+321>:	mov    eax,edx
+   0x08048a1a <+323>:	mov    edx,eax
+   0x08048a1c <+325>:	mov    eax,DWORD PTR [ebp-0x68]
+   0x08048a1f <+328>:	sub    esp,0x4
+   0x08048a22 <+331>:	push   edx
+   0x08048a23 <+332>:	push   DWORD PTR [ebp-0xc]
+   0x08048a26 <+335>:	push   eax
+   0x08048a27 <+336>:	call   0x80484f0 <read@plt>
+   0x08048a2c <+341>:	add    esp,0x10
+   0x08048a2f <+344>:	add    DWORD PTR [ebp-0xc],eax
+   0x08048a32 <+347>:	lea    eax,[ebp-0x5c]
+   0x08048a35 <+350>:	add    eax,0x3
+   0x08048a38 <+353>:	cmp    DWORD PTR [ebp-0xc],eax
+   0x08048a3b <+356>:	jne    0x8048a0b <main+308>
+   0x08048a3d <+358>:	sub    esp,0x8
+   0x08048a40 <+361>:	lea    eax,[ebp-0x5c]
+   0x08048a43 <+364>:	push   eax
+   0x08048a44 <+365>:	push   0x8048c7a
+   0x08048a49 <+370>:	call   0x8048500 <printf@plt>
+   0x08048a4e <+375>:	add    esp,0x10
+   0x08048a51 <+378>:	sub    esp,0x4
+   0x08048a54 <+381>:	push   0x3
+   0x08048a56 <+383>:	push   0x8048c73
+   0x08048a5b <+388>:	lea    eax,[ebp-0x5c]
+   0x08048a5e <+391>:	push   eax
+   0x08048a5f <+392>:	call   0x80485f0 <strncmp@plt>
+   0x08048a64 <+397>:	add    esp,0x10
+   0x08048a67 <+400>:	test   eax,eax
+   0x08048a69 <+402>:	je     0x8048a89 <main+434>
+   0x08048a6b <+404>:	sub    esp,0x4
+   0x08048a6e <+407>:	push   0x18
+   0x08048a70 <+409>:	push   0x8048c40
+   0x08048a75 <+414>:	push   0x2
+   0x08048a77 <+416>:	call   0x8048590 <write@plt>
+   0x08048a7c <+421>:	add    esp,0x10
+   0x08048a7f <+424>:	sub    esp,0xc
+   0x08048a82 <+427>:	push   0x1
+   0x08048a84 <+429>:	call   0x8048560 <exit@plt>
+   0x08048a89 <+434>:	push   DWORD PTR [ebp-0x10]
+   0x08048a8c <+437>:	push   0x8048c89
+   0x08048a91 <+442>:	push   0x20
+   0x08048a93 <+444>:	lea    eax,[ebp-0x3c]
+   0x08048a96 <+447>:	push   eax
+   0x08048a97 <+448>:	call   0x80485a0 <snprintf@plt>
+   0x08048a9c <+453>:	add    esp,0x10
+   0x08048a9f <+456>:	sub    esp,0x8
+   0x08048aa2 <+459>:	push   0x2
+   0x08048aa4 <+461>:	lea    eax,[ebp-0x3c]
+   0x08048aa7 <+464>:	push   eax
+   0x08048aa8 <+465>:	call   0x8048570 <open@plt>
+   0x08048aad <+470>:	add    esp,0x10
+   0x08048ab0 <+473>:	mov    DWORD PTR [ebp-0x18],eax
+   0x08048ab3 <+476>:	cmp    DWORD PTR [ebp-0x18],0x0
+   0x08048ab7 <+480>:	jns    0x8048ac3 <main+492>
+   0x08048ab9 <+482>:	sub    esp,0xc
+   0x08048abc <+485>:	push   0x2
+   0x08048abe <+487>:	call   0x8048560 <exit@plt>
+   0x08048ac3 <+492>:	sub    esp,0x4
+   0x08048ac6 <+495>:	push   0x804a060
+   0x08048acb <+500>:	push   0x804a060
+   0x08048ad0 <+505>:	push   DWORD PTR [ebp-0x18]
+   0x08048ad3 <+508>:	call   0x80487e3 <readmem>
+   0x08048ad8 <+513>:	add    esp,0x10
+   0x08048adb <+516>:	mov    edx,0x804a061
+   0x08048ae0 <+521>:	mov    eax,0x804a061
+   0x08048ae5 <+526>:	sub    esp,0x4
+   0x08048ae8 <+529>:	push   edx
+   0x08048ae9 <+530>:	push   eax
+   0x08048aea <+531>:	push   DWORD PTR [ebp-0x18]
+   0x08048aed <+534>:	call   0x80487e3 <readmem>
+   0x08048af2 <+539>:	add    esp,0x10
+   0x08048af5 <+542>:	mov    edx,0x804a062
+   0x08048afa <+547>:	mov    eax,0x804a062
+   0x08048aff <+552>:	sub    esp,0x4
+   0x08048b02 <+555>:	push   edx
+   0x08048b03 <+556>:	push   eax
+   0x08048b04 <+557>:	push   DWORD PTR [ebp-0x18]
+   0x08048b07 <+560>:	call   0x80487e3 <readmem>
+   0x08048b0c <+565>:	add    esp,0x10
+   0x08048b0f <+568>:	mov    edx,0x804a063
+   0x08048b14 <+573>:	mov    eax,0x804a063
+   0x08048b19 <+578>:	sub    esp,0x4
+   0x08048b1c <+581>:	push   edx
+   0x08048b1d <+582>:	push   eax
+   0x08048b1e <+583>:	push   DWORD PTR [ebp-0x18]
+   0x08048b21 <+586>:	call   0x80487e3 <readmem>
+   0x08048b26 <+591>:	add    esp,0x10
+   0x08048b29 <+594>:	mov    eax,ds:0x804a060
+   0x08048b2e <+599>:	cmp    DWORD PTR [ebp-0x14],eax
+   0x08048b31 <+602>:	je     0x8048b65 <main+654>
+   0x08048b33 <+604>:	sub    esp,0x4
+   0x08048b36 <+607>:	push   0x1b
+   0x08048b38 <+609>:	push   0x8048c58
+   0x08048b3d <+614>:	push   0x2
+   0x08048b3f <+616>:	call   0x8048590 <write@plt>
+   0x08048b44 <+621>:	add    esp,0x10
+   0x08048b47 <+624>:	sub    esp,0x4
+   0x08048b4a <+627>:	push   0x1
+   0x08048b4c <+629>:	lea    eax,[ebp-0x60]
+   0x08048b4f <+632>:	push   eax
+   0x08048b50 <+633>:	push   DWORD PTR [ebp-0x10]
+   0x08048b53 <+636>:	call   0x8048540 <waitpid@plt>
+   0x08048b58 <+641>:	add    esp,0x10
+   0x08048b5b <+644>:	sub    esp,0xc
+   0x08048b5e <+647>:	push   0x3
+   0x08048b60 <+649>:	call   0x8048560 <exit@plt>
+   0x08048b65 <+654>:	sub    esp,0xc
+   0x08048b68 <+657>:	push   DWORD PTR [ebp-0x18]
+   0x08048b6b <+660>:	call   0x8048843 <decrypt>
+   0x08048b70 <+665>:	add    esp,0x10
+   0x08048b73 <+668>:	mov    eax,DWORD PTR [ebp-0x6c]
+   0x08048b76 <+671>:	sub    esp,0x4
+   0x08048b79 <+674>:	push   0x4
+   0x08048b7b <+676>:	push   0x8048c76
+   0x08048b80 <+681>:	push   eax
+   0x08048b81 <+682>:	call   0x8048590 <write@plt>
+   0x08048b86 <+687>:	add    esp,0x10
+   0x08048b89 <+690>:	sub    esp,0xc
+   0x08048b8c <+693>:	lea    eax,[ebp-0x60]
+   0x08048b8f <+696>:	push   eax
+   0x08048b90 <+697>:	call   0x8048530 <wait@plt>
+   0x08048b95 <+702>:	add    esp,0x10
+   0x08048b98 <+705>:	mov    DWORD PTR [ebp-0x1c],eax
+   0x08048b9b <+708>:	cmp    DWORD PTR [ebp-0x1c],0xffffffff
+   0x08048b9f <+712>:	jne    0x8048b89 <main+690>
+   0x08048ba1 <+714>:	call   0x80485b0 <__errno_location@plt>
+   0x08048ba6 <+719>:	mov    eax,DWORD PTR [eax]
+   0x08048ba8 <+721>:	cmp    eax,0xa
+   0x08048bab <+724>:	je     0x8048baf <main+728>
+   0x08048bad <+726>:	jmp    0x8048b89 <main+690>
+   0x08048baf <+728>:	nop
+   0x08048bb0 <+729>:	mov    eax,0x0
+   0x08048bb5 <+734>:	mov    ecx,DWORD PTR [ebp-0x4]
+   0x08048bb8 <+737>:	leave  
+   0x08048bb9 <+738>:	lea    esp,[ecx-0x4]
+   0x08048bbc <+741>:	ret    
+End of assembler dump.
+gdb-peda$ b *0x0804894e
+Breakpoint 1 at 0x804894e
+gdb-peda$ r
+Starting program: /ctf/sss/05-dynamic-analysis/new/attach/phone_home 
+[New process 6580]
+[Switching to process 6580]
+
+[----------------------------------registers-----------------------------------]
+EAX: 0x19b0 
+EBX: 0x0 
+ECX: 0x0 
+EDX: 0x827 
+ESI: 0xf7f91000 --> 0x1d7d6c 
+EDI: 0x0 
+EBP: 0xffffcf88 --> 0x0 
+ESP: 0xffffcf10 --> 0x0 
+EIP: 0x804894e (<main+119>:	cmp    eax,0x29a)
+EFLAGS: 0x282 (carry parity adjust zero SIGN trap INTERRUPT direction overflow)
+[-------------------------------------code-------------------------------------]
+   0x8048939 <main+98>:	mov    eax,DWORD PTR [ebp-0x6c]
+   0x804893c <main+101>:	sub    esp,0xc
+   0x804893f <main+104>:	push   eax
+   0x8048940 <main+105>:	call   0x8048600 <close@plt>
+   0x8048945 <main+110>:	add    esp,0x10
+   0x8048948 <main+113>:	nop
+   0x8048949 <main+114>:	mov    eax,ds:0x804a060
+=> 0x804894e <main+119>:	cmp    eax,0x29a
+   0x8048953 <main+124>:	jne    0x8048949 <main+114>
+   0x8048955 <main+126>:	mov    eax,DWORD PTR [ebp-0x64]
+   0x8048958 <main+129>:	sub    esp,0x4
+   0x804895b <main+132>:	push   0x3
+   0x804895d <main+134>:	push   0x8048c73
+   0x8048962 <main+139>:	push   eax
+   0x8048963 <main+140>:	call   0x8048590 <write@plt>
+   0x8048968 <main+145>:	add    esp,0x10
+[------------------------------------stack-------------------------------------]
+0000| 0xffffcf10 --> 0x0 
+0004| 0xffffcf14 --> 0x1 
+0008| 0xffffcf18 --> 0x5 
+0012| 0xffffcf1c --> 0x6 
+0016| 0xffffcf20 --> 0x3 
+0020| 0xffffcf24 --> 0x4 
+0024| 0xffffcf28 --> 0x0 
+0028| 0xffffcf2c --> 0xf7ffd000 --> 0x26f34 
+0032| 0xffffcf30 --> 0x0 
+0036| 0xffffcf34 --> 0x0 
+0040| 0xffffcf38 --> 0x0 
+0044| 0xffffcf3c --> 0x6df80200 
+0048| 0xffffcf40 --> 0x9 ('\t')
+0052| 0xffffcf44 --> 0xffffd218 ("/ctf/sss/05-dynamic-analysis/new/attach/phone_home")
+0056| 0xffffcf48 --> 0xf7de94a9 (<__new_exitfn+9>:	add    ebx,0x1a7b57)
+0060| 0xffffcf4c --> 0xf7f94748 --> 0x0 
+[------------------------------------------------------------------------------]
+Legend: code, data, rodata, value
+
+Thread 2.1 "phone_home" hit Breakpoint 1, 0x0804894e in main ()
+gdb-peda$ set $eax=666
+gdb-peda$ b *0x080489e1
+Breakpoint 2 at 0x80489e1
+gdb-peda$ c
+Continuing.
+readbuf: 'OK'
+
+[----------------------------------registers-----------------------------------]
+EAX: 0x804b160 ("SSS_CTF{0bad3910f14d10569b8bfe11aa1081e970e72e}")
+EBX: 0x0 
+ECX: 0x0 
+EDX: 0x30 ('0')
+ESI: 0xf7f91000 --> 0x1d7d6c 
+EDI: 0x0 
+EBP: 0xffffcf88 --> 0x0 
+ESP: 0xffffcf10 --> 0x0 
+EIP: 0x80489e1 (<main+266>:	jmp    0x8048bb0 <main+729>)
+EFLAGS: 0x282 (carry parity adjust zero SIGN trap INTERRUPT direction overflow)
+[-------------------------------------code-------------------------------------]
+   0x80489c8 <main+241>:	push   0x2
+   0x80489ca <main+243>:	call   0x8048590 <write@plt>
+   0x80489cf <main+248>:	add    esp,0x10
+   0x80489d2 <main+251>:	sub    esp,0xc
+   0x80489d5 <main+254>:	push   0x3
+   0x80489d7 <main+256>:	call   0x8048560 <exit@plt>
+   0x80489dc <main+261>:	call   0x8048736 <gen_flag>
+=> 0x80489e1 <main+266>:	jmp    0x8048bb0 <main+729>
+ | 0x80489e6 <main+271>:	mov    eax,DWORD PTR [ebp-0x64]
+ | 0x80489e9 <main+274>:	sub    esp,0xc
+ | 0x80489ec <main+277>:	push   eax
+ | 0x80489ed <main+278>:	call   0x8048600 <close@plt>
+ | 0x80489f2 <main+283>:	add    esp,0x10
+ | 0x80489f5 <main+286>:	mov    eax,DWORD PTR [ebp-0x70]
+ | 0x80489f8 <main+289>:	sub    esp,0xc
+ | 0x80489fb <main+292>:	push   eax
+ |->   0x8048bb0 <main+729>:	mov    eax,0x0
+       0x8048bb5 <main+734>:	mov    ecx,DWORD PTR [ebp-0x4]
+       0x8048bb8 <main+737>:	leave
+       0x8048bb9 <main+738>:	lea    esp,[ecx-0x4]
+       0x8048bbc <main+741>:	ret
+       0x8048bbd:	xchg   ax,ax
+       0x8048bbf:	nop
+       0x8048bc0 <__libc_csu_init>:	push   ebp
+                                                                  JUMP is taken
+[------------------------------------stack-------------------------------------]
+0000| 0xffffcf10 --> 0x0 
+0004| 0xffffcf14 --> 0x1 
+0008| 0xffffcf18 --> 0x5 
+0012| 0xffffcf1c --> 0x6 
+0016| 0xffffcf20 --> 0x3 
+0020| 0xffffcf24 --> 0x4 
+0024| 0xffffcf28 --> 0x0 
+0028| 0xffffcf2c --> 0x214f47 ('GO!')
+0032| 0xffffcf30 --> 0x0 
+0036| 0xffffcf34 --> 0x0 
+0040| 0xffffcf38 --> 0x0 
+0044| 0xffffcf3c --> 0x6df80200 
+0048| 0xffffcf40 --> 0x9 ('\t')
+0052| 0xffffcf44 --> 0xffffd218 ("/ctf/sss/05-dynamic-analysis/new/attach/phone_home")
+0056| 0xffffcf48 --> 0xf7de94a9 (<__new_exitfn+9>:	add    ebx,0x1a7b57)
+0060| 0xffffcf4c --> 0xf7f94748 --> 0x0 
+[------------------------------------------------------------------------------]
+Legend: code, data, rodata, value
+
+Thread 2.1 "phone_home" hit Breakpoint 2, 0x080489e1 in main ()
+gdb-peda$ tele $eax
+0000| 0x804b160 ("SSS_CTF{0bad3910f14d10569b8bfe11aa1081e970e72e}")
+0004| 0x804b164 ("CTF{0bad3910f14d10569b8bfe11aa1081e970e72e}")
+0008| 0x804b168 ("0bad3910f14d10569b8bfe11aa1081e970e72e}")
+0012| 0x804b16c ("3910f14d10569b8bfe11aa1081e970e72e}")
+0016| 0x804b170 ("f14d10569b8bfe11aa1081e970e72e}")
+0020| 0x804b174 ("10569b8bfe11aa1081e970e72e}")
+0024| 0x804b178 ("9b8bfe11aa1081e970e72e}")
+0028| 0x804b17c ("fe11aa1081e970e72e}")
