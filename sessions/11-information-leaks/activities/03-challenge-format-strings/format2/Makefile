@@ -1,4 +1,4 @@
-CFLAGS = -Wall -Wno-format-security -m32 -fno-stack-protector
+CFLAGS = -Wall -Wno-format-security -m32 -fno-stack-protector  -no-pie
 
 .PHONY: all clean
 
