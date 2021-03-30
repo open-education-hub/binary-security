@@ -556,7 +556,7 @@ That's how we use netcat (the network swiss army knife).
 Let's remember how files and programs relate in Linux.
 
 
-![Files](https://raw.githubusercontent.com/hexcellents/sss-exploit/master/sessions/01-exploration-tools/assets/files.png)
+![Files](https://github.com/hexcellents/sss-exploit/blob/5591d7a4474f7ba113c55691236293644ee7f7f5/sessions/01-exploration-tools/assets/files.png)
 
 Let's also remember that, in Linux, 'file' can mean a lot of things:
 
