@@ -556,7 +556,7 @@ That's how we use netcat (the network swiss army knife).
 Let's remember how files and programs relate in Linux.
 
 
-![Files](https://github.com/hexcellents/sss-exploit/blob/5591d7a4474f7ba113c55691236293644ee7f7f5/sessions/01-exploration-tools/assets/files.png)
+![Files](assets/files.png)
 
 Let's also remember that, in Linux, 'file' can mean a lot of things:
 
@@ -647,12 +647,12 @@ Now go back again at the crackme6 console and type 'start'. If you see the messa
 
 There are other sources of information available about running processes if you prefer to do things by hand such as:
 
-* /proc/<PID>/environ : all environment variables given when the process was started
-* /proc/<PID>/fd : opened file descriptors.
-* /proc/<PID>/mem : address space layout
-* /proc/<PID>/cwd : symlink to working directory
-* /proc/<PID>/exe : symlink to binary image
-* /proc/<PID>/cmdline : complete program commandline, with arguments
+* /proc/\<PID\>/environ : all environment variables given when the process was started
+* /proc/\<PID\>/fd : opened file descriptors.
+* /proc/\<PID\>/mem : address space layout
+* /proc/\<PID\>/cwd : symlink to working directory
+* /proc/\<PID\>/exe : symlink to binary image
+* /proc/\<PID\>/cmdline : complete program commandline, with arguments
 
 ## Challenges
 
