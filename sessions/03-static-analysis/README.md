@@ -26,7 +26,15 @@ int main()
 	return -1;
 }
 ```
-Notice that the Makefile **strips** this binary. If we remove that line and disassemble the executable, we can see our inline assembly code (`de ad c0 de`) together with the encoding of `jmp -1`. The binary code is as expected, but the way it's interpreted is completely off. This happens because *objdump* gets "confused" when reaching the bytes `de ad c0 de` and can't figure out that that code is meaningless.
+
+Take a look at the Makefile rule for `wrong` and notice that it **strips** the binary:
+```makefile
+wrong: wrong.o
+	$(CC) $(CFLAGS) $< -o $@
+	-strip $@
+```
+
+If we remove the line at the end of the snipped above and then disassemble the executable, we can see our inline assembly code (`de ad c0 de`) together with the encoding of `jmp -1`. The binary code is as expected, but the way it's interpreted is completely off. This happens because *objdump* gets "confused" when reaching the bytes `de ad c0 de` and can't figure out that that code is meaningless.
 ```asm
 080491ab <A>:
  80491ab:       eb 09                   jmp    80491b6 <B>
@@ -109,7 +117,7 @@ jz      short loc_8049068
 ---
 **Remember!**
 
-`[ebp + 0]` is the saved `ebp`, `[ebp + 4]` is the return address and `[ebp + 8]` is the first argument to the current function. IDA follows a slightly different naming convention: `[ebp + 8]` is named `[ebp+arg_0]`. `[ebp + 12]` is named `[ebp+arg_4]` etc. You can rename those `arg_*` constructs if you want, anyway.
+On 32 bit systems, `[ebp + 0]` is the saved `ebp`, `[ebp + 4]` is the return address and `[ebp + 8]` is the first argument to the current function. IDA follows a slightly different naming convention: `[ebp + 8]` is named `[ebp+arg_0]`. `[ebp + 12]` is named `[ebp+arg_4]` etc. You can rename those `arg_*` constructs if you want, anyway.
 
 ---
 
