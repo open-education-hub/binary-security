@@ -20,7 +20,7 @@ ret
 ```
 Notice that buffer allocation is done by simply subtracting its intended size from the current stack pointer (`sub rsp, 0x20`). This simply reserves space on the stack (remember that on x86 the stack grows “upwards”, from higher addresses to lower ones).
 
-> A compiler may allocate more space on the stack than explicitly required due to alignment constraints or other hidden elements (like canary values). To exploit a program, the C source code may not be a good enough reference point for stack offsets. Only disassembling the executable will provide relevant information.
+> A compiler may allocate more space on the stack than explicitly required due to alignment constraints or other hidden values. To exploit a program, the C source code may not be a good enough reference point for stack offsets. Only disassembling the executable will provide relevant information.
 
 Buffers can be also be stored in other places in memory, such as the heap, `.bss`, `.data` or `.rodata`.
 
@@ -142,7 +142,7 @@ We should know by now that the stack serves multiple purposes:
 * Temporarily saving register values before a call
 * Saving the return address and old frame pointer
 
-Even though, in an abstract sense, different buffers are separate from one another, ultimately they are just some regions of memory which do not have any intrinsic identification or associated size. This is the reason why in some higher level languages it is not possible to write beyond the bounds of containers - the size is integrated into the object itself.
+Even though, in an abstract sense, different buffers are separate from one another, ultimately they are just some regions of memory which do not have any intrinsic identification or associated size. To avoid this, most hight level languages use size metadata and bound checks to detect out of bounds accesses to the memory.
 
 But in our case, bounds are unchecked, therefore it is up to the programmer to code carefully. This includes checking for any overflows and using **safe functions**. Unfortunately, many functions in the standard C library, particularly those which work with strings and read user input, are unsafe - nowadays, the compiler will issue warnings when encountering them.
 
