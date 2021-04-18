@@ -862,6 +862,8 @@ This randomization can be controlled through parameters passed to the kernel. Th
 
 ## Challenges
 
+Challenges can be found in the `activities/` directory.
+
 ### 01. Binary Puzzle
 
 Now that you know some stuff let's see how fast you can solve a 4 piece puzzle!
