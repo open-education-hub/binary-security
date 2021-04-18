@@ -1,36 +1,51 @@
 # Executable File Formats
 
+## Introduction
+
+The essence of this session is the comparison between a program and a process. A program has a certain structure that instructs the Operating System in using it as a blueprint to create a running process.
+
 ## Tutorials
 
-This session is meant to be a quick intro into how ELF files are structured from the perspective of how it all fits into creating a process. We will also analyze how the ELF structure evolves when going from object file to executable or shared library as well as how various elements get interpreted by the linker and the OS loader. After this we explore how the process looks like once it is loaded in memory as well as some basic runtime analysis principles.
-
-We will first begin with a brief taxonomy of ELF files as well as how they are created from C source files. We will continue with the main elements that constitute an ELF file as well as how they fit in when it comes to executable files. We will then move on to explore in depth each relevant structure with a key focus on how it all goes in to the running process.
+This session is focused on the transformation of an **ELF file** (stored on disk) as it is loaded into memory and becomes **a process** (stored into memory).
+We will first analyze the structure of an **ELF file** and how this structure evolves when going from **C source code**, to **object file** and then to either **an executable** or **a shared library**.
+We will also skim over how various elements are interpreted by the **linker** and the **loader**.
+Finally, we will see the layout of a process once it is loaded into memory.
 
 ### Big Picture View
 
-Sun Microsystems' SunOS came up with the concept of dynamic shared libraries and introduced it to UNIX in the late 1980s. UNIX System V Release 4, which Sun co-developed, introduced the ELF object format adaptation from the Sun scheme. Later it was developed and published as part of the ABI (Application Binary Interface) as an improvement over COFF, the previous object format and by the late 1990s it had become the standard for UNIX and UNIX-like systems including Linux and BSD derivatives. Depending on processor architectures, several specifications have emerged with minor changes, but for this session we will be focusing on the [ELF-32](http://www.skyfree.org/linux/references/ELF_Format.pdf) format.
-
-**Useful References:**
-
-*   [list](https://elinux.org/Executable_and_Linkable_Format_(ELF)) of all ELF specification formats
-*   [ELF-64](http://ftp.openwatcom.org/devel/docs/elf-64-gen.pdf) specification
-*   [ARM](https://developer.arm.com/documentation/ihi0044/e/) specification
+Sun Microsystems' SunOS came up with the concept of dynamic shared libraries and introduced it to UNIX in the late 1980s.
+UNIX System V Release 4, which Sun co-developed, introduced the ELF object format adaptation from the Sun scheme.
+Later it was developed and published as part of the ABI (Application Binary Interface) as an improvement over COFF, the previous object format and by the late 1990s it had become the standard for UNIX and UNIX-like systems including Linux and BSD derivatives.
+Depending on processor architectures, several specifications have emerged with minor changes, but for this session we will be focusing on the [ELF-32](http://www.skyfree.org/linux/references/ELF_Format.pdf) format.
 
 ![Linking View and Execution View](assets/elf-link-exec.png)
 
-The structure of the ELF file during linking is much the same as when we are referring to object files. On the right hand side we can see how the the ELF file structure will be transformed in memory. **Sections** instruct the Linker while **Segments** instruct the Operating System.
+The structure of an ELF file during the linking process is the same with that of an object file.
+The linking process involves collecting and combining code and data into a single file that will later be loaded into memory and executed.
+On the right hand side we can see how the the ELF file structure will be transformed in memory.
+**Sections** instruct the Linker while **Segments** instruct the Operating System.
 
 ![ELF Merging](assets/elf-merging.png)
 
-As we can see, the information inside the two program headers and the section headers gets merged as needed inside the more familiar program segments. The basic role for the ELF file format is to serve as a road-map for the linker and the OS Loader to generate a running process. 
+As we can see, the information inside the two program headers and the section headers gets merged as needed inside the more familiar program segments. The basic role of the ELF file format is to serve as a roadmap for the linker and the OS Loader to generate a running process. 
 
 ### Static/Dynamic linking
 
-Out of practical considerations, for very large programs, even early on, it was very impractical to store all of the source code inside a single file. One of the most mundane of all actions, namely splitting your source code into functions across multiple files while still obtaining a valid running program was a difficult engineering challenge. The initial paradigm was called static linking and was the only option inside the COFF file format. It involves interpreting each piece of code from each file and then merging all the information inside a single binary that would contain all the machine code necessary for the program. This way of doing things, still in use today, involves loading all of the code and data into memory regardless of use case. This basically meant that, the required resources to run a program were determined by the number of instances, with no possibility of optimization.
+Out of practical considerations, for very large programs, even early on, it was very impractical to store all of the source code inside a single file.
+One of the most mundane of all actions, namely splitting your source code into functions across multiple files while still obtaining a valid running program was a difficult engineering challenge.
+The initial paradigm was called **static linking** and was the only option inside the COFF file format.
+It involves interpreting each piece of code from each file and then merging all the information inside a single binary that would contain all the machine code necessary for the program.
+This way of doing things, still in use today, involves loading all of the code and data into memory regardless of use case.
+This basically meant that, the required resources to run a program were determined by the number of instances, with no possibility of optimization.
+Running 10 instances of the same program meant that there was a lot of code duplication going on in the memory space.
 
 ![ELF Static Linking](assets/elf-static-linking.png)
 
-Along with the ELF format came a new way of doing things. Instead of linking all the source files that contained subroutines into the final binaries, separate binaries were organized in libraries that could be loaded per use case, on demand. Essentially, the libraries were loaded only once into memory and when a program instance required a subroutine from a specific library it would inquire a special OS component about it and new resources would be allocated only for the volatile parts of the library image (`.bss` and `.data`). The new process allowed for a much more efficient resource utilization and was named dynamic linking and the new type of library files were called shared objects. 
+Along with the ELF format came a new way of doing things.
+Instead of linking all the source files that contained subroutines into the final binaries, separate binaries were organized in libraries that could be loaded per use case, on demand.
+Essentially, the libraries were loaded only once into memory and when a program instance required a subroutine from a specific library it would inquire a special OS component about it and new resources would be allocated only for the volatile parts of the library image (`.bss` and `.data`).
+The new process allowed for a much more efficient resource utilization and was named dynamic linking and the new type of library files were called shared objects.
+Running 10 instances of the same program now meant that only the volatile parts of those binaries would be duplicated. In cases where the same code can be reused, it is allocated only once and used by multiple instances of the same program.
 
 ![ELF Dynamic Linking](assets/elf-dynamic-linking.png)
 
@@ -990,3 +1005,19 @@ Review this tutorial on creating a minimal ELF file: http://www.muppetlabs.com/~
 ### Further Pwning
 
 http://crackmes.cf/users/geyslan/crackme.02.32/ is a challenge that will test your knowledge from the first three sessions. The password for the archive is `crackmes.de`. 
+
+### Further Reading
+
+*   [ELF-32](http://www.skyfree.org/linux/references/ELF_Format.pdf)
+*   [ELF-64](http://ftp.openwatcom.org/devel/docs/elf-64-gen.pdf) specification
+*   [list](https://elinux.org/Executable_and_Linkable_Format_(ELF)) of all ELF specification formats
+*   [ARM](https://developer.arm.com/documentation/ihi0044/e/) specification
+*   [Position Independent Code](https://wiki.gentoo.org/wiki/Hardened/Introduction_to_Position_Independent_Code)
+*   [Creating shared objects](https://www.ibm.com/developerworks/library/l-shobj/)
+*   [GNU_RELRO](https://www.airs.com/blog/archives/189)
+*   [GNU_STACK](https://guru.multimedia.cx/pt_gnu_stack/)
+*   [ELF Special Sections](https://refspecs.linuxfoundation.org/LSB_3.0.0/LSB-Core-generic/LSB-Core-generic/specialsections.html) 
+*   [A Whirlwind Tutorial on Creating Really Teensy ELF Executables for Linux](http://www.muppetlabs.com/~breadbox/software/tiny/teensy.html)
+*   [strip manpage](https://sourceware.org/binutils/docs/binutils/strip.html)
+*   [Some Assembly Required](http://www.mindfruit.co.uk/2012/06/relocations-relocations.html)
+*   [Study Of ELF Loading and Relocs](http://netwinder.osuosl.org/users/p/patb/public_html/elf_relocs.html)
