@@ -208,9 +208,7 @@ IDA can demangle strings such as the ones above by itself. Some recommended sett
 These settings only display the important classes and namespaces that make up each method, like this:  
 ![IDA demangled](https://raw.githubusercontent.com/hexcellents/sss-exploit/master/sessions/03-static-analysis/assets/ida_c%2B%2B_demangled.png)
 
-<details>
-<summary>Further reading</summary>
-
+# Further reading
 More information about name mangling can be obtained at:
 - https://en.wikipedia.org/wiki/Name_mangling
 - on demand demangling: http://demangler.com/ or c++filt
@@ -219,7 +217,7 @@ You can find out more information about the internals of C++ in general, using t
 - https://ocw.cs.pub.ro/courses/cpl/labs/06 (in Romanian)
 - https://www.blackhat.com/presentations/bh-dc-07/Sabanal_Yason/Paper/bh-dc-07-Sabanal_Yason-WP.pdf
 - http://www.hexblog.com/wp-content/uploads/2011/08/Recon-2011-Skochinsky.pdf
-</details>
+
 
 # Challenges
 ## 04. crypto_crackme
