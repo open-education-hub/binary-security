@@ -134,7 +134,8 @@ Non-static local variables and dynamically allocated buffers cannot be seen in t
 
 ## Stack buffer overflow
 
-![](../images/stack_x86_64.png "x86_64 stack layout")
+<img src="../images/stack_x86_64.png" width="600">
+
 > <i> Note that this is the stack for a 64bit system and the first couple of function arguments are stored in registers (rdi, rsi, rdx, rcx, r8, and r9) and that's why the images has `arg_6` as the first argument. </i>
 
 We should know by now that the stack serves multiple purposes:
@@ -204,6 +205,9 @@ ret
 Looking at the `fread` arguments we can see the buffer start relative to `RBP` and the number of bytes read. `RBP-0x80+0x100*0x1 = RBP+0x80`, so the fread function can read 128 bytes after `RBP` -> return address stored at 136 bytes after `RBP`.
 
 
+<img src="../images/stack_buffer.png" width="600">
+
+
 #### Dynamic analysis
 
 You can determine offsets at runtime in a more automated way with pwndbg using an [De Bruijin sequences](https://en.wikipedia.org/wiki/De_Bruijn_sequence) which produces strings where every substring of length N appears only once in the sequence; in our case it helps us identify the offset of an exploitable memory value relative to the buffer.
@@ -242,7 +246,12 @@ _Note: we get the same 136 offset computed manually with the static analysis met
 
 ### Input-Output with pwntools
 
-TODO
+Most programs aren't a straight forward single input buffer overflow so we need to deal with things like:
+* automizing program input-output  - by programmatically sending and receiving data
+* parsing program output - to use potential leaked information
+* understand the mechanics of the IO methods used - what kind of data they accept and possible constraints
+
+_Pwntools_ offers a large area of IO funcitons to communicate with a program (either local or remote).
 
 # Challenges
 
