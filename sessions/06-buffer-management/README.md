@@ -301,4 +301,9 @@ Time for a more complex challenge. Be patient and don't speed through it.
 
 # Further Reading
 
-TODO
+[De Bruijin sequences](https://en.wikipedia.org/wiki/De_Bruijn_sequence)
+
+[PwnTools ELF Module](https://docs.pwntools.com/en/latest/elf/elf.html) (which internally uses [PyElftoools](https://github.com/eliben/pyelftools) and may expose such objects)
+
+[PwnTools IO](https://docs.pwntools.com/en/stable/tubes.html)
+
