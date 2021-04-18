@@ -134,11 +134,7 @@ Non-static local variables and dynamically allocated buffers cannot be seen in t
 
 ## Stack buffer overflow
 
-TODO: Graphical Stack View
-
-stack_x86_64.png
-
-![](../images/stacK-x86_64.png?raw=true "x86_64 stack layout")
+![](../images/stack_x86_64.png "x86_64 stack layout")
 > <i> Note that this is the stack for a 64bit system and the first couple of function arguments are stored in registers (rdi, rsi, rdx, rcx, r8, and r9) and that's why the images has `arg_6` as the first argument. </i>
 
 We should know by now that the stack serves multiple purposes:
