@@ -1,3 +1,18 @@
+# Table of Contents
+   * [Introduction](#introduction)
+   * [Disassembling executables](#disassembling-executables)
+      * [Linear Sweep](#linear-sweep)
+      * [Recursive Traversal](#recursive-traversal)
+   * [IDA and Ghidra](#ida-and-ghidra)
+      * [IDA tips &amp; tricks](#ida-tips--tricks)
+      * [IDA Pro and Ghidra](#ida-pro-and-ghidra)
+   * [C++](#c)
+   * [Further reading](#further-reading)
+   * [Challenges](#challenges)
+      * [04. crypto_crackme](#04-crypto_crackme)
+      * [05. broken](#05-broken)
+      * [06. hyp3rs3rv3r](#06-hyp3rs3rv3r)
+
 # Introduction
 Sometimes we are either unable or reluctant to run an unknown executable. This inability to run the file can be caused by a multitude of factors, such as not having the correct dependencies or runtimes for it. In addition, it is often unsafe to run binaries without analysing them first. Today we'll learn about one method of analysis, called **static analysis**.
 
