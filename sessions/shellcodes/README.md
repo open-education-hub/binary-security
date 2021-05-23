@@ -432,7 +432,7 @@ To recap: given a stack-buffer-overflow vulnerability we can not only hijack con
 * between the buffer start and the saved return. The number of bytes we can write here is determined by _how much space was allocated on the stack_.
 * after the saved return. The number of bytes we can write here is determined by _how many bytes are read_.
 
-If any of these regions are too small, we can try the other one. If both of them are too small, that's a problem. However, note that shellcodes are usually tiny.
+If any of these regions is too small, we can try the other one. If both of them are too small, that's a problem. However, note that shellcodes are usually tiny.
 
 ## 09. Challenge: shellcode after saved ret - no leak
 
