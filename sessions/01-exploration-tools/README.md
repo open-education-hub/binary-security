@@ -1,5 +1,27 @@
-# 0x01. Exploration Tools
+# Exploration Tools
 
+<details open>
+    <summary>Table of contents</summary>
+
+   * [Tutorials](#tutorials)
+      * [01. Tutorial - Poor man's technique: strings](#01-tutorial---poor-mans-technique-strings)
+      * [02. Tutorial - Execution tracing (ltrace and strace)](#02-tutorial---execution-tracing-ltrace-and-strace)
+      * [03. Tutorial - Symbols: nm](#03-tutorial---symbols-nm)
+      * [04. Tutorial - Library dependencies](#04-tutorial---library-dependencies)
+      * [05. Tutorial - Network: netstat and netcat](#05-tutorial---network-netstat-and-netcat)
+      * [06. Tutorial - Open files](#06-tutorial---open-files)
+   * [Challenges](#challenges)
+      * [07. Challenge - Perfect Answer](#07-challenge---perfect-answer)
+      * [08. Challenge - Lots of strings](#08-challenge---lots-of-strings)
+      * [09. Challenge - Sleepy cats](#09-challenge---sleepy-cats)
+      * [10. Challenge - Hidden](#10-challenge---hidden)
+      * [11. Challenge - Detective](#11-challenge---detective)
+      * [Extra](#extra)
+      * [Further pwning](#further-pwning)
+   * [Further Reading](#further-reading)
+	
+</details>
+	
 ## Tutorials
 When faced with a binary with no source or parts of the source missing you can infer some of its functionalities based upon some basic reconnaissance techniques using various tools.
 ### 01. Tutorial - Poor man's technique: strings
@@ -7,7 +29,7 @@ The simplest recon technique is to dump the ASCII (or Unicode) text from a binar
 
 >By default, when applied to a binary it only scans the data section. To obtain information such as the compiler version used in producing the binary use `strings -a`.
 
-Let's illustrate how strings can be useful in a simple context. Try out crackme1 from the tutorial archive (01-tutorial-strings directory):
+Let's illustrate how strings can be useful in a simple context. Try out the [crackme1](./activities/01-tutorial-strings/src) binary:
 
 ```c
 #include <stdio.h>
@@ -49,7 +71,7 @@ The password has been redacted from the listing but you can retrieve it with `st
 >If you need to retrieve the offset of a string in a binary file, you may use the `-t` option of `strings`. For example, to print out the offset of the `Correct` string (in hexadecimal), you would issue the command
 `strings -t x crackme1 | grep Correct`
 
-### 2. Tutorial - Execution tracing (ltrace and strace)
+### 02. Tutorial - Execution tracing (ltrace and strace)
 
 [ltrace](https://man7.org/linux/man-pages/man1/ltrace.1.html) is an utility that can list the calls made to library functions made by a program, or the [syscalls](https://man7.org/linux/man-pages/man2/syscalls.2.html) a program makes. A syscall is a function that uses services exposed by the kernel, not by some separate library.
 
@@ -70,7 +92,7 @@ A tool like `strace` only traces syscalls and reads registers in order to provid
 * it listens for a `SIGTRAP` which will be generated when the breakpoint is hit
 * when the breakpoint is hit, ltrace can examine the stack of the tracee and print information such as function name, parameters, return codes, etc.
 
-Let's try the next crackme. If we remove `my_strcmp` from the previous crackme you can solve it even without `strings` because `strcmp` is called from `libc.so`. You can use `ltrace` and see what functions are used and check for their given parameters. Try it out on the following crackme where `strings` does not help (`02-tutorial-execution-tracing/crackme2` from the tutorial archive):
+Let's try the next crackme. If we remove `my_strcmp` from the previous crackme you can solve it even without `strings` because `strcmp` is called from `libc.so`. You can use `ltrace` and see what functions are used and check for their given parameters. Try it out on the following crackme where `strings` does not help ([crackme2](./activities/02-tutorial-execution-tracing/src)):
 
 ```c
 #include <stdio.h>
@@ -193,7 +215,7 @@ int main()
 	return 0;
 }
 ```
-In `03-tutorial-symbols/crackme3`, deobfuscation is done before the password is read. Since the correct_pass has an associated symbol that is stored at a known location you can obtain the address and peer into it at runtime:
+In [crackme3](./activities/03-tutorial-symbols/src), deobfuscation is done before the password is read. Since the correct_pass has an associated symbol that is stored at a known location you can obtain the address and peer into it at runtime:
 
 ```
 $ nm crackme3 | grep pass
@@ -240,7 +262,7 @@ Most programs you will see make use of existing functionality. You don't want to
 
 What makes all of these programs work is the Linux dynamic linker/loader. This is a statically linked helper program that resolves symbol names from shared objects at runtime. We can use the dynamic linker to gather information about an executable.
 
-The first and most common thing to do is see what libraries the executable loads, with the `ldd` utility:
+The first and most common thing to do is see what libraries the executable loads, with the [ldd](https://man7.org/linux/man-pages/man1/ldd.1.html) utility:
 
 ```
 $ ldd /bin/ls
@@ -283,7 +305,7 @@ and search for the LD_ string to find variables information.
 * `DT_RPATH` attribute in the `.dynamic` section of the executable, provided there is no `DT_RUNPATH`; this is deprecated
 * `LD_LIBRARY_PATH` environment variable, which is similar to PATH; does not work with SUID/SGID programs
 * `DT_RUNPATH` attribute in the .dynamic section of the executable
-* `/etc/ld.so.cache`, generated by [ldconfig](https://man7.org/linux/man-pages/man2/ptrace.2.html)
+* `/etc/ld.so.cache`, generated by [ldconfig](https://man7.org/linux/man-pages/man8/ldconfig.8.html)
 * `/lib` and then `/usr/lib`
 
 The last two options are skipped if the program was linked with the `-z nodeflib` option.
@@ -344,15 +366,16 @@ Nope!
      11480:	
      11480:	calling fini: ./crackme2 [0]
      11480:	
-```	
+```
 
 As you can see, functions like` puts()`, `fgets()`, `strlen()` and `strcmp()` are not actually resolved until the first call to them is made. Make the loader resolve all the symbols at startup. (Hint: [ld-linux](https://man7.org/linux/man-pages/man8/ld-linux.8.html)).
 
 **Library Wrapper Task**
 
-You've previously solved `crackme2` with the help of the `ltrace`. Check out the files in the `04-tutorial-library-dependencies/` folder from the [Session archive](TODO). The folders consists of a `Makefile` and a C source code file reimplementing the `strcmp()` function (library wrapper). The `strcmp.c` implementation uses `LD_PRELOAD` to wrap the actual `strcmp()` call to our own one.
+You've previously solved `crackme2` with the help of the `ltrace`. Check out the files from [04-tutorial-library-dependencies/](./activities/04-tutorial-library-dependencies/src). The folders consists of a `Makefile` and a C source code file reimplementing the `strcmp()` function (library wrapper). The `strcmp.c` implementation uses `LD_PRELOAD` to wrap the actual `strcmp()` call to our own one.
 
 In order to see how that works, we need to create a shared library and pass it as an argument to `LD_PRELOAD`. The `Makefile` file already takes care of this. To build and run the entire thing, simply run:
+
 ```
 make run
 ```
@@ -361,7 +384,7 @@ This will build the shared library file (`strcmp.so`) and run the `crackme2` exe
 
 Our goal is to use the `strcmp()` wrapper to alter the program behavior. We have two ways to make the `crackme2` program behave our way:
 
-1. Leak the password in the strcmp() wrapper.
+1. Leak the password in the `strcmp()` wrapper.
 1. Pass the check regardless of what password we provide.
 
 Modify the `strcmp()` function in the `strcmp.c` source code file to alter the the `crackme2` program behavior in each of the two ways shown above. To test it, use the `Makefile`:
@@ -372,7 +395,7 @@ make run
 
 ### 05. Tutorial - Network: netstat and netcat
 
-Services running on remote machines offer a gateway to those particular machines. Whether it's improper handling of the data received from clients, or a flaw in the protocol used between server and clients, certain privileges can be obtained if care is not taken. We'll explore some tools and approaches to analyzing remote services. To follow along, use the server and client programs in the crackme5 folder of the [tutorial](TODO) archive.
+Services running on remote machines offer a gateway to those particular machines. Whether it's improper handling of the data received from clients, or a flaw in the protocol used between server and clients, certain privileges can be obtained if care is not taken. We'll explore some tools and approaches to analyzing remote services. To follow along, use the server and client programs from [05-tutorial-network-netstat-netcat](./activities/05-tutorial-network-netstat-netcat/src).
 
 First of all, start the server:
 ```
@@ -553,7 +576,7 @@ Let's remember how files and programs relate in Linux.
 
 ![Files](assets/files.png)
 
-Let's also remember that, in Linux, 'file' can mean a lot of things:
+Let's also remember that, in Linux, `file` can mean a lot of things:
 
 * regular file
 * directory
@@ -605,14 +628,14 @@ lrwx------ 1 amadan amadan 64 Jun 15 22:03 2 -> /dev/pts/2
 lrwx------ 1 amadan amadan 64 Jun 15 22:04 3 -> socket:[883625]
 ```
 
-We'll be using `06-tutorial-open-files/crackme6` from the [session archive](TODO) for the next part of this section. Try the conventional means of strings and ltrace on it. Then run it normally.
+We'll be using [crackme6](./activities/06-tutorial-open-files/src) for the next part of this section. Try the conventional means of strings and ltrace on it. Then run it normally.
 
 ```
 $ ./crackme6 
 Type 'start' to begin authentication test
 ```
 
-Before complying to what the program tells us, lets use lsof to see what we can find out:
+Before complying to what the program tells us, let's use lsof to see what we can find out:
 
 ```
 $ lsof -c crackme6
@@ -651,15 +674,17 @@ There are other sources of information available about running processes if you 
 
 ## Challenges
 
+Challenges can be found in the `activities/<CHALLENGE_NUMBER>-challenge-<CHALLENGE_NAME>` directory.
+
 ### 07. Challenge - Perfect Answer
 
-For this task use the `perfect` binary from the `07-challenge-perfect-answer` directory.
+For this task use the [perfect](./activities/07-challenge-perfect-answer/src) binary.
 
 Can you find the flag?
 
 ### 08. Challenge - Lots of strings
 
-Use the `lots_of_files` binary from `08-challenge-lots-of-strings directory`.
+Use the [lots_of_strings](./activities/08-challenge-lots-of-strings/src) binary.
 
 Can you find the **password**?
 
@@ -667,7 +692,7 @@ Can you find the **password**?
 
 ### 09. Challenge - Sleepy cats
 
-For this task use the `sleepy` binary from the `09-challenge-sleepy-cats` directory.
+For this task use the [sleepy](./activities/09-challenge-sleepy-cats/src) binary.
 
 The `sleep()` function takes too much. Ain't nobody got time for that. We want the flag NOW!!
 
@@ -677,7 +702,7 @@ Modify the binary in order to get the flag.
 
 ### 10. Challenge - Hidden
 
-For this challenge use the `hidden` binary from the `10-challenge-hidden/` directory.
+For this challenge use the [hidden](./activities/10-challenge-hidden/src) binary.
 
 Can you find the hidden flag?
 
@@ -687,21 +712,21 @@ Can you find the hidden flag?
 ### 11. Challenge - Detective
 This challenge runs remotely at `141.85.224.157:31337`. You can use `netcat` to connect to it.
 
-Investigate the `detective` executable in the `11-challenge-detective/` directory. See what it does and work to get the flag.
+Investigate the [detective](./activities/11-challenge-detective/src) binary. See what it does and work to get the flag.
 
-You can start from the `sol/exploit_template.sh` solution template script.
+You can start from the [sol/exploit_template.sh](./activities/11-challenge-detective/sol) solution template script.
 
 >There is a bonus to this challenge and you will be able to find another flag. See that below.
 
 **Bonus: Get the Second Flag**
 
-You can actually exploit the remote `detective` executable and get the second flag. Look thoroughly through the executable and craft your payload to exploit the remote service.
+You can actually exploit the remote [detective](./activities/11-challenge-detective/src) executable and get the second flag. Look thoroughly through the executable and craft your payload to exploit the remote service.
 
 >You need to keep the connection going. Use the construction: `cat /path/to/file - | nc <host> <port>`
 
 ### Extra
 
-If you want some more, have a go at the bonus task included in the task archive. It is a simplified CTF task that you should be able to solve using the information learned in this lab.
+If you want some more, have a go at the [bonus](./activities/bonus/src) task. It is a simplified CTF task that you should be able to solve using the information learned in this lab.
 
 > Hint: This executable needs elevated permissions (run with `sudo`).
 
