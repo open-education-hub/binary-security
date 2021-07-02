@@ -190,7 +190,7 @@ It looks like the one on the left, `sub_8048B0B` handles the `LIST` command so w
 - If you want to write comments next to an instruction or a function press `:`.
 
 ## IDA Pro and Ghidra
-IDA Pro is installed on the [Kali virtual machine - TODO: ](https://github.com/hexcellents/sss-vm). The main difference between it and the free version is that the Pro one can also **decompile** the code based on the CFGs listed above. This will come in extremely useful as we hack more and more binaries.
+IDA Pro is installed on the Kali virtual machine. The main difference between it and the free version is that the Pro one can also **decompile** the code based on the CFGs listed above. This will come in extremely useful as we hack more and more binaries.
 
 Another tool that is capable of decompiling the code in an executable is [Ghidra](https://ghidra-sre.org/). One advantage of Ghidra over IDA is that Ghidra displays both the C and the Assembly code side by side. This allows us to correlate the two and reap the benefits of both of them at the same time.
 
@@ -206,7 +206,7 @@ int main()
 }
 ```
 
-Disassembling it in IDA looks familiar at first  
+Disassembling it in IDA looks familiar at first
 ![IDA _start](assets/ida_c%2B%2B_start.png)
 
 But then the fun starts:
