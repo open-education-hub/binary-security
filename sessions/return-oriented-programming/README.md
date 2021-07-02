@@ -452,8 +452,9 @@ pwndbg> rop --grep "pop .* ; pop .* ; ret"  # you can perform a finer search usi
 ### Linux x86 Program Start Up
 Notice that the `__libc_start_main` will always be present in the relocation
 table. As you discovered in the session dedicated to
-[executable fole formats](https://github.com/hexcellents/sss-binary/tree/master/sessions/executable-file-formats), this is the function called by the code from
-the `_start` label, which, in turn, calls the `main()` function.
+[executable file formats](https://github.com/hexcellents/sss-binary/tree/master/sessions/executable-file-formats),
+this is the function called by the code from the `_start` label, which, in turn,
+calls the `main()` function.
 
 To find more details about the startup of a Linux x86 program, you can read
 about it
@@ -549,11 +550,11 @@ PLT sections if CET is enabled.
 So, what does CET do? CET introduces a new restriction to indirect jump
 instructions. In order to understand how CET works, let's assume that it is
 enabled. Then, if you execute an indirect jump instruction, the processor
-verifies that a special "landing pad" instruction (which is actually a
-repurposed `NOP` instruction and, which is now called `endbr32` or `endbr64`, as
-you can see in the above snippets) is at the jump target. If the jump target
-does not start with that instruction, the processor raises an exception
-instead of continuing executing code.
+verifies that a special "landing pad" instruction, which is actually a
+repurposed `NOP` instruction (now called `endbr32` or `endbr64`, as you can see
+in the above snippets), is at the jump target. If the jump target does not start
+with that instruction, the processor raises an exception instead of continuing
+to execute code.
 
 If CET is enabled, the compiler places `endbr` instructions to all locations
 where indirect jumps may lead. This mechanism makes it extremely hard to
