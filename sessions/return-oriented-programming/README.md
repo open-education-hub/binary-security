@@ -1,5 +1,33 @@
 # Return Oriented Programming
 
+## Table of Contents
+* [Recap - ASLR](#recap---aslr)
+* [Solution - GOT and PLT](#solution---got-and-plt)
+	* [Further Inspection](#further-inspection)
+* [Return Oriented Programming (ROP)](#return-oriented-programming-rop)
+	* [Motivation](#motivation)
+	* [NOP Analogy](#nop-analogy)
+* [Gadgets and ROP Chains](#gadgets-and-rop-chains)
+	* [Code Execution](#code-execution)
+	* [Changing Register Values](#changing-register-values)
+	* [Clearing the Stack](#clearing-the-stack)
+* [Some Useful Tricks](#some-useful-tricks)
+	* [Memory Spraying](#memory-spraying)
+	* [checksec in pwndbg](#checksec-in-pwndbg)
+	* [Finding Gadgets in pwndbg](#finding-gadgets-in-pwndbg)
+* [Further Reading](#further-reading)
+	* [Linux x86 Program Start Up](#linux-x86-program-start-up)
+	* [The .plt.sec Schema](#the-pltsec-schema)
+		* [More about CET and endbr](#more-about-cet-and-endbr)
+		* [TLDR](#tldr)
+* [Challenges](#challenges)
+	* [01. Tutorial - Bypass NX Stack with return-to-libc](#01-tutorial---bypass-nx-stack-with-return-to-libc)
+	* [02. Challenge - ret-to-libc](#02-challenge---ret-to-libc)
+	* [03. Challenge - no-ret-control](#03-challenge---no-ret-control)
+	* [04. Challenge - ret-to-plt](#04-challenge---ret-to-plt)
+	* [05. Challenge - gadget tutorial](#05-challenge---gadget-tutorial)
+	* [06. Bonus Challenge - Echo service](#06-bonus-challenge---echo-service)
+
 ## Recap - ASLR
 ASLR is not the only feature that prevents the compiler and the linker from
 solving some relocations before the binary is actually running. Shared libraries
