@@ -766,7 +766,7 @@ at the end of a function.
 Alter the execution of `force_exit`, in order to call the secret function.
 
 ### 04. Challenge - ret-to-plt
-Go to the [03-challenge-ret-to-plt/](/activities/04-ret-to-plt/src) folder in
+Go to the [04-challenge-ret-to-plt/](/activities/04-ret-to-plt/src) folder in
 the activities archive.
 
 `random` is a small application that generates a random number.
