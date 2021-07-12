@@ -11,7 +11,7 @@
    * [Challenges](#challenges)
       * [06. Challenge: NOP sled redo](#06-challenge-nop-sled-redo)
       * [07. Challenge: No NOPs allowed!](#07-challenge-no-nops-allowed)
-      * [08. Challenge: multiple line output](#08-challenge-multiple-line-output)
+      * [08. Challenge: multiline output](#08-challenge-multiine-output)
       * [09: Challenge: execve blocking attempt](#09-challenge-execve-blocking-attempt)
    * [Further Reading](#further-reading)
       * [Input restrictions](#input-restrictions)
@@ -252,11 +252,11 @@ Redo the last three challenges (9, 10, 11) from [the previous session](../shellc
 
 This is similar to the previous tasks: you are left to guess a stack address. However, the `\x90` byte is filtered from input so you cannot use a NOP sled. But you should be able to adapt the concept. Remember the relevant features of the "NOP" instruction!
 
-## 08. Challenge: multi-line output
+## 08. Challenge: multiline output
 
 While perfectly ok with the byte 0, some functions (e.g. `fgets`) will stop reading when they encounter a newline character (`\n`). Thus, if our input is read by such a function, we need to make sure our shellcode contains no `\n` bytes.
 
-For this challenge, the input will be read using the `fgets` function, but you will need to craft a shellcode which prints to `stdout` the exact string:
+For this challenge, the input will be read using the `gets` function, but you will need to craft a shellcode which prints to `stdout` the exact string:
 
 ```
 first
