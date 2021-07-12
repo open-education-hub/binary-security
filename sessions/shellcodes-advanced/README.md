@@ -11,7 +11,7 @@
    * [Challenges](#challenges)
       * [06. Challenge: NOP sled redo](#06-challenge-nop-sled-redo)
       * [07. Challenge: No NOPs allowed!](#07-challenge-no-nops-allowed)
-      * [08. Challenge: multiline output](#08-challenge-multiine-output)
+      * [08. Challenge: multiline output](#08-challenge-multiline-output)
       * [09: Challenge: execve blocking attempt](#09-challenge-execve-blocking-attempt)
    * [Further Reading](#further-reading)
       * [Input restrictions](#input-restrictions)
