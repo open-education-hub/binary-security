@@ -1,0 +1,15 @@
+CFLAGS = -Wall -g -fno-stack-protector -Wno-unused-function -mpreferred-stack-boundary=4 -fno-PIC
+LDFLAGS = -no-pie
+
+all: vuln64
+
+vuln64: vuln64.o
+
+vuln64.o: vuln.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+clean:
+	-rm -f *~
+	-rm -f peda-session*.txt
+	-rm -f vuln64.o
+	-rm -f vuln64
