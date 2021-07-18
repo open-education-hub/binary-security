@@ -226,7 +226,7 @@ pwndbg> p write
 $2 = {<text variable, no debug info>} 0xe6ea0 <__GI___libc_write>
 ```
 
-    However, since bits 12-16 of the offsets differ, the corresponding bits in the full addresses would have to be bruteforced (probability 1/4). 
+However, since bits 12-16 of the offsets differ, the corresponding bits in the full addresses would have to be bruteforced (probability 1/4). 
 
 *   **Information leak**. The most effective way of bypassing ASLR is by using an information leak vulnerability that exposes randomized address, or at least parts of them. You can also dump parts of libraries (e.g. `libc`) if you are able to create an exploit that reads them. This is useful in remote attacks to infer the version of the library, downloading it from the web, and thus knowing the right offsets for other functions (not originally linked with the binary).
 
