@@ -4,8 +4,8 @@
 
 The previous sessions ([Shellcodes](../shellcodes/) and [Shellcodes Advanced](../shellcodes-advanced/)) presented an exploitation scenario that is based on the assumption that machine instructions can be executed from **any** memory segment belonging to the process. As you can recall from the [Executable File Formats](../executable-file-formats/) session, different sections of an ELF binary are grouped into segments which are loaded into memory when the binary is being executed. This mechanism (and some hardware support) enables 2 important protection mechanisms that will be presented in this session:
 
-    *   Executable Space Protection: only certain parts of the address space exhibit the code execution right;
-    *   Address Space Layout Randomization (ASLR): certain parts of the address space get mapped at random locations.
+*   Executable Space Protection: only certain parts of the address space exhibit the code execution right;
+*   Address Space Layout Randomization (ASLR): certain parts of the address space get mapped at random locations.
 
 In the [Return Oriented Programming](../return-oriented-prgramming) session we discussed how the **PLT**/**GOT** work in relation to resolving addresses of functions from dynamically liked libraries. We also learned how to abuse this process and trigger arbitrary code execution by **corrupting GOT entries**. We will take this exploit primitive to the next level and explore how it can be used when additional defense mechanisms are in use. 
 
@@ -46,14 +46,14 @@ The `executable space protection` is an instance of the `principle of least priv
 
 The mechanism can be (and was) implemented in many different ways, the most common in Linux being:
 
-    *   **NX bit**: This is the easiest method, and involves an extra bit added to each page table entry that specifies if the memory page should be executable or not. This is the current implementation in 64-bit processors where page table entries are 8-bytes wide. 
-    *   **Physical Address Extension (PAE)**: Besides the main feature that allows access to more than 4GB of memory, the PAE extension for 32-bit processor also adds a NX bit in its page table entries.
-    *   **Emulation**: The NX bit can be emulated on older (i.e., non-PAE) 32-bit processors by overloading the Supervisor bit ([PaX PAGEEXEC](https://en.wikipedia.org/wiki/PaX#PAGEEXEC)), or by using the segmentation mechanism and splitting the address space in half ([PaX SEGMEXEC](https://en.wikipedia.org/wiki/PaX#SEGMEXEC)).
+*   **NX bit**: This is the easiest method, and involves an extra bit added to each page table entry that specifies if the memory page should be executable or not. This is the current implementation in 64-bit processors where page table entries are 8-bytes wide. 
+*   **Physical Address Extension (PAE)**: Besides the main feature that allows access to more than 4GB of memory, the PAE extension for 32-bit processor also adds a NX bit in its page table entries.
+*   **Emulation**: The NX bit can be emulated on older (i.e., non-PAE) 32-bit processors by overloading the Supervisor bit ([PaX PAGEEXEC](https://en.wikipedia.org/wiki/PaX#PAGEEXEC)), or by using the segmentation mechanism and splitting the address space in half ([PaX SEGMEXEC](https://en.wikipedia.org/wiki/PaX#SEGMEXEC)).
 
 This security feature gets in the way of **just-in-time (JIT)** compilers, which need to produce and write code at runtime, and that is later executed. Since a JIT compiler cannot run in this kind of secured environment, an application using it is vulnerable to attacks known as **JIT spraying**. The idea was first presented by Dion Blazakis, and is, briefly, a way to force the JIT compiler to produce shellcode.
 
-    *   Slides: [Black Hat & DEF CON 2010](http://www.semantiscope.com/research/BHDC2010/BHDC-2010-Slides-v2.pdf);
-    *   Paper: [Interpreter Exploitation. Pointer Inference and JIT Spraying](http://www.semantiscope.com/research/BHDC2010/BHDC-2010-Paper.pdf).
+*   Slides: [Black Hat & DEF CON 2010](http://www.semantiscope.com/research/BHDC2010/BHDC-2010-Slides-v2.pdf);
+*   Paper: [Interpreter Exploitation. Pointer Inference and JIT Spraying](http://www.semantiscope.com/research/BHDC2010/BHDC-2010-Paper.pdf).
 
 There are of course other implementations in different hardening-oriented projects such as: OpenBSD [W^X](https://marc.info/?l=openbsd-misc&m=105056000801065), Red Hat [Exec Shield](https://marc.info/?l=openbsd-misc&m=105056000801065), PaX (which is now part of [grsecurity](https://grsecurity.net/)), Windows Data Execution Prevention ([DEP](https://docs.microsoft.com/en-us/windows/win32/memory/data-execution-prevention)).
 
@@ -70,8 +70,8 @@ PaX has a protection option that restricts the use of `mprotect()` and `mmap()` 
 
 Let's start by deactivating ASLR, which is going to be discussed in the following section of this tutorial, and only focus on the NX protection. We can do this in two ways, as told below.
 
-    *   To disable ASLR system-wide we use (root access is required): `sudo bash -c 'echo 0 > /proc/sys/kernel/randomize_va_space'`;
-    *   To create a shell with ASLR disabled (ASLR will also be disabled for future processes spawned from that shell), we use (root access is not required): `setarch $(uname -m) -R /bin/bash`.
+*   To disable ASLR system-wide we use (root access is required): `sudo bash -c 'echo 0 > /proc/sys/kernel/randomize_va_space'`;
+*   To create a shell with ASLR disabled (ASLR will also be disabled for future processes spawned from that shell), we use (root access is not required): `setarch $(uname -m) -R /bin/bash`.
 
 After disabling ASLR, let's compile an extremely simple C application. Save the following code as `hello.c`:
 
@@ -177,9 +177,9 @@ fffdd000-ffffe000 rw-p 00000000 00:00 0                                  [stack]
 
 Below are a few methods of exploiting a binary that has **NX** enabled:
 
-    *   **ret-to-plt/libc**. You can return to the `.plt` section and call library function already linked. You can also call other library functions based on their known offsets. The latter approach assumes no ASLR (see next section), or the possibility of an information leak. 
-    *   **mprotect()**. If the application is using `mprotect()` you can easily call it to modify the permissions and include `PROT_EXEC` for the stack. You can also call this in a `ret-to-libc` attack. You can also `mmap` a completely new memory region and dump the shellcode there.
-    *   **Return Oriented Programming (ROP)**. This is a generalization of the `ret-to-*` approach that makes use of existing code to execute almost anything. As this is probably one of the most common types of attacks, it will be discussed in depth in a future section.
+*   **ret-to-plt/libc**. You can return to the `.plt` section and call library function already linked. You can also call other library functions based on their known offsets. The latter approach assumes no ASLR (see next section), or the possibility of an information leak. 
+*   **mprotect()**. If the application is using `mprotect()` you can easily call it to modify the permissions and include `PROT_EXEC` for the stack. You can also call this in a `ret-to-libc` attack. You can also `mmap` a completely new memory region and dump the shellcode there.
+*   **Return Oriented Programming (ROP)**. This is a generalization of the `ret-to-*` approach that makes use of existing code to execute almost anything. As this is probably one of the most common types of attacks, it will be discussed in depth in a future section.
 
 ### Address Space Layout Randomization
 
@@ -187,9 +187,9 @@ Below are a few methods of exploiting a binary that has **NX** enabled:
 
 Linux allows 3 options for its ASLR implementation that can be configured using the `/proc/sys/kernel/randomize_va_space` file. Writing **0**, **1** or **2** to this will results in the following behaviors:
 
-    *   **0**: deactivated;
-    *   **1**: random stack, vdso, libraries; heap is after code section; random code section (only for PIE-linked binaries);
-    *   **2**: random heap too.
+*   **0**: deactivated;
+*   **1**: random stack, vdso, libraries; heap is after code section; random code section (only for PIE-linked binaries);
+*   **2**: random heap too.
 
 Make sure you reactivate ASLR after the previous section of the tutorial, by one of the two options below.
 
@@ -213,11 +213,11 @@ pwndbg> set disable-randomization off
 
 Below are a few methods of exploiting a binary that has **ASLR** enabled:
 
-    *   **Bruteforce**. If you are able to inject payloads multiple times without crashing the application, you can bruteforce the address you are interested in (e.g., a target in libc). Otherwise, you can just run the exploit multiple times. Another thing to keep in mind is that, as addresses are randomized at load-time, child processes spawned with fork inherit the memory layout of the parent. Take the following scenario: we interact with a vulnerable sever that handles connections by forking to another process. We manage to obtain a leak from a child process but we are not able to create an exploit chain that leads to arbitrary code execution. However, we may still be able to use this leak in another connection, since the new process will have the same address space as the previous.
-    *   **NOP sled**. In the case of shellcodes, a longer NOP sled will maximize the chances of jumping inside it and eventually reaching the exploit code even if the stack address is randomized. This is not very useful when we are interested in jumping to libc or other functions, which is usually the case if the executable space protection is also active.
-    *   **jmp esp**. This will basically jump into the stack, no matter where it is mapped. It's actually a very rudimentary form of Return Oriented Programming which was discussed in the previous session.
-    *   **Restrict entropy**. There are various ways of reducing the entropy of the randomized address. For example, you can decrease the initial stack size by setting a huge amount of dummy environment variables.
-    *   **Partial overwrite**. This technique is useful when we are able to overwrite only the least significant byte(s) of an address (e.g. a GOT entry). We must take into account the offsets of the original and final addresses from the beginning of the mapping. If these offsets only differ in the last 8 bits, the exploit is deterministic, as the base of the mapping is aligned to 0x1000. The offsets of `read` and `write` in `libc6_2.27-3ubuntu1.2_i386` are suitable for a partial overwrite:
+*   **Bruteforce**. If you are able to inject payloads multiple times without crashing the application, you can bruteforce the address you are interested in (e.g., a target in libc). Otherwise, you can just run the exploit multiple times. Another thing to keep in mind is that, as addresses are randomized at load-time, child processes spawned with fork inherit the memory layout of the parent. Take the following scenario: we interact with a vulnerable sever that handles connections by forking to another process. We manage to obtain a leak from a child process but we are not able to create an exploit chain that leads to arbitrary code execution. However, we may still be able to use this leak in another connection, since the new process will have the same address space as the previous.
+*   **NOP sled**. In the case of shellcodes, a longer NOP sled will maximize the chances of jumping inside it and eventually reaching the exploit code even if the stack address is randomized. This is not very useful when we are interested in jumping to libc or other functions, which is usually the case if the executable space protection is also active.
+*   **jmp esp**. This will basically jump into the stack, no matter where it is mapped. It's actually a very rudimentary form of Return Oriented Programming which was discussed in the previous session.
+*   **Restrict entropy**. There are various ways of reducing the entropy of the randomized address. For example, you can decrease the initial stack size by setting a huge amount of dummy environment variables.
+*   **Partial overwrite**. This technique is useful when we are able to overwrite only the least significant byte(s) of an address (e.g. a GOT entry). We must take into account the offsets of the original and final addresses from the beginning of the mapping. If these offsets only differ in the last 8 bits, the exploit is deterministic, as the base of the mapping is aligned to 0x1000. The offsets of `read` and `write` in `libc6_2.27-3ubuntu1.2_i386` are suitable for a partial overwrite:
 
 ```
 pwndbg> p read
@@ -228,7 +228,7 @@ $2 = {<text variable, no debug info>} 0xe6ea0 <__GI___libc_write>
 
     However, since bits 12-16 of the offsets differ, the corresponding bits in the full addresses would have to be bruteforced (probability 1/4). 
 
-    *   **Information leak**. The most effective way of bypassing ASLR is by using an information leak vulnerability that exposes randomized address, or at least parts of them. You can also dump parts of libraries (e.g. `libc`) if you are able to create an exploit that reads them. This is useful in remote attacks to infer the version of the library, downloading it from the web, and thus knowing the right offsets for other functions (not originally linked with the binary).
+*   **Information leak**. The most effective way of bypassing ASLR is by using an information leak vulnerability that exposes randomized address, or at least parts of them. You can also dump parts of libraries (e.g. `libc`) if you are able to create an exploit that reads them. This is useful in remote attacks to infer the version of the library, downloading it from the web, and thus knowing the right offsets for other functions (not originally linked with the binary).
 
 ### Chaining Information Leaks with GOT Overwrite
 
@@ -353,8 +353,8 @@ p.interactive()
 
 It comes in two flavors:
 
-    *   **Partial**. Protects the `.init_array`, `.fini_array`, `.dynamic` and `.got` sections (but NOT `.got.plt`);
-    *   **Full**. Additionally protects `.got.plt`, rendering the **GOT overwrite** attack infeasible. 
+*   **Partial**. Protects the `.init_array`, `.fini_array`, `.dynamic` and `.got` sections (but NOT `.got.plt`);
+*   **Full**. Additionally protects `.got.plt`, rendering the **GOT overwrite** attack infeasible. 
 
 In a previous session we explained how the addresses of dynamically linked functions are resolved using lazy binding. When Full RELRO is in effect, the addresses are resolved at load-time and then marked as read-only. Due to the way address space protection works, this means that the `.got` resides in the read-only mapping, instead of the read-write mapping that contains the `.bss`.
 
