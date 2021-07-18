@@ -31,10 +31,11 @@
 ## Recap - ASLR
 ASLR is not the only feature that prevents the compiler and the linker from
 solving some relocations before the binary is actually running. Shared libraries
-can also be combined in different ways, so the first time you actually know the
-address of a shared library is while the loader is running. The ASLR feature is
-orthogonal to this - the loader could choose to assign the addresses to
-libraries in a round-robin fashion, or could use ASLR to assign them randomly.
+can also be combined in different ways. Thus, the time when the loader is
+running is actually the first time you get to know the address of a shared
+library. The ASLR feature is orthogonal to this - the loader could choose to
+assign the addresses to libraries in a round-robin fashion, or could use ASLR to
+assign them randomly.
 
 Of course, we might be inclined to have the loader simply fix all relocations in
 the code section after it loaded the libraries, but this breaks the memory
@@ -42,13 +43,13 @@ access protection of the `.text` section, which should only be **readable** and
 **executable**.
 
 ## Solution - GOT and PLT
-In order to solve this issue, we need another level of indirection by which all
-accesses to symbols located in shared libraries will read the actual address
-from a table, called the **Global Offset Table (`.got`)**, at runtime. The one
-who populates this table is the loader. Note that this can work both for data
-accesses, as well as for function calls. However, function calls are actually
-using a small stub (i.e., a few instructions) stored in the **Procedure Linkage
-Table (`.plt`)**.
+In order to solve this issue, we need another level of indirection. Through this
+new level, all accesses to symbols located in shared libraries will read the
+actual address from a table at runtime. This table is called the
+**Global Offset Table (`.got`)**. The one who populates this table is the
+loader. Note that this can work both for data accesses, as well as for function
+calls. However, function calls are actually using a small stub (i.e., a few
+instructions) stored in the **Procedure Linkage Table (`.plt`)**.
 
 The PLT is responsible of finding the shared library function address when it is
 first called (**lazy binding**), and writing it to a GOT entry. Note that the
@@ -73,7 +74,7 @@ $ objdump -D -j .text -M intel hello | grep puts
 80483e4:	e8 07 ff ff ff       	call   80482f0 <puts@plt>
 ```
 
-If we look at the `.plt` section, we see that it starts at address `0x8049060`,
+If we look at the `.plt` section, we see that it starts at address `0x080482e0`,
 right where the previous call jumps:
 ```
 $ readelf --sections hello
@@ -91,7 +92,7 @@ $ objdump -D -j .plt -M intel hello | grep -A 3 '<puts@plt>'
  80482fb:	e9 e0 ff ff ff       	jmp    80482e0 <_init+0x30>
 ```
 
-We see this code performing a jump to address `0x804c00c` inside the data
+We see this code performing a jump to address `0x804a000` inside the data
 section. Let's check the binary relocations for that location:
 ```
 $ readelf --relocs hello
@@ -183,7 +184,7 @@ int main(void)
 ```
 
 This code obviously suffers from a stack buffer overflow. The offset to the
-return address is 28. So `DOWRD`s from offset 28 onwards will be popped from the
+return address is 24. So `DOWRD`s from offset 24 onwards will be popped from the
 stack and executed. Remember the `NOP` sled concept from previous sessions?
 These were long chains of `NOP` instructions (`\x90`) used to pad a payload for
 alignment purposes. Since we can't add any new code to the program (_NX_ is
@@ -337,6 +338,9 @@ RET + 0x08:   0xAB (param1 of f1)
 RET + 0x0c:   0xCD (param2 of f1)  but this should also be 0xEF (param1 of f2)
 RET + 0x10:   0x42 (param2 of f2) 
 ```
+
+Note that now, for the sake of clarity, we're moving back to `x32`, so that
+parameters are again passed on the stack.
 
 The problem is that those parameters of `f1` are getting in the way of calling
 `f2`. We need to find a `pop pop ret` gadget. The actual registers are not
