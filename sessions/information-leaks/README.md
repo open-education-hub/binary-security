@@ -1,11 +1,33 @@
 # Information Leaks
 
-<details open>
-	
-</details>
+## Table of Contents	
+   * [Tutorials](#tutorials)
+      * [Stack Protection (Canaries)](#stack-protection-canaries)
+         * [StackGuard](#stackguard)
+         * [StackShield](#stackshield)
+         * [ProPolice](#propolice)
+         * [Defeating Canaries](#defeating-canaries)
+      * [Format String Exploits](#format-string-exploits)
+         * [Format functions](#format-functions)
+            * [Use of format functions](#use-of-format-functions)
+               * [Functionality](#functionality)
+               * [How the format function works](#how-the-format-function-works)
+               * [The calling function](#the-calling-function)
+            * [What exactly is a format string](#what-exactly-is-a-format-string)
+         * [The stack and its role at format strings](#the-stack-and-its-role-at-format-strings)
+         * [What do we control?](#what-do-we-control)
+         * [Crash of the program](#crash-of-the-program)
+         * [Viewing the stack](#viewing-the-stack)
+         * [Viewing memory at any location](#viewing-memory-at-any-location)
+         * [Exploitation - through pure format strings](#exploitation---through-pure-format-strings)
+         * [A general method to exploit format strings vulnerabilities](#a-general-method-to-exploit-format-strings-vulnerabilities)
+         * [Direct Parameter Access](#direct-parameter-access)
+         * [Generalizing format string exploits](#generalizing-format-string-exploits)
+   * [Challenges](#challenges)
+      * [Challenge 1](#challenge-1)
+      * [Challenge 2](#challenge-2)
+      * [Challenge 3 - Format Strings](#challenge-3---format-strings)
 
-## Table of Contents
-	
 ## Tutorials
 
 ### Stack Protection (Canaries)
@@ -18,7 +40,7 @@ There are 3 main variations of this mechanism: random, terminator, and random XO
 
 `Random` canaries are generated when programs start, and are stored in a global variable. The global variable can be located in a memory region surrounded by unmapped pages - this protects against information leak attacks (see next section) that dump big memory chunks, since accessing the unmapped pages will trigger a segmentation fault. This first method is a little bit hard to implement because the `crt0.o` code (see note below) has to read `/dev/random`.
 
-The `terminator` canaries contain string termination characters such as 0x00, CR, LF, or -1. This is based on the assumption that most buffer overflows happen when string manipulation functions (e.g., strcpy()) are called with bad arguments. One would want to leak the canary value and then use a buffer overflow to overwrite it with the same value. Because string manipulation functions usually stop when termination characters are encountered, it is difficult to use them to overwrite the same value (containing termination characters) over the canary.
+The `terminator` canaries contain string termination characters such as `0x00`, `CR`, `LF`, or `-1`. This is based on the assumption that most buffer overflows happen when string manipulation functions (e.g., `strcpy()`) are called with bad arguments. One would want to leak the canary value and then use a buffer overflow to overwrite it with the same value. Because string manipulation functions usually stop when termination characters are encountered, it is difficult to use them to overwrite the same value (containing termination characters) over the canary.
 
 The `random XOR` canaries work by applying a XOR-based algorithm having both a random number (the canary), and the correct address as inputs. The attacker has to both obtain the random number, and apply the algorithm on the new return address before building the payload.
 
@@ -468,7 +490,7 @@ The bulletproof binary is compiled using GCC's SSP. I bet you can defeat it, twi
 
 > bad_func does not exit the program! You should use `cat <payload_file> - | ./bulletproof` so that you can detect if bad_func was called in the program loop.
 
-### Task 3 - Format Strings
+### Challenge 3 - Format Strings
 
 This task consists of 4 binaries exhibiting a format string vulnerability. Analyze what each binary does using the methods already familiar to you and try to determine the exact format string that will lead to the desired result.
 
