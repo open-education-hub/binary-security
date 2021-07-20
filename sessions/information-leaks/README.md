@@ -12,7 +12,7 @@
 
 The name comes from canaries (birds) that were used by mining workers when entering mines and were affected by any deadly gases such as methane before humans were. In our case, stack canaries are used to check if a buffer overflow of a stack variable resulted in overriding the return address. The mechanism is based on a (sometimes random) value that is placed on each function's stack, just above the return address, as the following picture shows. The value is checked in the function's epilogue before calling ret, and if the values do not match the execution is halted. Since the stack grows from higher memory addresses to lower ones, any buffer overflow targeting the return address will also have to overwrite the canary with the right value.
 
-@TODO POZA1
+![canary](assets/image1.png)
 
 There are 3 main variations of this mechanism: random, terminator, and random XOR.
 
@@ -40,7 +40,7 @@ The most notable feature of StackShield, compared to other implementations, is t
 
 ProPolice, proposed by IBM, started from an implementation similar to StackGuard, but evolved and introduced new features. It is currently the method used by GCC when the `--fstack-protector` compilation flag is used. The ProPolice mechanism will reorder local variables based on their types. The following picture shows where each variable should be placed on the stack based on it's type such that different attacks become impossible.
 
-@TODO POZA2
+![stack](assets/image2.jpg)
 
 > GCC supports 3 levels of stack smashing protection: complete, normal, and strong. The difference lies in the types of function that are protected, with the decision being made by looking at what kinds of local variables are used. Details in [this](https://lwn.net/Articles/584225/) LWN article.
 
@@ -222,7 +222,7 @@ printf ("Number %d has no address, number %d has: %08x\n", i, a, &a);
 
 From within the printf function the stack looks like:
 
-@TODO POZA3
+![format_string_stack](assets/image3.png)
 
 The format function now parses the format string `'A'`, by reading a character a time. If it is not `'%'`, the character is copied to the output. In case it is, the character behind the `'%'` specifies the type of parameter that should be evaluated. The string `"%%"` has a special meaning, it is used to print the escape character `'%'` itself. Every other parameter relates to data, which is located on the stack.
 
@@ -368,7 +368,7 @@ canary[1], canary[2], canary[3]);
 
 This returns the output `"10204080"` and `"canary: 00000041"`. We overwrite four times the least significant byte of an integer we point to. By increasing the pointer each time, the least significant byte moves through the memory we want to write to, and allows us to store completely arbitrary data. As you can see in the first row of the following figure, all eight bytes are not touched yet by our overwrite code. From the second row on we trigger four overwrites, shifted by one byte to the right for every step. The last row shows the final desired state: we overwrote all four bytes of our foo array, but while doing so, we destroyed three bytes of the canary array. We included the canary array just to see that we are overwriting memory we do not want to.
 
-@TODO POZA4
+![4-stage-overwrite](assets/image4.png)
 
 Although this method looks complex, it can be used to overwrite arbitrary data at arbitrary addresses. For explanation we have only used one write per format string until now, but it is also possible to write multiple times within one format string:
 
