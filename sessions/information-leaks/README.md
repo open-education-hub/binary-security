@@ -84,7 +84,7 @@ Compile the file using:
 ~$ CFLAGS='-O0 -m32 -fstack-protector' make ssp
 ```
 
-The disassembled code for func() looks like this:
+The disassembled code for `func()` looks like this:
 
 ```
 ~$ objdump -M intel -d -j .text ./ssp
