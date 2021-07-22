@@ -21,6 +21,7 @@
 	* [The .plt.sec Schema](#the-pltsec-schema)
 		* [More about CET and endbr](#more-about-cet-and-endbr)
 		* [TLDR](#tldr)
+* [Putting it all Together: Demo](#putting-it-all-together-demo)
 * [Challenges](#challenges)
 	* [01. Tutorial - Bypass NX Stack with return-to-libc](#01-tutorial---bypass-nx-stack-with-return-to-libc)
 	* [02. Challenge - ret-to-libc](#02-challenge---ret-to-libc)
@@ -32,12 +33,13 @@
 ## Prerequisites
 In order to fully grasp the content of this session, you should have a good
 understanding of the following topics, both theoretically and practically:
+- Stack frame
 - Shellcodes
 - ASLR
 - DEP
 - `pwntools`
 
-If you are unfamiliar with any of the above keyowrds or if your understanding of
+If you are unfamiliar with any of the above concepts or if your understanding of
 them is fuzzy, go over their corresponding sessions once again, before you
 proceed with the current session.
 
@@ -640,6 +642,177 @@ that the regular `.plt` is now called `.plt.sec` and `.plt` is repurposed to
 contain only code for lazy symbol resolution.
 
 
+## Putting it all Together: Demo
+Now that we've learned the theoretical aspects of what Return Oriented
+Programming is, let's put everything in practice as part of a demo.
+
+Navigate to the folder [00-demo](activities/00-demo). Notice that it contains
+two executables, one compiled for 32 bits (`vuln`) and the other for 64 bits
+(`vuln64`). TODO: diff
+
+Looking at their source code (it's one and the same for both of them), we can
+easily identify their vulnerability: the `reader` function reads (duh...) 128
+bytes from `stdin` into a buffer whose capacity is only 64 bytes. So we'll be
+able to overflow this buffer. We aim to do this in order to showcase the concept
+of **code reuse**.
+
+### Calling a Function
+The most basic type of code reuse is calling a function. For this, we'll be
+calling the `warcraft` function in the `vuln` and `vuln64` binaries mentioned
+above. In order to do this, we'll need to know:
+1. the offset of the return address inside our buffer
+2. the address of the `warcraft` function inside the binary.
+
+For all our exploits we'll be using the `exploit.py` script, which is also
+available in the [00-demo](activities/00-demo) folder. Notice that `pwntools`
+provides a functionality similar to `nm`, by which we can obtain the addresses
+of various sybols in the binary (as long as it hasn't been stripped):
+```python
+e = ELF(filename)
+warcraft_address = e.symbols[b"warcraft"]
+```
+
+As of now, requirement #2 mentioned above is complete. In order to also complete
+the first requirement, we'll use `objdump` and check the `reader` function:
+```
+$ objdump -M intel -d vuln
+08048529 <reader>:
+ 8048529:       55                      push   ebp
+ 804852a:       89 e5                   mov    ebp,esp
+ 804852c:       83 ec 40                sub    esp,0x40
+ [...]
+ 804853c:       a1 40 a0 04 08          mov    eax,ds:0x804a040
+ 8048541:       50                      push   eax
+ 8048542:       68 80 00 00 00          push   0x80
+ 8048547:       8d 45 c0                lea    eax,[ebp-0x40]
+ 804854a:       50                      push   eax
+ 804854b:       e8 10 fe ff ff          call   8048360 <fgets@plt>
+```
+Our vulnerable buffer is the first parameter of `fgets`, which is at offset
+`ebp - 0x40` i.e. `ebp - 64`. Which means that the offset of the return address
+is `64 + 4 = 68` bytes into this buffer (remember how a stack frame looks like).
+
+So, in order to call the `warcraft` function, we'll give our binary a payload
+made up of a padding of 68 bytes, followed by the address of `warcraft`, written
+in _little endian_ representation, which can be written like this:
+```python
+offset = 0x40 + 4
+payload = offset * b"A" + pack(warcraft_address)
+```
+Now our exploit is done. In order to perform this exploit on `vuln64`, simply
+run `objdump` on this binary and remember that the length of a pointer on a
+64-bit architecture is 8 bytes, which means that the offset of the return
+address is going to be `rbp + 8`.
+
+One thing to keep in mind is that you are by no means required to use addresses
+that point to the beginning of functions in your payloads. You can use any valid
+address from the `.text` section and the exploit should work just fine in
+executing code from the address you provide it.
+
+Now on to our next scenario: what if the function we're calling requires a
+parameter?
+
+### Calling a Function with Parameters
+Let's first look at the stack of a function when it's called "normally", i.e.
+with a `call` instruction. Let's use the `overwatch` function in `vuln.c` as an
+example. The picture below shows where its parameter is placed.
+
+![Overwatch Stack](assets/overwatch_stack_simple.png)
+
+Furthermore, as expected, the function retrieves its parameter from address
+`ebp + 8`, as shown above. How can we craft a payload so that, upon entering the
+function, the required `0xdeadbeef` parameter is where the function expects it
+to be?
+
+We'll obviously need to place `0xdeadbeef` on the stack (in little endian
+representation, of course), but where? After the function's preamble
+(`push ebp; mov esp, ebp`), `ebp` points to the location where the previous
+stack pointer it saved. Above it, the function expects to find its return
+address. Thus, we need to write 4 padding bytes in its place. The next 4 bytes
+are the first parameter. Just for reference, the next 4 bytes (`ebp + 12`) are
+the second parameter and so on. So, in order to call `overwatch` with the
+`0xdeadbeef` parameter, the payload would look like this:
+```python
+payload = offset * b"A" + pack(overwatch_address) + 4 * b"B" + pack(0xdeadbeef)
+```
+
+Take a look at those 4 `B`'s in the payload above. We agreed that they are
+`overwatch`'s expected return address. So if we wanted to call another function,
+we would only need to replace them with that function's address. Pretty simple,
+right? But what if we wanted to call a third function? Well, then we would need
+to overwrite the next 4 bytes in our payload with a third address. Easy! But now
+we have actually run into trouble: the next 4 bytes are `overwatch`'s parameter.
+In this situation it looks like we **either** call `overwatch` or we call a third
+function. Not cool. In this case, `overwatch`s stack would look like this:
+
+![Overwatch Stack with Conflicting Parameter/Address](assets/overwatch_stack_conflict.png)
+
+It seems we need another mechanism so that we can call **all 3 functions** with
+all their correct parameters. Enter ROPs!
+
+### Calling Multiple Functions
+What we need in order to solve the dilemma presented above is a means by which
+to **remove** `overwatch`'s parameter (i.e. `0xdeadbeef`) from the stack once
+the function is finished. We know that the `pop` instruction is good for
+removing stuff from the stack. So what we need is to execute the following two
+instructions:
+```assembly
+pop <any_register>
+ret
+```
+
+Since `ret` is equivalent to `pop eip`, the above code removes `0xdeadbeef` from
+the stack and places the instruction pointer (`eip`) at the address lying on the
+stack above `0xdeadbeef`. One thing to keep in mind is that now we're only
+interested in clearing the stack, so `pop` can be used with any 32 bit register.
+
+As a result, `overwatch`'s stack should look like the one in the image below.
+Notice there are no more conflicts now. Hurray!
+
+![Overwatch Stack without Conflicting Parameters and Addresses](assets/overwatch_stack_no_conflict.png)
+
+#### Finding Gadgets - `ROPgadget`
+The `pop; ret` instructions above are called a **gadget**, i.e. a small group of
+**consecutive** instructions that ends in `ret` and which can be used to alter
+the execution of a given program. Since all binaries contain a `.text` section,
+which is made up of instructions, all binaries contain gadgets. Lots of them.
+
+The tool that we're going to use in order to find such gadgets is called
+`ROPgadget`. It is already installed in the Kali VM and if you're working on
+another environment, you can install it by following the instructions in the
+tool's [Github repo](https://github.com/JonathanSalwan/ROPgadget).
+
+In order to run `ROPgadget` from your terminal, you need to specify a binary
+file to it using the `--binary` parameter. It is also recommended (if you know
+what gadgets you're looking for) to filter those you need using the `--only`
+parameter. As a result, in order to obtain a `pop; ret` gadget, we need to run
+the following command:
+```bash
+$ ROPgadget --binary vuln --only "pop|ret"
+Gadgets information
+============================================================
+0x080485eb : pop ebp ; ret
+0x080485e8 : pop ebx ; pop esi ; pop edi ; pop ebp ; ret
+0x08048331 : pop ebx ; ret
+0x080485ea : pop edi ; pop ebp ; ret
+0x080485e9 : pop esi ; pop edi ; pop ebp ; ret
+0x0804831a : ret
+0x0804819c : ret 0x3e41
+0x0804844e : ret 0xeac1
+```
+
+Thus, the payload needed in order to call both `overwatch` and `warcraft` is the
+one showcased below, with `pop_ret_gadget_address` being set to `0x08048331`
+from the output above.
+```python
+payload = offset * b"A" + pack(overwatch_address) + pack(pop_ret_gadget_address)
+	+ pack(0xdeadbeef) + pack(warcraft_address)
+```
+
+Notice this yet is another example of **code reuse** since we're reusing various
+chunks of instructions already present in our binary.
+
+
 ## Challenges
 ### 01. Tutorial - Bypass NX Stack with return-to-libc
 
@@ -663,7 +836,6 @@ executable. We only have read and write (RW) permissions for the stack area.
 The auth binary requires the `libssl1.0.0:i386` Debian package to work. You can
 find `libssl1.0.0:i386` Debian package
 [here](https://packages.debian.org/jessie/i386/libssl1.0.0/download).
-TODO: dldeaza
 
 First, let's check that *NX* bit we mentioned earlier:
 ```
