@@ -1,6 +1,7 @@
 # Return Oriented Programming
 
 ## Table of Contents
+* [Prerequisites](#prerequisites)
 * [Recap - ASLR](#recap---aslr)
 * [Solution - GOT and PLT](#solution---got-and-plt)
 	* [Further Inspection](#further-inspection)
@@ -28,6 +29,19 @@
 	* [05. Challenge - gadget tutorial](#05-challenge---gadget-tutorial)
 	* [06. Bonus Challenge - Echo service](#06-bonus-challenge---echo-service)
 
+## Prerequisites
+In order to fully grasp the content of this session, you should have a good
+understanding of the following topics, both theoretically and practically:
+- Shellcodes
+- ASLR
+- DEP
+- `pwntools`
+
+If you are unfamiliar with any of the above keyowrds or if your understanding of
+them is fuzzy, go over their corresponding sessions once again, before you
+proceed with the current session.
+
+
 ## Recap - ASLR
 ASLR is not the only feature that prevents the compiler and the linker from
 solving some relocations before the binary is actually running. Shared libraries
@@ -41,6 +55,7 @@ Of course, we might be inclined to have the loader simply fix all relocations in
 the code section after it loaded the libraries, but this breaks the memory
 access protection of the `.text` section, which should only be **readable** and
 **executable**.
+
 
 ## Solution - GOT and PLT
 In order to solve this issue, we need another level of indirection. Through this
@@ -141,6 +156,7 @@ address of the function, rather than the lookup stub. Ingenious!
 Going further into the resolver is left as an exercise. You can use GDB to
 inspect the address in `0x8049ffc`, and what happens when this jumps there.
 
+
 ## Return Oriented Programming (ROP)
 ### Motivation
 In the previous sessions we discussed `ret2libc` attacks. The standard attack
@@ -237,6 +253,7 @@ payload += dw(0xdeadc0de)
 
 sys.stdout.write(payload.decode('ascii', 'replace'))
 ```
+
 
 ## Gadgets and ROP Chains
 ### Code Execution
@@ -369,6 +386,7 @@ RET + 0x1c:   0x42 (param2 of f2)
 RET + 0x20:   addr of f3
 ```
 
+
 ## Some Useful Tricks
 ### Memory Spraying
 Let's take the following program:
@@ -479,6 +497,7 @@ pwndbg> rop --grep "pop .* ; pop .* ; ret"  # you can perform a finer search usi
 0x08049241 : pop esi ; pop edi ; pop ebp ; ret
 
 ```
+
 
 ## Further Reading
 ### Linux x86 Program Start Up
