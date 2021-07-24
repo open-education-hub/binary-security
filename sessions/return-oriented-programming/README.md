@@ -1041,3 +1041,13 @@ system("/bin/sh");
 ```
 
 Exploit it first with ASLR disabled and then with it enabled.
+
+
+## Conclusions
+At the end of this session, you should:
+- Understand the limitations of classic buffer overflow attacks, as well as
+shellcodes.
+- Understand and visualise the effect of various simple ROP attacks on a
+program's stack
+- Be able to craft and make use of ROP chains in order to hack vulnerable
+binaries
