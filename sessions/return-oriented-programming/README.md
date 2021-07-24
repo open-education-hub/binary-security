@@ -502,6 +502,15 @@ pwndbg> rop --grep "pop .* ; pop .* ; ret"  # you can perform a finer search usi
 
 
 ## Further Reading
+### ROP Gadgets in `pwntools`
+`pwntools` has a rather advanced
+[ROP module](https://docs.pwntools.com/en/stable/rop/rop.html) that is capable
+of crafting ROP attacks corresponding to various functions by creating
+concatenating chains of ROP adresses, also known as ROP chains.
+
+For this session, you won't need to use this module, but it may come in handy in
+the future.
+
 ### Linux x86 Program Start Up
 Notice that the `__libc_start_main` will always be present in the relocation
 table. As you discovered in the session dedicated to
