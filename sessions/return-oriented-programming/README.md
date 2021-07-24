@@ -22,6 +22,10 @@
 		* [More about CET and endbr](#more-about-cet-and-endbr)
 		* [TLDR](#tldr)
 * [Putting it all Together: Demo](#putting-it-all-together-demo)
+	* [Calling a Function](#calling-a-function)
+	* [Calling a Function with Parameters](#calling-a-function-with-parameters)
+	* [Calling Multiple Functions](#calling-multiple-functions)
+		* [Finding Gadgets - ROPgadget](#finding-gadgets---ropgadget)
 * [Challenges](#challenges)
 	* [01. Tutorial - Bypass NX Stack with return-to-libc](#01-tutorial---bypass-nx-stack-with-return-to-libc)
 	* [02. Challenge - ret-to-libc](#02-challenge---ret-to-libc)
@@ -29,6 +33,8 @@
 	* [04. Challenge - ret-to-plt](#04-challenge---ret-to-plt)
 	* [05. Challenge - gadget tutorial](#05-challenge---gadget-tutorial)
 	* [06. Bonus Challenge - Echo service](#06-bonus-challenge---echo-service)
+* [Conclusions](#conclusions)
+
 
 ## Prerequisites
 In order to fully grasp the content of this session, you should have a good
