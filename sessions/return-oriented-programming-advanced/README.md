@@ -1,6 +1,19 @@
 # Return Oriented Programming Advanced
 ---
 
+## Table of Contents
+
+* [Return Oriented Programming Advanced](#return-oriented-programming-advanced)
+   * [Calling Conventions in the ROP Context](#calling-conventions-in-the-rop-context)
+   * [ROP gadgets on x86_64](#rop-gadgets-on-x86_64)
+   * [Libc leaks](#libc-leaks)
+   * [Challenges](#challenges)
+      * [01. Challenge - Using ROP to Leak and Call system](#01-challenge---using-rop-to-leak-and-call-system)
+      * [02. Challenge - Handling Low Stack Space](#02-challenge---handling-low-stack-space)
+      * [03. Challenge - Stack Pivoting](#03-challenge---stack-pivoting)
+      * [04. Challenge - mprotect](#04-challenge---mprotect)
+   * [Further Reading](#further-reading)
+
 
 In this lab we are going to dive deeper into *Return Oriented Programming* and setbacks that appear in modern exploitation. Topics covered:
 
@@ -94,7 +107,7 @@ payload = ... + p64(libc.symbols['system'])
 
 **NOTE**: All tasks from this session are 64 bit binaries, so take that into consideration when you build the ROP chains.
 
-### 01. Challenge - Using ROP to Leak and Call `system`
+### 01. Challenge - Using ROP to Leak and Call system
 
 Use the `01-leak-call-system/src` executable file in order to spawn a shell.
 
