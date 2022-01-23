@@ -1,9 +1,44 @@
 # Executables and Processes
 
-## Introduction
+From a user's perspective, the main purpose of the computing system is to run applications.
+Applications are used for the user's benefit: listen to music, organize files, play games, develop applications, chat over the Internet, etc.
 
-The essence of this session is the comparison between a program and a process.
-A program has a certain structure that instructs the Operating System in using it as a blueprint to create a running process.
+A running application is called **a process**.
+A user starts a process, interacts with a process, ends a process.
+
+When a process runs for the benefit of the user, it **executes instructions** that **operate on data**.
+These two items (executing instructions and operating on data) are the most relevant items to understanding processes and executables.
+Instructions, also called **code**, and **data** reside in memory.
+Code is read from memory by the processor / CPU (*Central Processing Unit*), then it is decoded and interpreted by the CPU, then it is executed on data that is also read from memory by the CPU.
+Finally, the result of the operation is stored back into memory.
+So, each process has its memory space that stores code and data.
+
+TODO: diagram with memory (code, data) and CPU interaction
+
+We say that each process has its own memory space, also called address space.
+We refer to this as **process address space**, or **process virtual address space** ((P)VAS) (why this is named *virtual* is outside the scope of this section).
+This space is populated with data and code.
+Data is dynamic with respect to contents and size: it can be modified, it can be enlarged or shrinked.
+Code is static: it can't be (easily) modified, it can't be (easily) enlarged.
+Data can be read from or written to outside the process memory, to outside devices (I/O - *Input/Output*) - keyboard, monitor, network, disk.
+Code is however read at process birth time.
+
+The origin of the code and some parts of the data is **the application executable** (or program executable).
+The application executable is a binary file with a given format that stores the code and initial data that will be used to set up the process.
+The birth of a process means loading the code and initial data from the program executable into memory.
+This creates the process virtual address space.
+Then the CPU is pointed to execute instructions from the new process virtual address spaces and now the process is running.
+
+TODO: diagram with executable (code, data) and process memory (code, data) + CPU (code + data interaction) + I/O (for parts of data)
+
+We call the starting of a process from a program executable **loading**.
+The **loader** is the piece of software responsible for this.
+Whatever happens during loading is said to happen during **load-time**.
+After the process starts, whatever happens is said to happen at / during **runtime**.
+
+For this session we will first look at the process virtual address space and see how it is updated at runtime.
+We will then map that information to the program executable and what's hapenning at load-time.
+We will then spend more time dissecting and executable and make the first steps on static analysis, the subject of the [next section](https://github.com/razvand/binary/tree/master/sessions/static-analysis).
 
 ## Tutorials
 
