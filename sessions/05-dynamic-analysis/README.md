@@ -1,5 +1,3 @@
-
-
 # 05. Dynamic Analysis
 
 ## Introduction
@@ -8,7 +6,7 @@
 
 The first part of this session will give you a walkthrough of the most common GDB principles that we are going to use in exploitation. In the second half, we are going to use these concepts in practice, to evade a basic key evaluation program.
 
-Black Box type analysis works best when standard algorithms are used in the program, such as: MD5, SHA1,RSA . We can map the input and the output and then estimate what function can convert it.
+Black Box type analysis works best when standard algorithms are used in the program, such as: MD5, SHA1,RSA . We can change the input to a more suggestive one and use the output to estimate what function was used to convert it.
 
 Combined with behavioral analysis methods such as using sandboxes or strace/ltrace we can quickly map sections of code to functionalities.
 
@@ -31,6 +29,7 @@ For the purposes of this session it is a good idea to always run`objdump` on all
 ``` {.code .bash}
 $ objdump -M intel -d [executable]
 ```
+
 ### GDB Basic Commands {#gdb-basic-commands .sectionedit5}
 
 #### Getting help with GDB
@@ -48,6 +47,7 @@ Whenever you want to find out more information about GDB commands feel free to s
 #find out more about the command you are searching for
 (gdb) help disassemble
 ```
+
 #### Opening a program with GDB
 
 
@@ -138,6 +138,7 @@ At any given time all the breakpoints in the program can be displayed using the 
 ``` {.code .bash}
 (gdb) i b
 ```
+
 #### Deleting Breakpoints
 
 Breakpoints can be removed by issuing the `delete breakpoints` command followed by the breakpoints number, as it is listed in the output of the
@@ -152,12 +153,14 @@ Breakpoints can be removed by issuing the `delete breakpoints` command followed 
 ``` {.code .bash}
 (gdb) delete breakpoints
 ```
+
 Once a breakpoint is set you would normally want to launch the program into execution. You can do this by issuing the `run` command. The program will start executing and stop at the first breakpoint you have
 set.
 
 ``` {.code .bash}
 (gdb) run
 ```
+
 #### Execution flow
 
 Execution flow can be controlled in GDB using the `continue`, `stepi`,`nexti` as follows:
@@ -390,6 +393,7 @@ mm5            *value not available*
 mm6            *value not available*
 mm7            *value not available*
 ```
+
 *One thing you might notice while using GDB is that addresses seem to be pretty similar between runs. Although with experience you will gain a better feel for where an address points to, one thing to remember at this point would be that stack addresses usually have the `0xbffff….` format. In order to run GDB with the commands file you have just generated, when launching GDB specify the `-x [command_file]` parameter.*
 
 ### Using GDB to modify variables {#using-gdb-to-modify-variables .sectionedit8}
@@ -525,9 +529,9 @@ For more information on various PWNdbg commands you can always visit the PWNdbg 
 In addition to basic registers, GDB has a two extra variables which map onto some of the existing registers, as follows:
 
 -   `$pc – $eip`
-    
+
 -   `$sp – $esp`
-    
+
 -   `$fp – $ebp`
 
 In addition to these there are also two registers which can be used to view the processor state `$ps – processor status`
@@ -701,8 +705,9 @@ In essence what they do is save the reference of the old container (`push ebp`) 
 
 For a visual explanation please see below:
 
-[![](https://security.cs.pub.ro/summer-school/wiki/_media/session/s5_frame_pointer_picture.jpg?w=300&tok=e38db5){.mediacenter
-width="300"}](/summer-school/wiki/_media/session/s5_frame_pointer_picture.jpg "session:s5_frame_pointer_picture.jpg")
+<p align="center">
+    <img src="https://security.cs.pub.ro/summer-school/wiki/_media/session/s5_frame_pointer_picture.jpg?w=300&tok=e38db5" alt="Sublime's custom image"/>
+</p>
 
 As you can see the EBP register always points to the stack address that corresponds to the beginning of the current function\'s frame. That is why it is most often referred to as the frame pointer.
 
@@ -711,9 +716,8 @@ In addition to the two instructions required for creating a new stack frame for 
 If you analyze the instructions at the beginning of main, you can spot these as being:
 
 1.  An `and esp,0xfffffff0` instruction.
-    
+
 2.  A `sub` insctruction that subtracts a hex value from ESP.
-    
 
 The first of the two instructions has the purpose of aligning the stack to a specific address boundary. This is done to increase processor efficiency. In our specific case, the top of the stack gets aligned to a 16 byte multiple address.
 
@@ -784,11 +788,11 @@ Breakpoint 1, 0x080483ba in main ()
 As you can see the operations that relate to the stack are:
 
 1.  The old frame pointer is saved.
-    
+
 2.  EBP takes the value of ESP (the frame pointer is set to point to the current function\'s frame).
-    
+
 3.  `0x10` is subtracted from ESP (reserve space for local variables).
-    
+
 4.  The value `0x01` is placed at the address of EBP-0x4 (the local
     variable `a` takes the value 1).
 
@@ -806,9 +810,8 @@ When the callee wants to get access to the parameters it was called with, all it
 At this point it makes sense to remember the following cases:
 
 1.  When EBP+value is referred to it is generally a referral to a parameter passed in to the current function.
-    
+
 2.  When EBP-value is referred to it is generally a referral to a local variable.
-    
 
 Lets see how this happens with the following code:
 
@@ -883,8 +886,11 @@ The ret instruction could be translated into:
 The visual depiction of how the stack looks while a program is executing
 can be found in section 2 but will be included here as well:
 
-[![](https://security.cs.pub.ro/summer-school/wiki/_media/session/stack-convention.png?w=600&tok=d710e1){.mediacenter
-width="600"}](https://security.cs.pub.ro/summer-school/wiki/_detail/session/stack-convention.png?id=session%3A05 "session:stack-convention.png")
+<p align="center">
+    <img src="https://security.cs.pub.ro/summer-school/wiki/_media/session/stack-convention.png?w=600&tok=d710e1">
+</p>
+
+
 
 ### Next lesson preview: Buffer Overflows {#buffer-overflows .sectionedit12}
 
@@ -895,16 +901,19 @@ A buffer overflow takes place when there is a lack of checking regarding boundar
 
 A typical example of buffer overflows can be seen in the following picture:
 
-[![](https://security.cs.pub.ro/summer-school/wiki/_media/session/s5_buffer_overflow.jpg?w=500&tok=810778){.mediacenter
-width="500"}](https://security.cs.pub.ro/summer-school/wiki/session/s5_buffer_overflow.jpg?id=session%3A05 "session:s5_buffer_overflow.jpg")
+<p align="center">
+    <img src="https://security.cs.pub.ro/summer-school/wiki/_media/session/s5_buffer_overflow.jpg?w=500&tok=810778">
+</p>
 
 Challenges {#challenges .sectionedit13}
 ----------
 
+Use GDB and pwndbg to run the code provided in the Activities section.
+
 ### 01. Challenge - Explore The Simple Password Protected Bash {#challenge-explore-the-simple-password-protected-bash .sectionedit14}
 
 
-Use GDB and pwndbg to run the code provided in the [Challenges archive](https://security.cs.pub.ro/summer-school/res/arc/05-dynamic-analysis-skel.zip "https://security.cs.pub.ro/summer-school/res/arc/05-dynamic-analysis-skel.zip") The executable gets input from the user and evaluates it against a static condition. If it succeeds it then calls a `password_accepted` function that prints out a success message and spawns a shell.
+The executable gets input from the user and evaluates it against a static condition. If it succeeds it then calls a `password_accepted` function that prints out a success message and spawns a shell.
 
 Your task is to use GDB and pwndbg to force the executable to call the `password_accepted` function.
 
@@ -937,10 +946,12 @@ out the flag
    There is something hidden you can toy around with.
 </details>
 
+
 <details> 
   <summary>Hint </summary>
    The challenge name is a hint.
 </details>
+
 
 ### 05. Challenge - Snooze Me {#challenge-snooze-me .sectionedit18}
 
@@ -959,4 +970,3 @@ Unfortunately, the key feature of the application is now unreachable due to a bu
 
 Except where otherwise noted, content on this wiki is licensed under the
 following license: [CC Attribution-Share Alike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/deed.en)
-
