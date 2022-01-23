@@ -40,6 +40,358 @@ For this session we will first look at the process virtual address space and see
 We will then map that information to the program executable and what's hapenning at load-time.
 We will then spend more time dissecting and executable and make the first steps on static analysis, the subject of the [next section](https://github.com/razvand/binary/tree/master/sessions/static-analysis).
 
+## Process Memory Layout
+
+To understand the full picture of program execution it is vital to understand the memory layout of processes from ELF executables.
+The kernel provides an interface in `/proc/<PID>/maps` for each process to see how the memory layout looks like.
+
+Let's write a simple Hello World application and investigate.
+
+**IMPORTANT:** Note that we have removed **Address Space Layout Randomization** for these examples.
+We'll explain this later.
+
+```
+#include <stdio.h>
+int main()
+{
+	printf("Hello world\n");
+	malloc(10000);
+	while(1){
+		;
+	}
+	return 0;
+}
+```
+
+```
+$ gcc -Wall hw.c -o hw -m32
+$ ./hw  &
+[1] 4771
+Hello world
+$ cat /proc/4771/maps
+08048000-08049000 r-xp 00000000 08:06 1843771                            /tmp/hw
+08049000-0804a000 r--p 00000000 08:06 1843771                            /tmp/hw
+0804a000-0804b000 rw-p 00001000 08:06 1843771                            /tmp/hw
+0804b000-0806e000 rw-p 00000000 00:00 0                                  [heap]
+f7ded000-f7dee000 rw-p 00000000 00:00 0
+f7dee000-f7f93000 r-xp 00000000 08:06 917808                             /lib32/libc-2.17.so
+f7f93000-f7f95000 r--p 001a5000 08:06 917808                             /lib32/libc-2.17.so
+f7f95000-f7f96000 rw-p 001a7000 08:06 917808                             /lib32/libc-2.17.so
+f7f96000-f7f99000 rw-p 00000000 00:00 0
+f7fd9000-f7fdb000 rw-p 00000000 00:00 0
+f7fdb000-f7fdc000 r-xp 00000000 00:00 0                                  [vdso]
+f7fdc000-f7ffc000 r-xp 00000000 08:06 917869                             /lib32/ld-2.17.so
+f7ffc000-f7ffd000 r--p 0001f000 08:06 917869                             /lib32/ld-2.17.so
+f7ffd000-f7ffe000 rw-p 00020000 08:06 917869                             /lib32/ld-2.17.so
+fffdd000-ffffe000 rw-p 00000000 00:00 0                                  [stack]
+```
+
+If we start another process in the background the output for it will be exactly the same as this one.
+Why is that? The answer, of course, is virtual memory.
+The kernel provides this mechanism through which each process has an address space **completely isolated** from that of other running processes.
+They can still communicate using inter-process communication mechanisms provided by the kernel but we won't get into that here.
+Shortly put, there would be two processes with the same name and with two **apparently** identical mappings, but still the two programs would be isolated from one another.
+
+An initial schematic of the memory layout would be the following:
+
+![ELF Memory Layout](assets/elf-space.png)
+
+### Executable
+
+As we have seen, there are three memory regions associated with the executable:
+
+```
+08048000-08049000 r-xp 00000000 08:06 1843771                            /tmp/hw
+08049000-0804a000 r--p 00000000 08:06 1843771                            /tmp/hw
+0804a000-0804b000 rw-p 00001000 08:06 1843771                            /tmp/hw
+```
+
+From their permissions we can infer what they correspond to:
+
+* `08048000-08049000 r-xp` is the `.text` section along with the rest of the executable parts
+* `08049000-0804a000 r–p` is the `.rodata` section
+* `0804a000-0804b000 rw-p` consists of the `.data`, `.bss` sections and other R/W sections
+
+It is interesting to note that the executable is almost identically mapped into memory.
+The only region that is *compressed* in the binary is the `.bss` section.
+Let's see this in action by dumping the header of the file:
+
+```
+$ hexdump -Cv hw | head
+00000000  7f 45 4c 46 01 01 01 00  00 00 00 00 00 00 00 00  |.ELF............|
+00000010  02 00 03 00 01 00 00 00  b0 83 04 08 34 00 00 00  |............4...|
+00000020  78 11 00 00 00 00 00 00  34 00 20 00 0a 00 28 00  |x.......4. ...(.|
+00000030  1e 00 1b 00 06 00 00 00  34 00 00 00 34 80 04 08  |........4...4...|
+00000040  34 80 04 08 40 01 00 00  40 01 00 00 05 00 00 00  |4...@...@.......|
+00000050  04 00 00 00 03 00 00 00  74 01 00 00 74 81 04 08  |........t...t...|
+00000060  74 81 04 08 13 00 00 00  13 00 00 00 04 00 00 00  |t...............|
+00000070  01 00 00 00 01 00 00 00  00 00 00 00 00 80 04 08  |................|
+00000080  00 80 04 08 6c 06 00 00  6c 06 00 00 05 00 00 00  |....l...l.......|
+00000090  00 10 00 00 01 00 00 00  00 0f 00 00 00 9f 04 08  |................|
+$ gdb ./hw
+...........
+gdb-peda$ hexdump 0x08048000 /10
+0x08048000 : 7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00   .ELF............
+0x08048010 : 02 00 03 00 01 00 00 00 b0 83 04 08 34 00 00 00   ............4...
+0x08048020 : 78 11 00 00 00 00 00 00 34 00 20 00 0a 00 28 00   x.......4. ...(.
+0x08048030 : 1e 00 1b 00 06 00 00 00 34 00 00 00 34 80 04 08   ........4...4...
+0x08048040 : 34 80 04 08 40 01 00 00 40 01 00 00 05 00 00 00   4...@...@.......
+0x08048050 : 04 00 00 00 03 00 00 00 74 01 00 00 74 81 04 08   ........t...t...
+0x08048060 : 74 81 04 08 13 00 00 00 13 00 00 00 04 00 00 00   t...............
+0x08048070 : 01 00 00 00 01 00 00 00 00 00 00 00 00 80 04 08   ................
+0x08048080 : 00 80 04 08 6c 06 00 00 6c 06 00 00 05 00 00 00   ....l...l.......
+0x08048090 : 00 10 00 00 01 00 00 00 00 0f 00 00 00 9f 04 08   ................
+```
+
+### Heap
+
+The heap comes right after the executable at `0x0804b000` and ends at `0x0806e000` which is the current `brk` point.
+The memory allocator will increase the `brk` when more allocations are made but will not decrease it when memory is freed so as to reuse the memory regions for future allocations.
+The allocator in libc actually keeps a list of past allocations and their sizes.
+When future allocations will require the same size as a previously freed region, the allocator will reuse one from this lookup table.
+The process is called **binning**.
+
+Let's see how the brk evolves in our executable using strace:
+
+```
+$ strace -i -e brk ./hw
+[ Process PID=1995 runs in 32 bit mode. ]
+[f7ff2314] brk(0)                       = 0x804b000
+Hello world
+[f7fdb430] brk(0)                       = 0x804b000
+[f7fdb430] brk(0x806e000)               = 0x806e000
+```
+
+Let's test the fact that the `brk` does not decrease and that future malloc's can reuse previously freed regions:
+
+```
+#include <stdio.h>
+int main()
+{
+	void * buf[15];
+	int i;
+	for( i = 0 ; i < 15; i++)
+		buf[i] = malloc( i * 100) ;
+
+	for( i = 0 ; i < 15; i++)
+		free( buf[i] );
+
+	for( i = 0 ; i < 15; i++)
+		buf[i] = malloc( i * 100) ;
+
+
+	return 0;
+}
+```
+
+```
+$ strace -e brk ./hw
+[ Process PID=2424 runs in 32 bit mode. ]
+brk(0)                              = 0x804b000
+brk(0)                              = 0x804b000
+brk(0x806c000)                      = 0x806c000
++++ exited with 0 +++
+$ ltrace -e malloc ./hw
+hw->malloc(0)                       = 0x804b008
+hw->malloc(100)                     = 0x804b018
+hw->malloc(200)                     = 0x804b080
+hw->malloc(300)                     = 0x804b150
+hw->malloc(400)                     = 0x804b280
+hw->malloc(500)                     = 0x804b418
+hw->malloc(600)                     = 0x804b610
+hw->malloc(700)                     = 0x804b870
+hw->malloc(800)                     = 0x804bb30
+hw->malloc(900)                     = 0x804be58
+hw->malloc(1000)                    = 0x804c1e0
+hw->malloc(1100)                    = 0x804c5d0
+hw->malloc(1200)                    = 0x804ca20
+hw->malloc(1300)                    = 0x804ced8
+hw->malloc(1400)                    = 0x804d3f0
+
+hw->malloc(0)                       = 0x804b008
+hw->malloc(100)                     = 0x804b018
+hw->malloc(200)                     = 0x804b080
+hw->malloc(300)                     = 0x804b150
+hw->malloc(400)                     = 0x804b280
+hw->malloc(500)                     = 0x804b418
+hw->malloc(600)                     = 0x804b610
+hw->malloc(700)                     = 0x804b870
+hw->malloc(800)                     = 0x804bb30
+hw->malloc(900)                     = 0x804be58
+hw->malloc(1000)                    = 0x804c1e0
+hw->malloc(1100)                    = 0x804c5d0
+hw->malloc(1200)                    = 0x804ca20
+hw->malloc(1300)                    = 0x804ced8
+hw->malloc(1400)                    = 0x804d3f0
++++ exited (status 0) +++
+```
+
+As you can see, only one `brk` call is made.
+Furthermore, after the regions are freed they are reused.
+
+**IMPORTANT:** This behaviour of the allocator is important in the **Use After Free** class of vulnerabilities which we will be covering in the next labs.
+
+### Memory Mappings and Libraries
+
+In our example we had the following memory mappings:
+
+```
+f7ded000-f7dee000 rw-p 00000000 00:00 0
+f7dee000-f7f93000 r-xp 00000000 08:06 917808                             /lib32/libc-2.17.so
+f7f93000-f7f95000 r--p 001a5000 08:06 917808                             /lib32/libc-2.17.so
+f7f95000-f7f96000 rw-p 001a7000 08:06 917808                             /lib32/libc-2.17.so
+f7f96000-f7f99000 rw-p 00000000 00:00 0
+f7fd9000-f7fdb000 rw-p 00000000 00:00 0
+f7fdb000-f7fdc000 r-xp 00000000 00:00 0                                  [vdso]
+f7fdc000-f7ffc000 r-xp 00000000 08:06 917869                             /lib32/ld-2.17.so
+f7ffc000-f7ffd000 r--p 0001f000 08:06 917869                             /lib32/ld-2.17.so
+f7ffd000-f7ffe000 rw-p 00020000 08:06 917869                             /lib32/ld-2.17.so
+```
+
+All functions that are called from external libraries *pull* in the whole library into the address space.
+As these are also ELF files you can see that they have similar patterns: multiple sections with different permissions just like the main executable.
+
+One more thing to note here is that large calls to `malloc` result in calls to `mmap2`:
+
+```
+#include <stdio.h>
+int main()
+{
+	printf("Hello world\n");
+	printf("Small allocation %p\n", malloc(10000));
+	printf("Big allocation %p\n", malloc(10000000));
+	return 0;
+}
+```
+
+```
+# strace -e brk,mmap2  ./hw_large
+[ Process PID=3445 runs in 32 bit mode. ]
+brk(0)                                  = 0x804b000
+mmap2(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xfffffffff7fda000
+mmap2(NULL, 265183, PROT_READ, MAP_PRIVATE, 3, 0) = 0xfffffffff7f99000
+mmap2(NULL, 1747628, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0xfffffffff7dee000
+mmap2(0xf7f93000, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1a5000) = 0xfffffffff7f93000
+mmap2(0xf7f96000, 10924, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0xfffffffff7f96000
+mmap2(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xfffffffff7ded000
+mmap2(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xfffffffff7fd9000
+Hello world
+brk(0)                                  = 0x804b000
+brk(0x806e000)                          = 0x806e000
+Small allocation 0x804b008
+mmap2(NULL, 10002432, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xfffffffff7463000
+Big allocation 0xf7463008
+```
+
+As expected, the `brk` is increased when the first allocation is made.
+However, larger regions are backed by memory mappings.
+
+### Stack
+
+If you observed from previous traces, the `mmap2` call returns addresses towards NULL (lower addresses).
+It behaves like this because there is another important memory region called the `stack` that has a fixed size: usually 8 MB.
+Since the heap and the mmap region do not have this limit imposed the optimization is to start mmap-ings from a known boundary: the stack end boundary.
+Let's put this into perspective.
+You can view the current stack limit using `ulimit -s`.
+
+```
+$ ulimit -s
+8192
+$ python
+>>> hex(0xffffffff - 8192*1024)
+'0xff7fffff'
+```
+
+This address is the stack boundary.
+It seems odd then that the first mmap in the program above ends at `0xf7ffe000` and not `0xff7fffff`.
+This is probably an optimization.
+
+However, we can set the stack size to unlimited and the mmap allocation direction will reverse:
+
+```
+$ ulimit -s unlimited
+$ strace -e mmap2,brk ./hw_large
+[ Process PID=4617 runs in 32 bit mode. ]
+brk(0)                                  = 0x804b000
+mmap2(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x55578000
+mmap2(NULL, 265183, PROT_READ, MAP_PRIVATE, 3, 0) = 0x55579000
+mmap2(NULL, 1747628, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x555ba000
+mmap2(0x5575f000, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1a5000) = 0x5575f000
+mmap2(0x55762000, 10924, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x55762000
+mmap2(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x55765000
+mmap2(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x55579000
+Hello world
+brk(0)                                  = 0x804b000
+brk(0x806e000)                          = 0x806e000
+Small allocation 0x804b008
+mmap2(NULL, 10002432, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x55766000
+Big allocation 0x55766008
+^Z
+[1]+  Stopped                 strace -e mmap2,brk ./hw_large
+
+
+$ cat /proc/4617/maps
+08048000-08049000 r-xp 00000000 08:06 1843771                            /tmp/hw_large
+08049000-0804a000 r--p 00000000 08:06 1843771                            /tmp/hw_large
+0804a000-0804b000 rw-p 00001000 08:06 1843771                            /tmp/hw_large
+0804b000-0806e000 rw-p 00000000 00:00 0                                  [heap]
+55555000-55575000 r-xp 00000000 08:06 917869                             /lib32/ld-2.17.so
+55575000-55576000 r--p 0001f000 08:06 917869                             /lib32/ld-2.17.so
+55576000-55577000 rw-p 00020000 08:06 917869                             /lib32/ld-2.17.so
+55577000-55578000 r-xp 00000000 00:00 0                                  [vdso]
+55578000-5557a000 rw-p 00000000 00:00 0
+555ba000-5575f000 r-xp 00000000 08:06 917808                             /lib32/libc-2.17.so
+5575f000-55761000 r--p 001a5000 08:06 917808                             /lib32/libc-2.17.so
+55761000-55762000 rw-p 001a7000 08:06 917808                             /lib32/libc-2.17.so
+55762000-560f0000 rw-p 00000000 00:00 0
+fffdd000-ffffe000 rw-p 00000000 00:00 0                                  [stack]
+```
+
+As you can see, the big allocation is now towards the stack instead of towards the heap.
+
+Returning to the main functionality of the stack, remember from the previous lab that local variables are declared on the stack.
+This translates into assembly code in the following way:
+
+```
+int main()
+{
+
+        char buf[1000];
+        int i;
+............
+}
+```
+
+The C snippet would be translated into ASM something like:
+
+```
+0804840c <main>:
+ 804840c:	55                   	push   ebp
+ 804840d:	89 e5                	mov    ebp,esp
+ 804840f:	81 ec f0 03 00 00    	sub    esp,0x3f0
+..........
+```
+
+The `0x3f0` hex value is equal to `1008` in decimal, which is precisely 1000 (from `buf`) + 4 (from `i`) + 4 (the storage of another int that the compiler used later in the code).
+
+As the program subtracts more from `esp` the kernel will provide pages on-demand until the stack boundary or another mmap-ing is hit.
+The kernel will, in this case, kill the application because of the Segmentation Fault.
+
+### Segmentation Fault
+
+Now that we know everything about the memory address space we can say more about the infamous `Segmentation Fault` that all of us have, at some time, encountered.
+It is basically a permission violation.
+Apart from the mappings that appear in `/proc/<PID>/maps` with `r--`, `rw-`, etc, you can consider that everything else is `---`.
+Thus, a read access at such a location will violate the permission of that region so the whole app will be killed by the signal received (unless it has a signal handler).
+Examples:
+
+* Dereferencing a `NULL` pointer will try to read from `0x00000000` which is not (usually) mapped => `SIGSEGV` (read access on none)
+* Writing after the end of a heap buffer (if the heap buffer is exactly at the end of a mapping) will determine writes into unmapped pages => SIGSEGV (write access on none)
+* Trying to write to `.rodata` => SIGSEGV (write access on read only)
+* Overwriting the stack with "AAAAAAAAAAAAAAAAAAA" will also overwrite the return address and make the execution go to `0x41414141` => SIGSEGV (execute access on none)
+* Overwriting the stack and return address with another address to a shellcode on the stack => SIGSEGV (execute access on read/write only)
+* Trying to rewrite the binary (`int *v = main; *v = 0x90909090;`) => SIGSEGV (write access on read/execute only)
+
 ## Tutorials
 
 This session is focused on the transformation of an **ELF file** (stored on disk) as it is loaded into memory and becomes **a process** (stored into memory).
@@ -525,413 +877,6 @@ By looking at the types of relocations we can draw some basic conclusions about 
   * **R_386_RELATIVE** - at link time all the R_386_GOTOFF entries are fixed and these relocation will contain absolute addresses
 
 **IMPORTANT:** Executable files that are statically linked do not contain relocations.
-
-### Memory Layout
-
-To understand the full picture of program execution it is vital to understand the memory layout of processes from ELF executables.
-The kernel provides an interface in `/proc/<PID>/maps` for each process to see how the memory layout looks like.
-
-Let's write a simple Hello World application and investigate.
-
-**IMPORTANT:** Note that we have removed **Address Space Layout Randomization** for these examples.
-We'll explain this later.
-
-```
-#include <stdio.h>
-int main()
-{
-	printf("Hello world\n");
-	malloc(10000);
-	while(1){
-		;
-	}
-	return 0;
-}
-```
-
-```
-$ gcc -Wall hw.c -o hw -m32
-$ ./hw  &
-[1] 4771
-Hello world
-$ cat /proc/4771/maps
-08048000-08049000 r-xp 00000000 08:06 1843771                            /tmp/hw
-08049000-0804a000 r--p 00000000 08:06 1843771                            /tmp/hw
-0804a000-0804b000 rw-p 00001000 08:06 1843771                            /tmp/hw
-0804b000-0806e000 rw-p 00000000 00:00 0                                  [heap]
-f7ded000-f7dee000 rw-p 00000000 00:00 0
-f7dee000-f7f93000 r-xp 00000000 08:06 917808                             /lib32/libc-2.17.so
-f7f93000-f7f95000 r--p 001a5000 08:06 917808                             /lib32/libc-2.17.so
-f7f95000-f7f96000 rw-p 001a7000 08:06 917808                             /lib32/libc-2.17.so
-f7f96000-f7f99000 rw-p 00000000 00:00 0
-f7fd9000-f7fdb000 rw-p 00000000 00:00 0
-f7fdb000-f7fdc000 r-xp 00000000 00:00 0                                  [vdso]
-f7fdc000-f7ffc000 r-xp 00000000 08:06 917869                             /lib32/ld-2.17.so
-f7ffc000-f7ffd000 r--p 0001f000 08:06 917869                             /lib32/ld-2.17.so
-f7ffd000-f7ffe000 rw-p 00020000 08:06 917869                             /lib32/ld-2.17.so
-fffdd000-ffffe000 rw-p 00000000 00:00 0                                  [stack]
-```
-
-If we start another process in the background the output for it will be exactly the same as this one.
-Why is that? The answer, of course, is virtual memory.
-The kernel provides this mechanism through which each process has an address space **completely isolated** from that of other running processes.
-They can still communicate using inter-process communication mechanisms provided by the kernel but we won't get into that here.
-Shortly put, there would be two processes with the same name and with two **apparently** identical mappings, but still the two programs would be isolated from one another.
-
-An initial schematic of the memory layout would be the following:
-
-![ELF Memory Layout](assets/elf-space.png)
-
-#### Executable
-
-As we have seen, there are three memory regions associated with the executable:
-
-```
-08048000-08049000 r-xp 00000000 08:06 1843771                            /tmp/hw
-08049000-0804a000 r--p 00000000 08:06 1843771                            /tmp/hw
-0804a000-0804b000 rw-p 00001000 08:06 1843771                            /tmp/hw
-```
-
-From their permissions we can infer what they correspond to:
-
-* `08048000-08049000 r-xp` is the `.text` section along with the rest of the executable parts
-* `08049000-0804a000 r–p` is the `.rodata` section
-* `0804a000-0804b000 rw-p` consists of the `.data`, `.bss` sections and other R/W sections
-
-It is interesting to note that the executable is almost identically mapped into memory.
-The only region that is *compressed* in the binary is the `.bss` section.
-Let's see this in action by dumping the header of the file:
-
-```
-$ hexdump -Cv hw | head
-00000000  7f 45 4c 46 01 01 01 00  00 00 00 00 00 00 00 00  |.ELF............|
-00000010  02 00 03 00 01 00 00 00  b0 83 04 08 34 00 00 00  |............4...|
-00000020  78 11 00 00 00 00 00 00  34 00 20 00 0a 00 28 00  |x.......4. ...(.|
-00000030  1e 00 1b 00 06 00 00 00  34 00 00 00 34 80 04 08  |........4...4...|
-00000040  34 80 04 08 40 01 00 00  40 01 00 00 05 00 00 00  |4...@...@.......|
-00000050  04 00 00 00 03 00 00 00  74 01 00 00 74 81 04 08  |........t...t...|
-00000060  74 81 04 08 13 00 00 00  13 00 00 00 04 00 00 00  |t...............|
-00000070  01 00 00 00 01 00 00 00  00 00 00 00 00 80 04 08  |................|
-00000080  00 80 04 08 6c 06 00 00  6c 06 00 00 05 00 00 00  |....l...l.......|
-00000090  00 10 00 00 01 00 00 00  00 0f 00 00 00 9f 04 08  |................|
-$ gdb ./hw
-...........
-gdb-peda$ hexdump 0x08048000 /10
-0x08048000 : 7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00   .ELF............
-0x08048010 : 02 00 03 00 01 00 00 00 b0 83 04 08 34 00 00 00   ............4...
-0x08048020 : 78 11 00 00 00 00 00 00 34 00 20 00 0a 00 28 00   x.......4. ...(.
-0x08048030 : 1e 00 1b 00 06 00 00 00 34 00 00 00 34 80 04 08   ........4...4...
-0x08048040 : 34 80 04 08 40 01 00 00 40 01 00 00 05 00 00 00   4...@...@.......
-0x08048050 : 04 00 00 00 03 00 00 00 74 01 00 00 74 81 04 08   ........t...t...
-0x08048060 : 74 81 04 08 13 00 00 00 13 00 00 00 04 00 00 00   t...............
-0x08048070 : 01 00 00 00 01 00 00 00 00 00 00 00 00 80 04 08   ................
-0x08048080 : 00 80 04 08 6c 06 00 00 6c 06 00 00 05 00 00 00   ....l...l.......
-0x08048090 : 00 10 00 00 01 00 00 00 00 0f 00 00 00 9f 04 08   ................
-```
-
-#### Heap
-
-The heap comes right after the executable at `0x0804b000` and ends at `0x0806e000` which is the current `brk` point.
-The memory allocator will increase the `brk` when more allocations are made but will not decrease it when memory is freed so as to reuse the memory regions for future allocations.
-The allocator in libc actually keeps a list of past allocations and their sizes.
-When future allocations will require the same size as a previously freed region, the allocator will reuse one from this lookup table.
-The process is called **binning**.
-
-Let's see how the brk evolves in our executable using strace:
-
-```
-$ strace -i -e brk ./hw
-[ Process PID=1995 runs in 32 bit mode. ]
-[f7ff2314] brk(0)                       = 0x804b000
-Hello world
-[f7fdb430] brk(0)                       = 0x804b000
-[f7fdb430] brk(0x806e000)               = 0x806e000
-```
-
-Let's test the fact that the `brk` does not decrease and that future malloc's can reuse previously freed regions:
-
-```
-#include <stdio.h>
-int main()
-{
-	void * buf[15];
-	int i;
-	for( i = 0 ; i < 15; i++)
-		buf[i] = malloc( i * 100) ;
-
-	for( i = 0 ; i < 15; i++)
-		free( buf[i] );
-
-	for( i = 0 ; i < 15; i++)
-		buf[i] = malloc( i * 100) ;
-
-
-	return 0;
-}
-```
-
-```
-$ strace -e brk ./hw
-[ Process PID=2424 runs in 32 bit mode. ]
-brk(0)                              = 0x804b000
-brk(0)                              = 0x804b000
-brk(0x806c000)                      = 0x806c000
-+++ exited with 0 +++
-$ ltrace -e malloc ./hw
-hw->malloc(0)                       = 0x804b008
-hw->malloc(100)                     = 0x804b018
-hw->malloc(200)                     = 0x804b080
-hw->malloc(300)                     = 0x804b150
-hw->malloc(400)                     = 0x804b280
-hw->malloc(500)                     = 0x804b418
-hw->malloc(600)                     = 0x804b610
-hw->malloc(700)                     = 0x804b870
-hw->malloc(800)                     = 0x804bb30
-hw->malloc(900)                     = 0x804be58
-hw->malloc(1000)                    = 0x804c1e0
-hw->malloc(1100)                    = 0x804c5d0
-hw->malloc(1200)                    = 0x804ca20
-hw->malloc(1300)                    = 0x804ced8
-hw->malloc(1400)                    = 0x804d3f0
-
-hw->malloc(0)                       = 0x804b008
-hw->malloc(100)                     = 0x804b018
-hw->malloc(200)                     = 0x804b080
-hw->malloc(300)                     = 0x804b150
-hw->malloc(400)                     = 0x804b280
-hw->malloc(500)                     = 0x804b418
-hw->malloc(600)                     = 0x804b610
-hw->malloc(700)                     = 0x804b870
-hw->malloc(800)                     = 0x804bb30
-hw->malloc(900)                     = 0x804be58
-hw->malloc(1000)                    = 0x804c1e0
-hw->malloc(1100)                    = 0x804c5d0
-hw->malloc(1200)                    = 0x804ca20
-hw->malloc(1300)                    = 0x804ced8
-hw->malloc(1400)                    = 0x804d3f0
-+++ exited (status 0) +++
-```
-
-As you can see, only one `brk` call is made.
-Furthermore, after the regions are freed they are reused.
-
-**IMPORTANT:** This behaviour of the allocator is important in the **Use After Free** class of vulnerabilities which we will be covering in the next labs.
-
-#### Memory Mappings and Libraries
-
-In our example we had the following memory mappings:
-
-```
-f7ded000-f7dee000 rw-p 00000000 00:00 0
-f7dee000-f7f93000 r-xp 00000000 08:06 917808                             /lib32/libc-2.17.so
-f7f93000-f7f95000 r--p 001a5000 08:06 917808                             /lib32/libc-2.17.so
-f7f95000-f7f96000 rw-p 001a7000 08:06 917808                             /lib32/libc-2.17.so
-f7f96000-f7f99000 rw-p 00000000 00:00 0
-f7fd9000-f7fdb000 rw-p 00000000 00:00 0
-f7fdb000-f7fdc000 r-xp 00000000 00:00 0                                  [vdso]
-f7fdc000-f7ffc000 r-xp 00000000 08:06 917869                             /lib32/ld-2.17.so
-f7ffc000-f7ffd000 r--p 0001f000 08:06 917869                             /lib32/ld-2.17.so
-f7ffd000-f7ffe000 rw-p 00020000 08:06 917869                             /lib32/ld-2.17.so
-```
-
-All functions that are called from external libraries *pull* in the whole library into the address space.
-As these are also ELF files you can see that they have similar patterns: multiple sections with different permissions just like the main executable.
-
-One more thing to note here is that large calls to `malloc` result in calls to `mmap2`:
-
-```
-#include <stdio.h>
-int main()
-{
-	printf("Hello world\n");
-	printf("Small allocation %p\n", malloc(10000));
-	printf("Big allocation %p\n", malloc(10000000));
-	return 0;
-}
-```
-
-```
-# strace -e brk,mmap2  ./hw_large
-[ Process PID=3445 runs in 32 bit mode. ]
-brk(0)                                  = 0x804b000
-mmap2(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xfffffffff7fda000
-mmap2(NULL, 265183, PROT_READ, MAP_PRIVATE, 3, 0) = 0xfffffffff7f99000
-mmap2(NULL, 1747628, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0xfffffffff7dee000
-mmap2(0xf7f93000, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1a5000) = 0xfffffffff7f93000
-mmap2(0xf7f96000, 10924, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0xfffffffff7f96000
-mmap2(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xfffffffff7ded000
-mmap2(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xfffffffff7fd9000
-Hello world
-brk(0)                                  = 0x804b000
-brk(0x806e000)                          = 0x806e000
-Small allocation 0x804b008
-mmap2(NULL, 10002432, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xfffffffff7463000
-Big allocation 0xf7463008
-```
-
-As expected, the `brk` is increased when the first allocation is made.
-However, larger regions are backed by memory mappings.
-
-#### Stack
-
-If you observed from previous traces, the `mmap2` call returns addresses towards NULL (lower addresses).
-It behaves like this because there is another important memory region called the `stack` that has a fixed size: usually 8 MB.
-Since the heap and the mmap region do not have this limit imposed the optimization is to start mmap-ings from a known boundary: the stack end boundary.
-Let's put this into perspective.
-You can view the current stack limit using `ulimit -s`.
-
-```
-$ ulimit -s
-8192
-$ python
->>> hex(0xffffffff - 8192*1024)
-'0xff7fffff'
-```
-
-This address is the stack boundary.
-It seems odd then that the first mmap in the program above ends at `0xf7ffe000` and not `0xff7fffff`.
-This is probably an optimization.
-
-However, we can set the stack size to unlimited and the mmap allocation direction will reverse:
-
-```
-$ ulimit -s unlimited
-$ strace -e mmap2,brk ./hw_large
-[ Process PID=4617 runs in 32 bit mode. ]
-brk(0)                                  = 0x804b000
-mmap2(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x55578000
-mmap2(NULL, 265183, PROT_READ, MAP_PRIVATE, 3, 0) = 0x55579000
-mmap2(NULL, 1747628, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x555ba000
-mmap2(0x5575f000, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1a5000) = 0x5575f000
-mmap2(0x55762000, 10924, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x55762000
-mmap2(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x55765000
-mmap2(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x55579000
-Hello world
-brk(0)                                  = 0x804b000
-brk(0x806e000)                          = 0x806e000
-Small allocation 0x804b008
-mmap2(NULL, 10002432, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x55766000
-Big allocation 0x55766008
-^Z
-[1]+  Stopped                 strace -e mmap2,brk ./hw_large
-
-
-$ cat /proc/4617/maps
-08048000-08049000 r-xp 00000000 08:06 1843771                            /tmp/hw_large
-08049000-0804a000 r--p 00000000 08:06 1843771                            /tmp/hw_large
-0804a000-0804b000 rw-p 00001000 08:06 1843771                            /tmp/hw_large
-0804b000-0806e000 rw-p 00000000 00:00 0                                  [heap]
-55555000-55575000 r-xp 00000000 08:06 917869                             /lib32/ld-2.17.so
-55575000-55576000 r--p 0001f000 08:06 917869                             /lib32/ld-2.17.so
-55576000-55577000 rw-p 00020000 08:06 917869                             /lib32/ld-2.17.so
-55577000-55578000 r-xp 00000000 00:00 0                                  [vdso]
-55578000-5557a000 rw-p 00000000 00:00 0
-555ba000-5575f000 r-xp 00000000 08:06 917808                             /lib32/libc-2.17.so
-5575f000-55761000 r--p 001a5000 08:06 917808                             /lib32/libc-2.17.so
-55761000-55762000 rw-p 001a7000 08:06 917808                             /lib32/libc-2.17.so
-55762000-560f0000 rw-p 00000000 00:00 0
-fffdd000-ffffe000 rw-p 00000000 00:00 0                                  [stack]
-```
-
-As you can see, the big allocation is now towards the stack instead of towards the heap.
-
-Returning to the main functionality of the stack, remember from the previous lab that local variables are declared on the stack.
-This translates into assembly code in the following way:
-
-```
-int main()
-{
-
-        char buf[1000];
-        int i;
-............
-}
-```
-
-The C snippet would be translated into ASM something like:
-
-```
-0804840c <main>:
- 804840c:	55                   	push   ebp
- 804840d:	89 e5                	mov    ebp,esp
- 804840f:	81 ec f0 03 00 00    	sub    esp,0x3f0
-..........
-```
-
-The `0x3f0` hex value is equal to `1008` in decimal, which is precisely 1000 (from `buf`) + 4 (from `i`) + 4 (the storage of another int that the compiler used later in the code).
-
-As the program subtracts more from `esp` the kernel will provide pages on-demand until the stack boundary or another mmap-ing is hit.
-The kernel will, in this case, kill the application because of the Segmentation Fault.
-
-#### Segmentation Fault
-
-Now that we know everything about the memory address space we can say more about the infamous `Segmentation Fault` that all of us have, at some time, encountered.
-It is basically a permission violation.
-Apart from the mappings that appear in `/proc/<PID>/maps` with `r--`, `rw-`, etc, you can consider that everything else is `---`.
-Thus, a read access at such a location will violate the permission of that region so the whole app will be killed by the signal received (unless it has a signal handler).
-Examples:
-
-* Dereferencing a `NULL` pointer will try to read from `0x00000000` which is not (usually) mapped => `SIGSEGV` (read access on none)
-* Writing after the end of a heap buffer (if the heap buffer is exactly at the end of a mapping) will determine writes into unmapped pages => SIGSEGV (write access on none)
-* Trying to write to `.rodata` => SIGSEGV (write access on read only)
-* Overwriting the stack with "AAAAAAAAAAAAAAAAAAA" will also overwrite the return address and make the execution go to `0x41414141` => SIGSEGV (execute access on none)
-* Overwriting the stack and return address with another address to a shellcode on the stack => SIGSEGV (execute access on read/write only)
-* Trying to rewrite the binary (`int *v = main; *v = 0x90909090;`) => SIGSEGV (write access on read/execute only)
-
-#### Pure 32-bit Systems
-
-Until now, the listings have been from a 32-bit binary running on a 64-bit platform.
-As you have seen, the stack reaches towards `0xffffffff`.
-On 32-bit systems we don't have this luxury as the memory address space is split:
-
-* `0x00000000 - 0xbfffffff` => user-space
-* `0xc0000000 - 0xffffffff` => kernel-space
-
-So, the stack will begin at around `0xbfffffff`.
-Let's test this out using one of the binaries.
-The new memory layout will look like this:
-
-```
-08048000-08049000 r-xp 00000000 08:06 1843771                            /tmp/hw_large
-08049000-0804a000 r--p 00000000 08:06 1843771                            /tmp/hw_large
-0804a000-0804b000 rw-p 00001000 08:06 1843771                            /tmp/hw_large
-0804b000-0806e000 rw-p 00000000 00:00 0                                  [heap]
-b7465000-b7df0000 rw-p 00000000 00:00 0
-b7df0000-b7f95000 r-xp 00000000 08:06 917808                             /lib32/libc-2.17.so
-b7f95000-b7f97000 r--p 001a5000 08:06 917808                             /lib32/libc-2.17.so
-b7f97000-b7f98000 rw-p 001a7000 08:06 917808                             /lib32/libc-2.17.so
-b7f98000-b7f9b000 rw-p 00000000 00:00 0
-b7fdb000-b7fdd000 rw-p 00000000 00:00 0
-b7fdd000-b7fde000 r-xp 00000000 00:00 0                                  [vdso]
-b7fde000-b7ffe000 r-xp 00000000 08:06 917869                             /lib32/ld-2.17.so
-b7ffe000-b7fff000 r--p 0001f000 08:06 917869                             /lib32/ld-2.17.so
-b7fff000-b8000000 rw-p 00020000 08:06 917869                             /lib32/ld-2.17.so
-bffdf000-c0000000 rw-p 00000000 00:00 0                                  [stack]
-```
-
-#### Summary of Memory Layout Without ASLR
-
-We can now add some more labels on the initial schematic to complete the picture:
-
-![ELF Address Space without ASLR](assets/elf-space-final.png)
-
-#### Address Space Layout Randomization
-
-In practice, you will find that memory mappings are not that static.
-Actually, most of the offsets might seem to vary at each new run of a binary.
-This is a security feature and we will talk about the motives that introduced it in a future lab.
-
-For the moment you should only need to know that the heap, the stack and the mmap areas are randomized by the kernel introducing an initial random offset:
-
-![ELF Address Space with ASLR](assets/elf-space-aslr.png)
-
-This randomization can be controlled through parameters passed to the kernel.
-The file `/proc/sys/kernel/randomize_va_space` provides this interface.
-You can read from it or write the following values:
-
-* 0 => no randomization (that is what we used for the previous listings in this memory layout tutorial)
-* 1 => stack randomization
-* 2 => stack, heap and mmap randomization
 
 ## Challenges
 
