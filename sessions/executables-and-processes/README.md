@@ -1,4 +1,4 @@
-# Executable File Formats
+# Executables and Processes
 
 ## Introduction
 
