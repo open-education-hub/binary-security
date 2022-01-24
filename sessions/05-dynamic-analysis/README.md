@@ -30,7 +30,7 @@ For the purposes of this session it is a good idea to always run`objdump` on all
 $ objdump -M intel -d [executable]
 ```
 
-### GDB Basic Commands {#gdb-basic-commands .sectionedit5}
+### GDB Basic Commands
 
 #### Getting help with GDB
 
@@ -207,7 +207,7 @@ Breakpoint 2 at 0x80491cd
 ```
 
 
-### Examine and Print, your most powerful tools {#examine-and-print-your-most-powerful-tools .sectionedit6}
+### Examine and Print, your most powerful tools
 
 
 GDB allows examining of memory locations be them specified as addresses or stored in registers. The `x` command (for *examine*) is arguably one
@@ -304,7 +304,7 @@ In order to see the same result we must use the command p /s (char*)0x804a030 an
 ```
 
 
-### GDB command file {#gdb-command-file .sectionedit7}
+### GDB command file 
 
 
 
@@ -396,12 +396,12 @@ mm7            *value not available*
 
 *One thing you might notice while using GDB is that addresses seem to be pretty similar between runs. Although with experience you will gain a better feel for where an address points to, one thing to remember at this point would be that stack addresses usually have the `0xbffff….` format. In order to run GDB with the commands file you have just generated, when launching GDB specify the `-x [command_file]` parameter.*
 
-### Using GDB to modify variables {#using-gdb-to-modify-variables .sectionedit8}
+### Using GDB to modify variables 
 
 GDB can be used to modify variables during runtime. In the case of exploitation this comes in handy as the program can be altered at
 runtime with the purpose of changing the execution path to desired branches.
 
-### PWNDBG{#gdb-peda .sectionedit9}
+### PWNDBG
 
 
 As you can see using GDB can be cumbersome, this is why we recommend using the pwndbg  plug-in. The tutorial as well as the repository of the project can be found here [Pwndbg](https://github.com/pwndbg/pwndbg "https://github.com/pwndbg/pwndbg") 
@@ -594,12 +594,12 @@ $11 = 0x80
 ```
 
 
-### Enough with GDB (for a while) {#enough-with-gdb-for-a-while .sectionedit10}
+### Enough with GDB (for a while) 
 
 
 The following section will describe the process of function calling in detail. Understanding function calling and stack operations during program execution is esential to exploitation.
 
-### The Stack {#the-stack .sectionedit11}
+### The Stack 
 
 The stack is one of the areas of memory which gets the biggest attention in exploitation writing.
 
@@ -892,7 +892,7 @@ can be found in section 2 but will be included here as well:
 
 
 
-### Next lesson preview: Buffer Overflows {#buffer-overflows .sectionedit12}
+### Next lesson preview: Buffer Overflows 
 
 
 Now that we have a complete overview of the stack we can step forward to stack based buffer overflows.
@@ -905,12 +905,12 @@ A typical example of buffer overflows can be seen in the following picture:
     <img src="https://security.cs.pub.ro/summer-school/wiki/_media/session/s5_buffer_overflow.jpg?w=500&tok=810778">
 </p>
 
-Challenges {#challenges .sectionedit13}
+Challenges
 ----------
 
 Use GDB and pwndbg to run the code provided in the Activities section.
 
-### 01. Challenge - Explore The Simple Password Protected Bash {#challenge-explore-the-simple-password-protected-bash .sectionedit14}
+### 01. Challenge - Explore The Simple Password Protected Bash 
 
 
 The executable gets input from the user and evaluates it against a static condition. If it succeeds it then calls a `password_accepted` function that prints out a success message and spawns a shell.
@@ -921,7 +921,7 @@ Gather as much info about the executable as possible through the techniques you 
 
 Think of modifying registers for forcing the executable to call thefunction (there is more than one way of doing this).
 
-### 02. Challenge - Simple Password Protected Bash Destruction {#challenge-simple-password-protected-bash-destruction .sectionedit15}
+### 02. Challenge - Simple Password Protected Bash Destruction
 
 What is the condition against which your input is evaluated in the executable contained in the executable `sppb`?
 
@@ -931,12 +931,12 @@ running the program in GDB is just for training purposes).</span>
 
 
 
-### 03. Challenge - Domino {#challenge-domino .sectionedit16}
+### 03. Challenge - Domino 
 
 Analyze the binary, reverse engineer what it does and get a nice message
 back.
 
-### 04. Challenge - Call me {#challenge-call-me .sectionedit17}
+### 04. Challenge - Call me 
 
 Investigate the binary in `04-challenge-call-me/src/call_me` and find
 out the flag
@@ -953,18 +953,25 @@ out the flag
 </details>
 
 
-### 05. Challenge - Snooze Me {#challenge-snooze-me .sectionedit18}
+### 05. Challenge - Snooze Me 
 
 
 I wrote a simple binary that computes the answer to life, the universe and everything. It swear it works... eventually.
 
-### 06. Challenge - Phone Home {#challenge-phone-home .sectionedit19}
+### 06. Challenge - Phone Home 
 
 
 To protect their confidential data from those snooping cloud providers, the authors of `06-challenge-phone-home/src/phone_home` have used some obfuscation techniques.
 
 Unfortunately, the key feature of the application is now unreachable due to a bug. Can you bypass the impossible condition?
 
+### 07. Challenge - Chain encoder 
+
+How do you reverse something made to be ireversible, you are welcome to find out in this challenge. 
+
+### 08. Challenge - Simple cdkey
+
+I found this software but i don't have the cd key, can you crack it for me?
 
 ------------------------------------------------------------------------
 
