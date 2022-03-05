@@ -27,7 +27,10 @@ When faced with a binary with no source or parts of the source missing you can i
 ### 01. Tutorial - Poor man's technique: strings
 The simplest recon technique is to dump the ASCII (or Unicode) text from a binary. It doesn't offer any guarantees but sometimes you can get a lot of useful information out of it.
 
->By default, when applied to a binary it only scans the data section. To obtain information such as the compiler version used in producing the binary use `strings -a`.
+>By default, when applied to a binary it only scans the data section. To obtain information such as the compiler version used in producing the binary use:
+```
+strings -a crackme1
+```
 
 Let's illustrate how strings can be useful in a simple context. Try out the [crackme1](./activities/01-tutorial-strings/src) binary:
 
@@ -69,13 +72,15 @@ int main()
 The password has been redacted from the listing but you can retrieve it with `strings`. Try it out!
 
 >If you need to retrieve the offset of a string in a binary file, you may use the `-t` option of `strings`. For example, to print out the offset of the `Correct` string (in hexadecimal), you would issue the command
-`strings -t x crackme1 | grep Correct`
+```
+strings -t x crackme1 | grep Correct
+```
 
 ### 02. Tutorial - Execution tracing (ltrace and strace)
 
-[ltrace](https://man7.org/linux/man-pages/man1/ltrace.1.html) is an utility that can list the calls made to library functions made by a program, or the [syscalls](https://man7.org/linux/man-pages/man2/syscalls.2.html) a program makes. A syscall is a function that uses services exposed by the kernel, not by some separate library.
+[ltrace](https://man7.org/linux/man-pages/man1/ltrace.1.html) is an utility that can list the calls made to library functions made by a program, or the [syscalls](https://man7.org/linux/man-pages/man2/syscalls.2.html) a program makes. [strace](https://man7.org/linux/man-pages/man1/strace.1.html) is similar, but only lists syscalls. A syscall is a service exposed by the kernel itself.
 
-The way strace works is with the aid of a special syscall, called [ptrace](https://man7.org/linux/man-pages/man2/ptrace.2.html). This single syscall forms the basis for most of the functionality provided by ltrace, strace, gdb and similar tools that debug programs. It can receive up to 4 arguments: the operation, the PID to act on, the address to read/write and the data to write. The functionality exposed by ptrace() is massive, but think of any functionality you've seen in a debugger:
+The way they work is with the aid of a special syscall, called [ptrace](https://man7.org/linux/man-pages/man2/ptrace.2.html). This single syscall forms the basis for most of the functionality provided by `ltrace`, `strace`, `gdb` and similar tools that debug programs. It can receive up to 4 arguments: the operation, the PID to act on, the address to read/write and the data to write. The functionality exposed by `ptrace()` is massive, but think of any functionality you've seen in a debugger:
 
 * attach/detach to/from a process
 * set breakpoints
@@ -84,7 +89,7 @@ The way strace works is with the aid of a special syscall, called [ptrace](https
 * act on signals
 * register syscalls
 
-A tool like `strace` only traces syscalls and reads registers in order to provide some pretty printing strictly concerning the syscalls of the traced process. However, `ltrace` provides further functionality and gathers information about all library calls. Here's how `ltrace` does its magic:
+`strace` provides some pretty printing strictly concerning the syscalls of the traced process. However, `ltrace` provides further functionality and gathers information about all library calls. Here's how `ltrace` does its magic:
 
 * it reads the tracee memory and parses it in order to find out about loaded symbols
 * it makes a copy of the binary code pertaining to a symbol using a `PTRACE_PEEKTEXT` directive of `ptrace()`
@@ -92,7 +97,7 @@ A tool like `strace` only traces syscalls and reads registers in order to provid
 * it listens for a `SIGTRAP` which will be generated when the breakpoint is hit
 * when the breakpoint is hit, ltrace can examine the stack of the tracee and print information such as function name, parameters, return codes, etc.
 
-Let's try the next crackme. If we remove `my_strcmp` from the previous crackme you can solve it even without `strings` because `strcmp` is called from `libc.so`. You can use `ltrace` and see what functions are used and check for their given parameters. Try it out on the following crackme where `strings` does not help ([crackme2](./activities/02-tutorial-execution-tracing/src)):
+Let's try the next `crackme`. If we remove `my_strcmp` from the previous crackme you can solve it even without `strings` because `strcmp` is called from `libc.so`. You can use `ltrace` and see what functions are used and check for their given parameters. Try it out on the second `crackme` where `strings` does not help ([crackme2](./activities/02-tutorial-execution-tracing/src)):
 
 ```c
 #include <stdio.h>
@@ -124,9 +129,6 @@ int main()
     return 0;
 }
 ```
-
-
-The `deobf()` function calls `strlen()` and that's why you get such a large number of `strlen()` calls when running `crackme2` under `ltrace`.
 
 ### 03. Tutorial - Symbols: nm
 
@@ -297,8 +299,10 @@ $ /lib/ld-linux-x86-64.so.2 --list /bin/ls
 >When using the loader directly, make sure the loader and the executable are compiled for the same platform (e.g. they are both 64-bit or 32-bit).
 
 >You may find out more information about dynamic linker/loader variables in its man page. Issue the command
-`man ld-linux.so`
-and search for the LD_ string to find variables information.
+```
+man ld-linux.so
+```
+>and search for the LD_ string to find variables information.
 
 `ldd` shows us **which** libraries are loaded, but it's not any clearer how the loader knows **where** to load them from. First of all, the loader checks every dependency for a slash character. If it finds such a dependency it loads the library from that path, whether it is a relative of absolute path. But it is not the case in our example. For dependencies without slashes, the search order is as follows:
 
@@ -368,13 +372,13 @@ Nope!
      11480:	
 ```
 
-As you can see, functions like` puts()`, `fgets()`, `strlen()` and `strcmp()` are not actually resolved until the first call to them is made. Make the loader resolve all the symbols at startup. (Hint: [ld-linux](https://man7.org/linux/man-pages/man8/ld-linux.8.html)).
+As you can see, functions like `puts()`, `fgets()`, `strlen()` and `strcmp()` are not actually resolved until the first call to them is made. Make the loader resolve all the symbols at startup. (Hint: [ld-linux](https://man7.org/linux/man-pages/man8/ld-linux.8.html)).
 
 **Library Wrapper Task**
 
-You've previously solved `crackme2` with the help of the `ltrace`. Check out the files from [04-tutorial-library-dependencies/](./activities/04-tutorial-library-dependencies/src). The folders consists of a `Makefile` and a C source code file reimplementing the `strcmp()` function (library wrapper). The `strcmp.c` implementation uses `LD_PRELOAD` to wrap the actual `strcmp()` call to our own one.
+You've previously solved `crackme2` with the help of the `ltrace`. Check out the files from [04-tutorial-library-dependencies](./activities/04-tutorial-library-dependencies/src). The folder consists of a `Makefile` and a C source code file reimplementing the `strcmp()` function (library wrapper). The `strcmp.c` implementation uses `LD_PRELOAD` to wrap the actual `strcmp()` call to our own.
 
-In order to see how that works, we need to create a shared library and pass it as an argument to `LD_PRELOAD`. The `Makefile` file already takes care of this. To build and run the entire thing, simply run:
+In order to see how that works, we need to create a shared library and pass it as an argument to `LD_PRELOAD`. The `Makefile` already takes care of this. To build and run the entire thing, simply run:
 
 ```
 make run
@@ -427,7 +431,7 @@ tcp        0      0 0.0.0.0:44790           0.0.0.0:*               LISTEN      
 tcp        0      0 127.0.0.1:631           0.0.0.0:*               LISTEN      -                   
 tcp6       0      0 :::631                  :::*                    LISTEN      - 
 ```
-Here we're looking at all the programs that are listening (-l) on a TCP port (-t). We're also telling netcat not to resolve hosts (-n) and to show the process that is listening (-p). We can see that our server is listening on port 31337. Let's keep that in mind and see how the client behaves.
+Here we're looking at all the programs that are listening (`-l`) on a TCP port (`-t`). We're also telling netcat not to resolve hosts (`-n`) and to show the process that is listening (`-p`). We can see that our server is listening on port 31337. Let's keep that in mind and see how the client behaves.
 
 ```
 $ ./client 
@@ -457,7 +461,7 @@ Not enough minerals!
 Enter a command (or 'quit' to exit):
 ```
 
-So we can do anything except the privileged command 'infoclient'. Running 'status' on the server yields no information. What can we do now?
+So we can do anything except the privileged command `infoclient`. Running `status` on the server yields no information. What can we do now?
 
 We can see what the server and client are exchanging at an application level by capturing the traffic with the [tcpdump](https://man7.org/linux/man-pages/man1/tcpdump.1.html) utility. Start tcpdump, the server and then the client, and run the commands again. When you're done, stop tcpdump with Ctrl+C.
 
@@ -469,16 +473,16 @@ tcpdump: listening on any, link-type LINUX_SLL (Linux cooked), capture size 6553
 0 packets dropped by kernel
 ```
 
-Here we're telling tcpdump to listen on all available interfaces, write the capture to the crackme5.pcap file and only log packets that have the source or destination port equal to 31337.
+Here we're telling tcpdump to listen on all available interfaces, write the capture to the `crackme5.pcap` file and only log packets that have the source or destination port equal to 31337.
 
-Having our capture file, we can open it with [wireshark](https://www.wireshark.org/) in order to analyze the packets in a friendlier manner. You can look at the packets exchanged between server and client. Notice that there seems to be some sort of protocol where values are delimited by the pipe character. What is especially interesting is the first data packet sent from the client to the server, which sends 'the_laughing_man|false'. While we've specified the client name, there was nothing we could specify via the client command-line in order to control the second value.
+Having our capture file, we can open it with [wireshark](https://www.wireshark.org/) in order to analyze the packets in a friendlier manner. You can look at the packets exchanged between server and client. Notice that there seems to be some sort of protocol where values are delimited by the pipe character. What is especially interesting is the first data packet sent from the client to the server, which sends `the_laughing_man|false`. While we've specified the client name, there was nothing we could specify via the client command-line in order to control the second value.
 
 However, since this seems to be a plaintext protocol, there is an alternative course of action available. The [netcat](https://linux.die.net/man/1/nc) utility allows for arbitrary clients and servers. It just needs a server address and a server port in client mode. We can use it instead of the “official” client and see what happens when we craft the first message. Go ahead! Start the server again and a normal client.
 
->Connect to the server using the `netcat` command. Then send out the required string through the `netcat` connection with true as the second parameter and see if you can find out anything about the normal client.
+>Connect to the server using `netcat`. Then send out the required string through the `netcat` connection with true as the second parameter and see if you can find out anything about the normal client.
 
 ```
- # netcat localhost 31337
+# netcat localhost 31337
 Welcome to the awesome server.
 Valid commands are:
 listclients
@@ -555,7 +559,7 @@ $ cat /etc/services | nc localhost 4444
 ```
 It's now on the server side.
 
-You can also do it with UDP, instead of TCP by using the -u flag both for the server and the client. Start the server using:
+You can also do it with UDP, instead of TCP by using the `-u` flag both for the server and the client. Start the server using:
 
 ```
 $ nc -u -l -p 4444
@@ -576,17 +580,17 @@ Let's remember how files and programs relate in Linux.
 
 ![Files](assets/files.png)
 
-Let's also remember that, in Linux, `file` can mean a lot of things:
+Let's also remember that, in Linux, `file` can mean one of many things:
 
 * regular file
 * directory
 * block device
 * character device
-* named pipes
-* symbolic or hard links
-* sockets
+* named pipe
+* symbolic or hard link
+* socket
 
-Let's look at the previous server from crackme5. Start it up once again.
+Let's look at the previous server from `crackme5`. Start it up once again.
 
 While previously we've used netstat to gather information about it, that was by no means the only solution. [lsof](https://linux.die.net/man/8/lsof) is a tool that can show us what files a process has opened:
 
@@ -607,17 +611,17 @@ server  9678 amadan    3u  IPv4 821076      0t0     TCP *:31337 (LISTEN)
 
 We can see the standard file descriptors found in any process, as well as our socket.
 
-The 'FD' column shows the file descriptor entry for a file, or a role in case of special files. We notice the current working directory (cwd), the root directory (rtd), the current executable (txt), some memory mapped files (mem) and the file descriptors (0-3). For normal file descriptors, 'r' means read access, 'w' means write access and 'u' means both.
+  * The `FD` column shows the file descriptor entry for a file, or a role in case of special files. We notice the current working directory (`cwd`), the root directory (`rtd`), the current executable (`txt`), some memory mapped files (`mem`) and the file descriptors (0-3). For normal file descriptors, `r` means read access, `w` means write access and `u` means both.
 
-The 'TYPE' column shows whether we're dealing with a directory (DIR), a regular file (REG), a character device (CHR), a socket (IPv4) or other type of file.
+  * The `TYPE` column shows whether we're dealing with a directory (`DIR`), a regular file (`REG`), a character device (`CHR`), a socket (`IPv4`) or other type of file.
 
-The 'NODE' column shows the inode of the file, or a class marker as is the case for the socket.
+  * The `NODE` column shows the inode of the file, or a class marker as is the case for the socket.
 
-The 'NAME' column shows the path to the file, or the bound address and port for a socket.
+  * The `NAME` column shows the path to the file, or the bound address and port for a socket.
 
-I've left out some details since they are not relevant for our purposes. Feel free to read the manual page.
+We've left out some details since they are not relevant for our purposes. Feel free to read the manual page.
 
-You could also get some hint that there is an open socket by looking into the /proc virtual filesystem:
+You could also get some hint that there is an open socket by looking into the `/proc` virtual filesystem:
 
 ```
 $ ls -l /proc/`pidof server`/fd
@@ -635,7 +639,7 @@ $ ./crackme6
 Type 'start' to begin authentication test
 ```
 
-Before complying to what the program tells us, let's use lsof to see what we can find out:
+Before complying to what the program tells us, let's use `lsof` to see what we can find out:
 
 ```
 $ lsof -c crackme6
@@ -659,18 +663,18 @@ There seems to be a named pipe used by the executable. Let's look at it:
 $ more /tmp/crackme6.fifo 
 ```
 
-Now go back again at the crackme6 console and type 'start'. If you see the message that the authentication test has succeeded, quit and try again. If you do not see the message, kill the crackme6 process, look at the more command output and then delete the pipe file. Now try the password.
+Now go back again at the `crackme6` console and type `start`. If you see the message that the authentication test has succeeded, quit and try again. If you do not see the message, kill the `crackme6` process, look at the more command output and then delete the pipe file. Now try the password.
 
 **Misc**
 
 There are other sources of information available about running processes if you prefer to do things by hand such as:
 
-* /proc/\<PID\>/environ : all environment variables given when the process was started
-* /proc/\<PID\>/fd : opened file descriptors.
-* /proc/\<PID\>/mem : address space layout
-* /proc/\<PID\>/cwd : symlink to working directory
-* /proc/\<PID\>/exe : symlink to binary image
-* /proc/\<PID\>/cmdline : complete program commandline, with arguments
+* `/proc/<PID>/environ`: all environment variables given when the process was started
+* `/proc/<PID>/fd`: opened file descriptors.
+* `/proc/<PID>/mem`: address space layout
+* `/proc/<PID>/cwd`: symlink to working directory
+* `/proc/<PID>/exe`: symlink to binary image
+* `/proc/<PID>/cmdline`: complete program commandline, with arguments
 
 ## Challenges
 
@@ -731,6 +735,7 @@ If you want some more, have a go at the [bonus](./activities/bonus/src) task. It
 > Hint: This executable needs elevated permissions (run with `sudo`).
 
 ### Further pwning
+
 [pwnable.kr](http://pwnable.kr/) is a wargames site with fun challenges of different difficulty levels. After completing all tutorials and challenges in this session, you should be able to go there and try your hand at the following games from Toddler's bottle: `fd`, `collision`, `bof`, `passcode`, `mistake`, `cmd1`, `blukat`.
 
 ## Further Reading
