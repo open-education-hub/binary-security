@@ -71,11 +71,6 @@ int main()
 
 The password has been redacted from the listing but you can retrieve it with `strings`. Try it out!
 
->If you need to retrieve the offset of a string in a binary file, you may use the `-t` option of `strings`. For example, to print out the offset of the `Correct` string (in hexadecimal), you would issue the command
-```
-strings -t x crackme1 | grep Correct
-```
-
 ### 02. Tutorial - Execution tracing (ltrace and strace)
 
 [ltrace](https://man7.org/linux/man-pages/man1/ltrace.1.html) is an utility that can list the calls made to library functions made by a program, or the [syscalls](https://man7.org/linux/man-pages/man2/syscalls.2.html) a program makes. [strace](https://man7.org/linux/man-pages/man1/strace.1.html) is similar, but only lists syscalls. A syscall is a service exposed by the kernel itself.
