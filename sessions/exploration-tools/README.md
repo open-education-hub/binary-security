@@ -73,7 +73,7 @@ The password has been redacted from the listing but you can retrieve it with `st
 
 ### 02. Tutorial - Execution tracing (ltrace and strace)
 
-[ltrace](https://man7.org/linux/man-pages/man1/ltrace.1.html) is an utility that can list the calls made to library functions made by a program, or the [syscalls](https://man7.org/linux/man-pages/man2/syscalls.2.html) a program makes. [strace](https://man7.org/linux/man-pages/man1/strace.1.html) is similar, but only lists syscalls. A syscall is a service exposed by the kernel itself.
+[ltrace](https://man7.org/linux/man-pages/man1/ltrace.1.html) is an utility that can library function calls or [syscalls](https://man7.org/linux/man-pages/man2/syscalls.2.html) made by a program. [strace](https://man7.org/linux/man-pages/man1/strace.1.html) is similar, but only lists syscalls. A syscall is a service exposed by the kernel itself.
 
 The way they work is with the aid of a special syscall, called [ptrace](https://man7.org/linux/man-pages/man2/ptrace.2.html). This single syscall forms the basis for most of the functionality provided by `ltrace`, `strace`, `gdb` and similar tools that debug programs. It can receive up to 4 arguments: the operation, the PID to act on, the address to read/write and the data to write. The functionality exposed by `ptrace()` is massive, but think of any functionality you've seen in a debugger:
 
@@ -102,26 +102,26 @@ Let's try the next `crackme`. If we remove `my_strcmp` from the previous crackme
 char correct_pass[] = ????????????????? ;
 char *deobf(char *s)
 {
-    ???????????????
+	???????????????
 }
 
 int main()
 {
-    char buf[1000];
+	char buf[1000];
 
-    printf("Password:\n");
-    if (fgets(buf, 1000, stdin) == NULL)
-        exit(-1);
+	printf("Password:\n");
+	if (fgets(buf, 1000, stdin) == NULL)
+		exit(-1);
 
-    buf[strlen(buf) - 1] = '\0';
+	buf[strlen(buf) - 1] = '\0';
 
-    if (!strcmp(buf, deobf(correct_pass))) {
-        printf("Correct!\n");
-    } else
+	if (!strcmp(buf, deobf(correct_pass))) {
+		printf("Correct!\n");
+	} else
 
-    printf("Nope!\n");
+	printf("Nope!\n");
 
-    return 0;
+	return 0;
 }
 ```
 
@@ -179,13 +179,13 @@ char correct_pass[] = ????????????????????????
 
 int my_strcmp(char *s1, char *s2)
 {
-    size_t i, len = strlen(s1);
-    if (len == 0)
-        return -1;
-    for (i = 0; i < len; i++)
-        if (s1[i] != s2[i])
-            return -1;
-    return 0;
+	size_t i, len = strlen(s1);
+	if (len == 0)
+		return -1;
+	for (i = 0; i < len; i++)
+		if (s1[i] != s2[i])
+			return -1;
+	return 0;
 }
 
 char *deobf(char *s)
@@ -196,23 +196,23 @@ char *deobf(char *s)
 
 int main()
 {
-    char buf[1000];
-    deobf(correct_pass);
-    printf("Password:\n");
-    if (fgets(buf, 1000, stdin) == NULL)
-        exit(-1);
+	char buf[1000];
+	deobf(correct_pass);
+	printf("Password:\n");
+	if (fgets(buf, 1000, stdin) == NULL)
+		exit(-1);
 
-    buf[strlen(buf) - 1] = '\0';
+	buf[strlen(buf) - 1] = '\0';
 
-    if (!my_strcmp(buf, correct_pass)) {
-        printf("Correct!\n");
-    } else
-        printf("Nope!\n");
+	if (!my_strcmp(buf, correct_pass)) {
+		printf("Correct!\n");
+	} else
+		printf("Nope!\n");
 
-    return 0;
+	return 0;
 }
 ```
-In [crackme3](./activities/03-tutorial-symbols/src), deobfuscation is done before the password is read. Since the correct_pass has an associated symbol that is stored at a known location you can obtain the address and peer into it at runtime:
+In [crackme3](./activities/03-tutorial-symbols/src), deobfuscation is done before the password is read. Since the `correct_pass` has an associated symbol that is stored at a known location you can obtain the address and peer into it at runtime:
 
 ```
 $ nm crackme3 | grep pass
@@ -249,7 +249,7 @@ $ nm mystery_binary
 0000000000402255 T urldecode(std::string const&)
 .....
 ```
-Note: In this case the signatures are also decoded because the binary was compiled from C++ source code.
+**Note:** In this case the signatures are also decoded because the binary was compiled from C++ source code.
 
 Dealing with stripped binaries (or worse, statically linked binaries that have been stripped) is harder but can still be done. We'll see how in a future lab.
 
@@ -470,9 +470,18 @@ tcpdump: listening on any, link-type LINUX_SLL (Linux cooked), capture size 6553
 
 Here we're telling tcpdump to listen on all available interfaces, write the capture to the `crackme5.pcap` file and only log packets that have the source or destination port equal to 31337.
 
-Having our capture file, we can open it with [wireshark](https://www.wireshark.org/) in order to analyze the packets in a friendlier manner. You can look at the packets exchanged between server and client. Notice that there seems to be some sort of protocol where values are delimited by the pipe character. What is especially interesting is the first data packet sent from the client to the server, which sends `the_laughing_man|false`. While we've specified the client name, there was nothing we could specify via the client command-line in order to control the second value.
+We can then open our capture with [wireshark](https://www.wireshark.org/) in order to analyze the packets in a friendlier manner.
+You can look at the packets exchanged between server and client.
+Notice that there seems to be some sort of protocol where values are delimited by the pipe character.
+What is especially interesting is the first data packet sent from the client to the server, which sends `the_laughing_man|false`.
+While we've specified the client name, there was nothing we could specify via the client command-line in order to control the second value.
 
-However, since this seems to be a plaintext protocol, there is an alternative course of action available. The [netcat](https://linux.die.net/man/1/nc) utility allows for arbitrary clients and servers. It just needs a server address and a server port in client mode. We can use it instead of the “official” client and see what happens when we craft the first message. Go ahead! Start the server again and a normal client.
+However, since this seems to be a plaintext protocol, there is an alternative course of action available.
+The [netcat](https://linux.die.net/man/1/nc) utility allows for arbitrary clients and servers.
+It just needs a server address and a server port in client mode.
+We can use it instead of the "official" client and see what happens when we craft the first message.
+Go ahead!
+Start the server again and a normal client.
 
 >Connect to the server using `netcat`. Then send out the required string through the `netcat` connection with true as the second parameter and see if you can find out anything about the normal client.
 
@@ -486,7 +495,7 @@ infoclient <client name> [ADMIN access required]
 sendmsg <client name> <message>
 ```
 
-**Doing It in Python**
+**Doing it in Python**
 
 You can create a sever and a client in Python only. We can use the `server.py` and `client.py` scripts. Check them out first.
 
@@ -509,7 +518,7 @@ Now you can test it using the Python client:
 ```
 $ python client.py
 sending 'anaaremere'
-received 'ANAAREMERE
+received 'ANAAREMERE'
 ```
 
 We can do the same using netcat as the client:
