@@ -43,10 +43,11 @@ int my_strcmp(char *s1, char *s2)
 {
 	size_t i, len = strlen(s1);
 	if (len == 0)
-	return -1;
+		return -1;
 	for (i = 0; i < len; i++)
 		if (s1[i] != s2[i])
-		return -1;
+			return -1;
+
 	return 0;
 }
 
@@ -115,11 +116,10 @@ int main()
 
 	buf[strlen(buf) - 1] = '\0';
 
-	if (!strcmp(buf, deobf(correct_pass))) {
+	if (!strcmp(buf, deobf(correct_pass)))
 		printf("Correct!\n");
-	} else
-
-	printf("Nope!\n");
+	else
+		printf("Nope!\n");
 
 	return 0;
 }
@@ -185,6 +185,7 @@ int my_strcmp(char *s1, char *s2)
 	for (i = 0; i < len; i++)
 		if (s1[i] != s2[i])
 			return -1;
+
 	return 0;
 }
 
@@ -528,7 +529,7 @@ anaaremere
 ANAAREMERE
 ```
 
-**Doing It Only with netcat**
+**Doing it Only with netcat**
 
 We can still simulate a network connection using netcat only, both for starting the server and for runing the client.
 
@@ -636,7 +637,8 @@ lrwx------ 1 amadan amadan 64 Jun 15 22:03 2 -> /dev/pts/2
 lrwx------ 1 amadan amadan 64 Jun 15 22:04 3 -> socket:[883625]
 ```
 
-We'll be using [crackme6](./activities/06-tutorial-open-files/src) for the next part of this section. Try the conventional means of strings and ltrace on it. Then run it normally.
+We'll be using [crackme6](./activities/06-tutorial-open-files/src) for the next part of this section.
+Try the conventional means of `strings` and `ltrace` on it. Then run it normally.
 
 ```
 $ ./crackme6
@@ -707,6 +709,7 @@ The `sleep()` function takes too much. Ain't nobody got time for that. We want t
 Modify the binary in order to get the flag.
 
 > To edit a binary, you can use [vim + xxd](https://vim.fandom.com/wiki/Hex_dump#Editing_binary_files) or `Bless`.
+> We strongly encourage you to use `Bless`
 
 ### 10. Challenge - Hidden
 
@@ -740,7 +743,7 @@ If you want some more, have a go at the [bonus](./activities/bonus/src) task. It
 
 ### Further pwning
 
-[pwnable.kr](http://pwnable.kr/) is a wargames site with fun challenges of different difficulty levels. After completing all tutorials and challenges in this session, you should be able to go there and try your hand at the following games from Toddler's bottle: `fd`, `collision`, `bof`, `passcode`, `mistake`, `cmd1`, `blukat`.
+[pwnable.kr](http://pwnable.kr/) is a wargames site with fun challenges of different difficulty levels. After completing all tutorials and challenges in this session, you should be able to go there and try your hand at the following games from Toddler's bottle: `fd`, `collision`, `bof`, `passcode`, `mistake`, `cmd1`, `blukat` (of course, you are encouraged to try any other challenges, but they might get frustrating, as they require knowledge of notions we will explore in future sessions).
 
 ## Further Reading
 
