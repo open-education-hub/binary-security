@@ -19,9 +19,9 @@
       * [Extra](#extra)
       * [Further pwning](#further-pwning)
    * [Further Reading](#further-reading)
-	
+
 </details>
-	
+
 ## Tutorials
 When faced with a binary with no source or parts of the source missing you can infer some of its functionalities based upon some basic reconnaissance techniques using various tools.
 ### 01. Tutorial - Poor man's technique: strings
@@ -38,32 +38,32 @@ Let's illustrate how strings can be useful in a simple context. Try out the [cra
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
- 
+
 int my_strcmp(char *s1, char *s2)
 {
 	size_t i, len = strlen(s1);
-    if (len == 0)
+	if (len == 0)
 	return -1;
-    for (i = 0; i < len; i++)
-        if (s1[i] != s2[i])
-	    return -1;
-    return 0;
+	for (i = 0; i < len; i++)
+		if (s1[i] != s2[i])
+		return -1;
+	return 0;
 }
 
 int main()
 {
-    char buf[1000];
- 
-    printf("Password:\n");
-    if (fgets(buf, 1000, stdin) == NULL)
-	exit(-1);
+	char buf[1000];
 
-    buf[strlen(buf) - 1] = '\0';
+	printf("Password:\n");
+	if (fgets(buf, 1000, stdin) == NULL)
+		exit(-1);
 
-    if (!my_strcmp(buf, ???????????????????????)) {
-        printf("Correct!\n");
-    } else
-	printf("Nope!\n");
+	buf[strlen(buf) - 1] = '\0';
+
+	if (!my_strcmp(buf, ???????????????????????)) {
+		printf("Correct!\n");
+	} else
+		printf("Nope!\n");
 
     return 0;
 }
@@ -103,7 +103,7 @@ Let's try the next `crackme`. If we remove `my_strcmp` from the previous crackme
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-  
+
 char correct_pass[] = ????????????????? ;
 char *deobf(char *s)
 {
@@ -116,15 +116,15 @@ int main()
 
     printf("Password:\n");
     if (fgets(buf, 1000, stdin) == NULL)
-	    exit(-1);
+        exit(-1);
 
     buf[strlen(buf) - 1] = '\0';
 
     if (!strcmp(buf, deobf(correct_pass))) {
-	    printf("Correct!\n");
+        printf("Correct!\n");
     } else
 
-	printf("Nope!\n");
+    printf("Nope!\n");
 
     return 0;
 }
@@ -184,13 +184,13 @@ char correct_pass[] = ????????????????????????
 
 int my_strcmp(char *s1, char *s2)
 {
-	size_t i, len = strlen(s1);
-	if (len == 0)
-		return -1;
-	for (i = 0; i < len; i++)
-		if (s1[i] != s2[i])
-			return -1;
-	return 0;
+    size_t i, len = strlen(s1);
+    if (len == 0)
+        return -1;
+    for (i = 0; i < len; i++)
+        if (s1[i] != s2[i])
+            return -1;
+    return 0;
 }
 
 char *deobf(char *s)
@@ -201,20 +201,20 @@ char *deobf(char *s)
 
 int main()
 {
-	char buf[1000];
-	deobf(correct_pass);
-	printf("Password:\n");
-	if (fgets(buf, 1000, stdin) == NULL)
-		exit(-1);
+    char buf[1000];
+    deobf(correct_pass);
+    printf("Password:\n");
+    if (fgets(buf, 1000, stdin) == NULL)
+        exit(-1);
 
-	buf[strlen(buf) - 1] = '\0';
+    buf[strlen(buf) - 1] = '\0';
 
-	if (!my_strcmp(buf, correct_pass)) {
-		printf("Correct!\n");
-	} else
-		printf("Nope!\n");
+    if (!my_strcmp(buf, correct_pass)) {
+        printf("Correct!\n");
+    } else
+        printf("Nope!\n");
 
-	return 0;
+    return 0;
 }
 ```
 In [crackme3](./activities/03-tutorial-symbols/src), deobfuscation is done before the password is read. Since the correct_pass has an associated symbol that is stored at a known location you can obtain the address and peer into it at runtime:
@@ -230,7 +230,7 @@ Password:
 Program received signal SIGINT, Interrupt.
 0xf7fdb430 in __kernel_vsyscall ()
 (gdb) x/s 0x0804a02c
-0x804a02c <correct_pass>:	"JWxb7gE2pjiY3gRG8U"
+0x804a02c <correct_pass>:    "JWxb7gE2pjiY3gRG8U"
 ```
 
 The above `x/s 0x0804a02c` command in GDB is used for printing the string starting from address `0x0804a02c`. `x` stands for examine memory and `s` stands for string format. In short it dumps memory in string format starting from the address passed as argument. You may print multiple strings by prefixing `s` with a number, for example `x/20s 0x0804a02c`.
@@ -268,33 +268,33 @@ The first and most common thing to do is see what libraries the executable loads
 
 ```
 $ ldd /bin/ls
-	linux-vdso.so.1 (0x00007ffff13fe000)
-	librt.so.1 => /lib64/librt.so.1 (0x00007fc9b4893000)
-	libacl.so.1 => /lib64/libacl.so.1 (0x00007fc9b468a000)
-	libc.so.6 => /lib64/libc.so.6 (0x00007fc9b42da000)
-	libpthread.so.0 => /lib64/libpthread.so.0 (0x00007fc9b40bd000)
-	libattr.so.1 => /lib64/libattr.so.1 (0x00007fc9b3eb8000)
-	/lib64/ld-linux-x86-64.so.2 (0x00007fc9b4a9b000)
+    linux-vdso.so.1 (0x00007ffff13fe000)
+    librt.so.1 => /lib64/librt.so.1 (0x00007fc9b4893000)
+    libacl.so.1 => /lib64/libacl.so.1 (0x00007fc9b468a000)
+    libc.so.6 => /lib64/libc.so.6 (0x00007fc9b42da000)
+    libpthread.so.0 => /lib64/libpthread.so.0 (0x00007fc9b40bd000)
+    libattr.so.1 => /lib64/libattr.so.1 (0x00007fc9b3eb8000)
+    /lib64/ld-linux-x86-64.so.2 (0x00007fc9b4a9b000)
 ```
 We see that for each dependency in the executable, `ldd` lists where it is found on the filesystem and where it is loaded in the process memory space. Alternatively, you can achieve the same result with the `LD_TRACE_LOADED_OBJECTS` environment variable, or with the dynamic loader itself:
 
 ```
 $ LD_TRACE_LOADED_OBJECTS=whatever /bin/ls
-	linux-vdso.so.1 (0x00007fff325fe000)
-	librt.so.1 => /lib64/librt.so.1 (0x00007f1845386000)
-	libacl.so.1 => /lib64/libacl.so.1 (0x00007f184517d000)
-	libc.so.6 => /lib64/libc.so.6 (0x00007f1844dcd000)
-	libpthread.so.0 => /lib64/libpthread.so.0 (0x00007f1844bb0000)
-	libattr.so.1 => /lib64/libattr.so.1 (0x00007f18449ab000)
-	/lib64/ld-linux-x86-64.so.2 (0x00007f184558e000)
+    linux-vdso.so.1 (0x00007fff325fe000)
+    librt.so.1 => /lib64/librt.so.1 (0x00007f1845386000)
+    libacl.so.1 => /lib64/libacl.so.1 (0x00007f184517d000)
+    libc.so.6 => /lib64/libc.so.6 (0x00007f1844dcd000)
+    libpthread.so.0 => /lib64/libpthread.so.0 (0x00007f1844bb0000)
+    libattr.so.1 => /lib64/libattr.so.1 (0x00007f18449ab000)
+    /lib64/ld-linux-x86-64.so.2 (0x00007f184558e000)
 $ /lib/ld-linux-x86-64.so.2 --list /bin/ls
-	linux-vdso.so.1 (0x00007fff1e712000)
-	librt.so.1 => /lib64/librt.so.1 (0x00007f18a07d8000)
-	libacl.so.1 => /lib64/libacl.so.1 (0x00007f18a05cf000)
-	libc.so.6 => /lib64/libc.so.6 (0x00007f18a021e000)
-	libattr.so.1 => /lib64/libattr.so.1 (0x00007f189fdfc000)
-	libpthread.so.0 => /lib64/libpthread.so.0 (0x00007f18a0001000)
-	/lib64/ld-linux-x86-64.so.2 => /lib/ld-linux-x86-64.so.2 (0x00007f18a0c44000)
+    linux-vdso.so.1 (0x00007fff1e712000)
+    librt.so.1 => /lib64/librt.so.1 (0x00007f18a07d8000)
+    libacl.so.1 => /lib64/libacl.so.1 (0x00007f18a05cf000)
+    libc.so.6 => /lib64/libc.so.6 (0x00007f18a021e000)
+    libattr.so.1 => /lib64/libattr.so.1 (0x00007f189fdfc000)
+    libpthread.so.0 => /lib64/libpthread.so.0 (0x00007f18a0001000)
+    /lib64/ld-linux-x86-64.so.2 => /lib/ld-linux-x86-64.so.2 (0x00007f18a0c44000)
 ```
 >When using the loader directly, make sure the loader and the executable are compiled for the same platform (e.g. they are both 64-bit or 32-bit).
 
@@ -318,25 +318,25 @@ Now let's see exactly where the loader finds the libraries:
 
 ```
 $ LD_DEBUG=libs /bin/ls
-     11451:	find library=librt.so.1 [0]; searching
-     11451:	 search cache=/etc/ld.so.cache
-     11451:	  trying file=/lib64/librt.so.1
-     11451:	
-     11451:	find library=libacl.so.1 [0]; searching
-     11451:	 search cache=/etc/ld.so.cache
-     11451:	  trying file=/lib64/libacl.so.1
-     11451:	
-     11451:	find library=libc.so.6 [0]; searching
-     11451:	 search cache=/etc/ld.so.cache
-     11451:	  trying file=/lib64/libc.so.6
-     11451:	
-     11451:	find library=libpthread.so.0 [0]; searching
-     11451:	 search cache=/etc/ld.so.cache
-     11451:	  trying file=/lib64/libpthread.so.0
-     11451:	
-     11451:	find library=libattr.so.1 [0]; searching
-     11451:	 search cache=/etc/ld.so.cache
-     11451:	  trying file=/lib64/libattr.so.1
+     11451:    find library=librt.so.1 [0]; searching
+     11451:     search cache=/etc/ld.so.cache
+     11451:      trying file=/lib64/librt.so.1
+     11451:
+     11451:    find library=libacl.so.1 [0]; searching
+     11451:     search cache=/etc/ld.so.cache
+     11451:      trying file=/lib64/libacl.so.1
+     11451:
+     11451:    find library=libc.so.6 [0]; searching
+     11451:     search cache=/etc/ld.so.cache
+     11451:      trying file=/lib64/libc.so.6
+     11451:
+     11451:    find library=libpthread.so.0 [0]; searching
+     11451:     search cache=/etc/ld.so.cache
+     11451:      trying file=/lib64/libpthread.so.0
+     11451:
+     11451:    find library=libattr.so.1 [0]; searching
+     11451:     search cache=/etc/ld.so.cache
+     11451:      trying file=/lib64/libattr.so.1
 ```
 The `LD_DEBUG` environment variable makes the dynamic loader be verbose about what it's doing. Try `LD_DEBUG=help` if you're curious about what else you can find out. We can see in the output listed above that all the libraries are found via the loader cache. The number at the beginning of each line is ls's PID.
 
@@ -347,29 +347,29 @@ You can see the way lazy binding behaves:
 ```
 $ LD_DEBUG=symbols,bindings ./crackme2
 ...
-     11480:	initialize program: ./crackme2
-     11480:	
-     11480:	
-     11480:	transferring control: ./crackme2
-     11480:	
-     11480:	symbol=puts;  lookup in file=./crackme2 [0]
-     11480:	symbol=puts;  lookup in file=/lib32/libc.so.6 [0]
-     11480:	binding file ./crackme2 [0] to /lib32/libc.so.6 [0]: normal symbol 'puts' [GLIBC_2.0]
+     11480:    initialize program: ./crackme2
+     11480:
+     11480:
+     11480:    transferring control: ./crackme2
+     11480:
+     11480:    symbol=puts;  lookup in file=./crackme2 [0]
+     11480:    symbol=puts;  lookup in file=/lib32/libc.so.6 [0]
+     11480:    binding file ./crackme2 [0] to /lib32/libc.so.6 [0]: normal symbol 'puts' [GLIBC_2.0]
 Password:
-     11480:	symbol=fgets;  lookup in file=./crackme2 [0]
-     11480:	symbol=fgets;  lookup in file=/lib32/libc.so.6 [0]
-     11480:	binding file ./crackme2 [0] to /lib32/libc.so.6 [0]: normal symbol 'fgets' [GLIBC_2.0]
+     11480:    symbol=fgets;  lookup in file=./crackme2 [0]
+     11480:    symbol=fgets;  lookup in file=/lib32/libc.so.6 [0]
+     11480:    binding file ./crackme2 [0] to /lib32/libc.so.6 [0]: normal symbol 'fgets' [GLIBC_2.0]
 I_pity_da_fool_who_gets_here_without_solving_crackme2
-     11480:	symbol=strlen;  lookup in file=./crackme2 [0]
-     11480:	symbol=strlen;  lookup in file=/lib32/libc.so.6 [0]
-     11480:	binding file ./crackme2 [0] to /lib32/libc.so.6 [0]: normal symbol 'strlen' [GLIBC_2.0]
-     11480:	symbol=strcmp;  lookup in file=./crackme2 [0]
-     11480:	symbol=strcmp;  lookup in file=/lib32/libc.so.6 [0]
-     11480:	binding file ./crackme2 [0] to /lib32/libc.so.6 [0]: normal symbol 'strcmp' [GLIBC_2.0]
+     11480:    symbol=strlen;  lookup in file=./crackme2 [0]
+     11480:    symbol=strlen;  lookup in file=/lib32/libc.so.6 [0]
+     11480:    binding file ./crackme2 [0] to /lib32/libc.so.6 [0]: normal symbol 'strlen' [GLIBC_2.0]
+     11480:    symbol=strcmp;  lookup in file=./crackme2 [0]
+     11480:    symbol=strcmp;  lookup in file=/lib32/libc.so.6 [0]
+     11480:    binding file ./crackme2 [0] to /lib32/libc.so.6 [0]: normal symbol 'strcmp' [GLIBC_2.0]
 Nope!
-     11480:	
-     11480:	calling fini: ./crackme2 [0]
-     11480:	
+     11480:
+     11480:    calling fini: ./crackme2 [0]
+     11480:
 ```
 
 As you can see, functions like `puts()`, `fgets()`, `strlen()` and `strcmp()` are not actually resolved until the first call to them is made. Make the loader resolve all the symbols at startup. (Hint: [ld-linux](https://man7.org/linux/man-pages/man8/ld-linux.8.html)).
@@ -419,35 +419,35 @@ $ netstat -tlpn
 (Not all processes could be identified, non-owned process info
  will not be shown, you would have to be root to see it all.)
 Active Internet connections (only servers)
-Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
-tcp        0      0 0.0.0.0:36732           0.0.0.0:*               LISTEN      3062/steam          
-tcp        0      0 127.0.0.1:57343         0.0.0.0:*               LISTEN      3062/steam          
-tcp        0      0 127.0.0.1:31337         0.0.0.0:*               LISTEN      15022/./server      
-tcp        0      0 0.0.0.0:58154           0.0.0.0:*               LISTEN      3062/steam          
-tcp        0      0 127.0.0.1:60783         0.0.0.0:*               LISTEN      2644/SpiderOak      
-tcp        0      0 192.168.101.1:53        0.0.0.0:*               LISTEN      -                   
-tcp        0      0 192.168.100.1:53        0.0.0.0:*               LISTEN      -                   
-tcp        0      0 0.0.0.0:44790           0.0.0.0:*               LISTEN      2644/SpiderOak      
-tcp        0      0 127.0.0.1:631           0.0.0.0:*               LISTEN      -                   
-tcp6       0      0 :::631                  :::*                    LISTEN      - 
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 0.0.0.0:36732           0.0.0.0:*               LISTEN      3062/steam
+tcp        0      0 127.0.0.1:57343         0.0.0.0:*               LISTEN      3062/steam
+tcp        0      0 127.0.0.1:31337         0.0.0.0:*               LISTEN      15022/./server
+tcp        0      0 0.0.0.0:58154           0.0.0.0:*               LISTEN      3062/steam
+tcp        0      0 127.0.0.1:60783         0.0.0.0:*               LISTEN      2644/SpiderOak
+tcp        0      0 192.168.101.1:53        0.0.0.0:*               LISTEN      -
+tcp        0      0 192.168.100.1:53        0.0.0.0:*               LISTEN      -
+tcp        0      0 0.0.0.0:44790           0.0.0.0:*               LISTEN      2644/SpiderOak
+tcp        0      0 127.0.0.1:631           0.0.0.0:*               LISTEN      -
+tcp6       0      0 :::631                  :::*                    LISTEN      -
 ```
 Here we're looking at all the programs that are listening (`-l`) on a TCP port (`-t`). We're also telling netcat not to resolve hosts (`-n`) and to show the process that is listening (`-p`). We can see that our server is listening on port 31337. Let's keep that in mind and see how the client behaves.
 
 ```
-$ ./client 
+$ ./client
 Usage: ./client <client name> <server IP> <server port>
 $ ./client the_laughing_man localhost 31337
 Welcome to the awesome server.
 Valid commands are:
 listclients
 infoclient <client name> [ADMIN access required]
-	name, IP, port, privileged, connected time
+    name, IP, port, privileged, connected time
 sendmsg <client name> <message>
 
 Enter a command (or 'quit' to exit):
 listclients
 Connected clients are:
-the_laughing_man	
+the_laughing_man
 Enter a command (or 'quit' to exit):
 sendmsg the_laughing_man test
 Enter a command (or 'quit' to exit):
@@ -487,7 +487,7 @@ Welcome to the awesome server.
 Valid commands are:
 listclients
 infoclient <client name> [ADMIN access required]
-	name, IP, port, privileged, connected time
+    name, IP, port, privileged, connected time
 sendmsg <client name> <message>
 ```
 
@@ -504,15 +504,15 @@ It now accepts connections on TCP port 9999 as you can see by using `netstat`:
 ```
 $ netstat -tlpn
 [...]
-Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
-tcp        0      0 127.0.0.1:9999          0.0.0.0:*               LISTEN      12541/python        
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 127.0.0.1:9999          0.0.0.0:*               LISTEN      12541/python
 [...]
 ```
 
 Now you can test it using the Python client:
 
 ```
-$ python client.py 
+$ python client.py
 sending 'anaaremere'
 received 'ANAAREMERE
 ```
@@ -595,7 +595,7 @@ Let's look at the previous server from `crackme5`. Start it up once again.
 While previously we've used netstat to gather information about it, that was by no means the only solution. [lsof](https://linux.die.net/man/8/lsof) is a tool that can show us what files a process has opened:
 
 ```
-$ lsof -c server 
+$ lsof -c server
 COMMAND  PID   USER   FD   TYPE DEVICE SIZE/OFF    NODE NAME
 server  9678 amadan  cwd    DIR    8,6     4096 1482770 /home/amadan/projects/sss/session01/crackmes/crackme5
 server  9678 amadan  rtd    DIR    8,6     4096       2 /
@@ -635,7 +635,7 @@ lrwx------ 1 amadan amadan 64 Jun 15 22:04 3 -> socket:[883625]
 We'll be using [crackme6](./activities/06-tutorial-open-files/src) for the next part of this section. Try the conventional means of strings and ltrace on it. Then run it normally.
 
 ```
-$ ./crackme6 
+$ ./crackme6
 Type 'start' to begin authentication test
 ```
 
@@ -660,7 +660,7 @@ crackme6 10466 amadan    4r  FIFO   0,32      0t0  988920 /tmp/crackme6.fifo
 There seems to be a named pipe used by the executable. Let's look at it:
 
 ```
-$ more /tmp/crackme6.fifo 
+$ more /tmp/crackme6.fifo
 ```
 
 Now go back again at the `crackme6` console and type `start`. If you see the message that the authentication test has succeeded, quit and try again. If you do not see the message, kill the `crackme6` process, look at the more command output and then delete the pipe file. Now try the password.
