@@ -9,7 +9,8 @@ char correct_pass[] = "\xc4\xc3\xd6\xc6\xd1\xf2\xb6\xf4\xbb\xf3\xc7\xcc\xed\xbc\
 char *deobf(char *s)
 {
 	int i;
-	for (i = 0 ; i < strlen(s); i++) {
+	unsigned long len = strlen(s);
+	for (i = 0 ; i < len; i++) {
 		s[i] = s[i] ^ 0x80 ^ (i%256);
 	}
 
