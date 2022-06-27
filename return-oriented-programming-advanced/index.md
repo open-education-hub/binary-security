@@ -1,9 +1,7 @@
 ---
 linkTitle: Return Oriented Programming Advanced
 type: docs
-menu:
-  main:
-    weight: 20
+weight: 10
 ---
 
 # Return Oriented Programming Advanced

@@ -1,9 +1,7 @@
 ---
 linkTitle: Shellcodes Advanced
 type: docs
-menu:
-  main:
-    weight: 20
+weight: 10
 ---
 
 <details open>

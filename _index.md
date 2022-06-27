@@ -1,3 +1,11 @@
+---
+linkTitle: Binary Exploitation
+type: docs
+menu:
+  main:
+    weight: 20
+---
+
 # Security Summer School: Exploit Track
 
 Welcome to the Binary Exploit Track of the Security Summer School at University POLITEHNICA of Bucharest (UPB).

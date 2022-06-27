@@ -1,9 +1,7 @@
 ---
 linkTitle: Static Analysis
 type: docs
-menu:
-  main:
-    weight: 20
+weight: 10
 ---
 
 # Table of Contents

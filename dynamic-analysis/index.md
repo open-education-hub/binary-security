@@ -1,12 +1,10 @@
 ---
 linkTitle: Dynamic Analysis
 type: docs
-menu:
-  main:
-    weight: 20
+weight: 10
 ---
 
-# 05. Dynamic Analysis
+# Dynamic Analysis
 
 ## Introduction
 

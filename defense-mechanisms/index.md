@@ -1,9 +1,7 @@
 ---
 linkTitle: Defense Mechanisms
 type: docs
-menu:
-  main:
-    weight: 20
+weight: 10
 ---
 
 # Defense Mechanisms

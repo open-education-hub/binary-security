@@ -1,9 +1,7 @@
 ---
-linkTitle: Executables And Processes
+linkTitle: Executables and Processes
 type: docs
-menu:
-  main:
-    weight: 20
+weight: 10
 ---
 
 # Executables and Processes

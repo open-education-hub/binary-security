@@ -1,9 +1,7 @@
 ---
 linkTitle: Exploration Tools
 type: docs
-menu:
-  main:
-    weight: 20
+weight: 10
 ---
 
 # Exploration Tools
