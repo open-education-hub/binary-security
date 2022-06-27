@@ -1,3 +1,11 @@
+---
+linkTitle: Defense Mechanisms
+type: docs
+menu:
+  main:
+    weight: 20
+---
+
 # Defense Mechanisms
 
 ## Introduction

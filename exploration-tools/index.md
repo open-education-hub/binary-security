@@ -1,3 +1,11 @@
+---
+linkTitle: Exploration Tools
+type: docs
+menu:
+  main:
+    weight: 20
+---
+
 # Exploration Tools
 
 <details open>

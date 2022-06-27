@@ -1,3 +1,11 @@
+---
+linkTitle: Shellcodes Advanced
+type: docs
+menu:
+  main:
+    weight: 20
+---
+
 <details open>
     <summary>Table of contents</summary>
     

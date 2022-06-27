@@ -1,3 +1,11 @@
+---
+linkTitle: Information Leaks
+type: docs
+menu:
+  main:
+    weight: 20
+---
+
 # Lab 11 - Information Leaks
 
 -----

@@ -1,3 +1,11 @@
+---
+linkTitle: Executables And Processes
+type: docs
+menu:
+  main:
+    weight: 20
+---
+
 # Executables and Processes
 
 From a user's perspective, the main purpose of the computing system is to run applications.

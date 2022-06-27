@@ -1,3 +1,11 @@
+---
+linkTitle: Static Analysis
+type: docs
+menu:
+  main:
+    weight: 20
+---
+
 # Table of Contents
    * [Introduction](#introduction)
    * [Disassembling executables](#disassembling-executables)
