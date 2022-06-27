@@ -1,0 +1,30 @@
+name: Sync parent repo with submodule
+
+on:
+  push:
+    branches: 
+      - master
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with: 
+          repository: security-summer-school/security-summer-school.github.io
+          token: ${{ secrets.BINARY_PRIVATE_TOKEN }}
+
+      - name: Pull and update submodule recursively
+        run: |
+          git submodule update --init --recursive
+          git submodule update --remote --recursive -- content/en/binary/
+
+      - name: Commit
+        run: |
+          git config user.email "binary-updater@github.com"
+          git config user.name "Binary Track Updater"
+          git add content/en/binary/
+          git commit -m "binary: Update track submodule" || echo "No changes to commit"
+          git push
+
