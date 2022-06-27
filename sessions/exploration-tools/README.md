@@ -74,7 +74,7 @@ The password has been redacted from the listing but you can retrieve it with `st
 
 ### 02. Tutorial - Execution tracing (ltrace and strace)
 
-[ltrace](https://man7.org/linux/man-pages/man1/ltrace.1.html) is an utility that can library function calls or [syscalls](https://man7.org/linux/man-pages/man2/syscalls.2.html) made by a program. [strace](https://man7.org/linux/man-pages/man1/strace.1.html) is similar, but only lists syscalls. A syscall is a service exposed by the kernel itself.
+[ltrace](https://man7.org/linux/man-pages/man1/ltrace.1.html) is an utility that can list library function calls or [syscalls](https://man7.org/linux/man-pages/man2/syscalls.2.html) made by a program. [strace](https://man7.org/linux/man-pages/man1/strace.1.html) is similar, but only lists syscalls. A syscall is a service exposed by the kernel itself.
 
 The way they work is with the aid of a special syscall, called [ptrace](https://man7.org/linux/man-pages/man2/ptrace.2.html). This single syscall forms the basis for most of the functionality provided by `ltrace`, `strace`, `gdb` and similar tools that debug programs. It can receive up to 4 arguments: the operation, the PID to act on, the address to read/write and the data to write. The functionality exposed by `ptrace()` is massive, but think of any functionality you've seen in a debugger:
 
