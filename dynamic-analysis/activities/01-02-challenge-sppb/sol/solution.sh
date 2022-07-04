@@ -2,5 +2,5 @@
 # divisible with 13
 
 echo "312" > payload
-cat payload - | ./sppb
+cat payload - | ./sppb # cat payload - | nc <ip>:42069	
 rm payload
