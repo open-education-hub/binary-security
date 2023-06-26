@@ -727,7 +727,7 @@ Can you find the hidden flag?
 
 
 ### 11. Challenge - Detective
-This challenge runs remotely at `141.85.224.157:31337`. You can use `netcat` to connect to it.
+This challenge runs remotely at `141.85.224.104:31337`. You can use `netcat` to connect to it.
 
 Investigate the [detective](./activities/11-challenge-detective/src) binary. See what it does and work to get the flag.
 
