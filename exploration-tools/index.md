@@ -731,7 +731,7 @@ This challenge runs remotely at `141.85.224.157:31337`. You can use `netcat` to 
 
 Investigate the [detective](./activities/11-challenge-detective/src) binary. See what it does and work to get the flag.
 
-You can start from the [sol/exploit_template.sh](./activities/11-challenge-detective/sol) solution template script.
+You can start from the [sol/exploit_template.py](./activities/11-challenge-detective/sol/exploit_template.py) solution template script.
 
 >There is a bonus to this challenge and you will be able to find another flag. See that below.
 
