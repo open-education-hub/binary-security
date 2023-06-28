@@ -1,0 +1,20 @@
+$ nm ./lots_of_strings
+
+# Extract password address
+080484fd T mystrcmp
+0804a060 D NUM
+0804a580 D password
+         U puts@@GLIBC_2.0
+08048470 t register_tm_clones
+
+
+$ gdb ./lots_of_strings
+gdb-peda$ x/s 0x0804a580
+0x804a580 <password>:	"_34qx9RlP2BWtEIJ"
+
+$ ./lots_of_strings
+Can you guess the password?
+_34qx9RlP2BWtEIJ
+Congrats!
+
+

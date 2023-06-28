@@ -1,0 +1,9 @@
+# Terminal 1
+$ touch /tmp/graybox1234
+$ tail -f /tmp/graybox1234
+
+# Terminal 2
+$ ./hidden
+Generating the flag
+Generated! Can you guess it?
+<insert password printed in Terminal 1>
