@@ -1,0 +1,5 @@
+
+
+start
+patch 0x080485aa "\x90\x90\x90\x90\x90"
+c
