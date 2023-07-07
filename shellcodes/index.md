@@ -99,7 +99,7 @@ $ wc --bytes exit_shellcode.bin
 
 ## 02. Tutorial: inspecting machine code
 
-We would also like to be able to do the reverse of this: given a file that contains a raw string of machine bode bytes, translate it back into readable assembly. This is useful to check that our assembly process was correct, as well as for analyzing files that we did not create.
+We would also like to be able to do the reverse of this: given a file that contains a raw string of machine code bytes, translate it back into readable assembly. This is useful to check that our assembly process was correct, as well as for analyzing files that we did not create.
 
 In [the first session](../exploration-tools), we learned to disassemble using `objdump`. By default, `objdump` expects a proper `ELF` executable and complains about our raw file:
 
@@ -130,7 +130,7 @@ Disassembly of section .data:
 * `-m i386:86-64`: the machine code inside the binary file is i386 (x86), 64 bits (usually, `objdump` gets this information from the ELF header).
 * `-M intel`: display ASM using Intel assembly syntax, as opposed to AT&T assembly syntax.
 
-We can also use a tool like `xxd` or `hexdump` to inspect the byte values in the file, without dissasembling:
+We can also use a tool like `xxd` or `hexdump` to inspect the byte values in the file, without disassembling:
 
 ```
 $ xxd exit_shellcode.bin
@@ -146,7 +146,7 @@ Now that we know how to obtain a bytestring of machine code from an assembly pro
 $ ./vuln < exit_shellcode.bin
 ```
 
-However, we might want to freely edit the payload directly on the command line (for example, if the program reads some other stuff). The way to do this is to use another tool, like the shell itself, to transform hexdecimal notation into binary data:
+However, we might want to freely edit the payload directly on the command line (for example, if the program reads some other stuff). The way to do this is to use another tool, like the shell itself, to transform hexadecimal notation into binary data:
 
 ```
 $ printf '\x4b\x80\x04\x08'
