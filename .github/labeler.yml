@@ -1,0 +1,3 @@
+area/infra:
+  - 'common/**/*'
+  - '.github/**/*'
