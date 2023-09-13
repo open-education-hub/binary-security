@@ -1,0 +1,10 @@
+---
+title: "Exploration Tools"
+revealOptions:
+  background-color: 'aquamarine'
+  transition: 'none'
+  slideNumber: true
+  autoAnimateDuration: 0.0
+---
+
+!INCLUDE "exploration-tools.md"

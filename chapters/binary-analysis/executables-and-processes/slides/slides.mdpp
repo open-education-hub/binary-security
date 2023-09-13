@@ -1,0 +1,10 @@
+---
+title: "Executables and processes"
+revealOptions:
+  background-color: 'aquamarine'
+  transition: 'none'
+  slideNumber: true
+  autoAnimateDuration: 0.0
+---
+
+!INCLUDE "executables-and-processes.md"

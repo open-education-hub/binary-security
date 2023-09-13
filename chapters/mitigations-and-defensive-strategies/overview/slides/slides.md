@@ -1,0 +1,12 @@
+---
+title: "Mitigations and Defensive Strategies"
+revealOptions:
+  background-color: 'aquamarine'
+  transition: 'none'
+  slideNumber: true
+  autoAnimateDuration: 0.0
+---
+
+# Mitigations and Defensive Strategies
+
+# Mitigations and Defensive Strategies

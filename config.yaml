@@ -1,0 +1,80 @@
+stages:
+  - make_assets
+  - embed_reveal
+  - docusaurus
+
+build_dir: /build
+output_type: last
+output_dir: /output
+
+make_assets:
+  plugin: command
+  options:
+    command: make
+    locations:
+      - chapters/binary-analysis/exploration-tools/slides
+      - chapters/binary-analysis/executables-and-processes/slides
+      - chapters/binary-analysis/static-analysis/slides
+      - chapters/binary-analysis/dynamic-analysis/slides
+    args:
+      - all
+
+embed_reveal:
+  plugin: reveal_embed
+  options:
+    target: docusaurus
+    extension: mdx
+    build:
+      Exploration-tools: Exploration-tools
+      Executables-and-processes: Executable-and-processes
+      Static-Analysis: Static-Analysis
+      Dynamic-Analysis: Dynamic-Analysis
+
+docusaurus:
+  plugin: docusaurus
+  options:
+    course_name: Binary Security
+    sidebar: js
+    structure:
+      - Introduction: chapters/README.md
+      - Binary Analysis:
+          - Overview: chapters/binary-analysis/overview/README.md
+          - Static Analysis:
+              path: chapters/binary-analysis/static-analysis/
+              extra:
+                - media/
+              subsections:
+                - Reading/: reading/
+                - Drills:
+                    path: drills/
+                    subsections:
+                      - Crypto Crackme/: 04-challenge-crypto-crackme/
+                      - Broken/: 05-challenge-broken/
+                      - Hyp3rs3rv3r/: 06-challenge-hyp3rs3rv3r/
+                - Demos:
+                    path: demos/
+                    subsections:
+                      - Disassemble Methods/: 01-tutorial-disassemble-methods/
+                      - IDA time/: 02-tutorial-ida-time/
+                      - CPP Executables/: 03-tutorial-cpp-executables/
+
+                - Slides: /build/embed_reveal/Static-Analysis
+
+      - Exploitation Techniques: chapters/README.md
+      - Mitigations and Defensive Strategies: chapters/README.md
+
+    static_assets:
+      - Exploration-tools: /build/make_assets/chapters/binary-analysis/exploration-tools/slides/_site
+      - Executables-and-processes: /build/make_assets/chapters/binary-analysis/executables-and-processes/slides/_site
+      - Static-Analysis: /build/make_assets/chapters/binary-analysis/static-analysis/slides/_site
+      - Dynamic-Analysis: /build/make_assets/chapters/binary-analysis/dynamic-analysis/slides/_site
+    config_meta:
+      title: Binary Security
+      url: http://localhost/
+      baseUrl: /binary-security/
+      onBrokenLinks: warn
+      onBrokenMarkdownLinks: warn
+    config_socials:
+      OCW: https://security.cs.pub.ro/summer-school/wiki/
+      Facebook: https://www.facebook.com/SSSUPB/
+    copyright_string: SSS Team
