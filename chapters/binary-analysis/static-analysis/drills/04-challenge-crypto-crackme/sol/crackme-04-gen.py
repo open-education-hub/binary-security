@@ -10,6 +10,7 @@ FILE = "secret.enc"
 sha1_key = hashlib.sha1(KEY)
 digest_key = sha1_key.digest()
 
+
 def RC4(data, key):
     x = 0
     box = range(256)
@@ -23,9 +24,10 @@ def RC4(data, key):
         y = (y + box[x]) % 256
         box[x], box[y] = box[y], box[x]
         out.append(chr(ord(char) ^ box[(box[x] + box[y]) % 256]))
-    return ''.join(out)
+    return "".join(out)
 
-shuffle_key = "".join([ digest_key[7 * i % 20] for i in range(len(digest_key))])
+
+shuffle_key = "".join([digest_key[7 * i % 20] for i in range(len(digest_key))])
 rc4_msg = RC4(MSG, KEY)
 
 f = open(FILE, "wb")
