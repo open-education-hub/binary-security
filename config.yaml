@@ -70,11 +70,11 @@ docusaurus:
       - Dynamic-Analysis: /build/make_assets/chapters/binary-analysis/dynamic-analysis/slides/_site
     config_meta:
       title: Binary Security
-      url: http://localhost/
+      url: http://open-education-hub.github.io/binary-security/
       baseUrl: /binary-security/
       onBrokenLinks: warn
       onBrokenMarkdownLinks: warn
     config_socials:
-      OCW: https://security.cs.pub.ro/summer-school/wiki/
+      site: https://security-summer-school.github.io/binary/
       Facebook: https://www.facebook.com/SSSUPB/
     copyright_string: SSS Team
