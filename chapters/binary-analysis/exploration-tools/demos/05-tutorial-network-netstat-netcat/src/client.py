@@ -4,7 +4,7 @@ import socket
 PORT = 9999
 MESSAGE = "anaaremere"
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect(('127.0.0.1', PORT))
+s.connect(("127.0.0.1", PORT))
 
 request = MESSAGE
 print(f"sending '{request}'")

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: BSD-3-Clause
+---
 stages:
   - make_assets
   - embed_reveal
@@ -25,8 +27,8 @@ embed_reveal:
     target: docusaurus
     extension: mdx
     build:
-      Exploration-tools: Exploration-tools
-      Executables-and-processes: Executable-and-processes
+      Exploration-Tools: Exploration-Tools
+      Executables-and-Processes: Executables-and-Processes
       Static-Analysis: Static-Analysis
       Dynamic-Analysis: Dynamic-Analysis
 
@@ -38,39 +40,106 @@ docusaurus:
     structure:
       - Introduction: chapters/README.md
       - Binary Analysis:
-          - Overview: chapters/binary-analysis/overview/README.md
-          - Static Analysis:
-              path: chapters/binary-analysis/static-analysis/
+          - Exploration Tools:
+              path: chapters/binary-analysis/exploration-tools
+              extra:
+                - media/
+              subsections:
+                - Reading/: reading/
+                - Slides: /build/embed_reveal/Exploration-Tools
+          - Executables and Processes:
+              path: chapters/binary-analysis/executables-and-processes
               extra:
                 - media/
               subsections:
                 - Reading/: reading/
                 - Drills:
-                    path: drills/
+                    path: drills
+                    subsections:
+                      - Matryoshka/: 06-challenge-matryoshka/
+                - Slides: /build/embed_reveal/Executables-and-Processes
+          - Static Analysis:
+              path: chapters/binary-analysis/static-analysis
+              extra:
+                - media/
+              subsections:
+                - Reading/: reading/
+                - Drills:
+                    path: drills
                     subsections:
                       - Crypto Crackme/: 04-challenge-crypto-crackme/
                       - Broken/: 05-challenge-broken/
                       - Hyp3rs3rv3r/: 06-challenge-hyp3rs3rv3r/
                 - Demos:
-                    path: demos/
+                    path: demos
                     subsections:
                       - Disassemble Methods/: 01-tutorial-disassemble-methods/
-                      - IDA time/: 02-tutorial-ida-time/
+                      - IDA Time/: 02-tutorial-ida-time/
                       - CPP Executables/: 03-tutorial-cpp-executables/
-
                 - Slides: /build/embed_reveal/Static-Analysis
-
-      - Exploitation Techniques: chapters/README.md
-      - Mitigations and Defensive Strategies: chapters/README.md
-
+          - Dynamic Analysis:
+              path: chapters/binary-analysis/dynamic-analysis
+              subsections:
+                - Reading/: reading/
+                - Slides: /build/embed_reveal/Dynamic-Analysis
+      - Exploitation Techniques:
+          - Buffer Exploitation:
+              extra:
+                - media/
+              path: chapters/exploitation-techniques/buffer-exploitation
+              subsections:
+                - Reading/: reading/
+          - Shellcodes:
+              extra:
+                - media/
+              path: chapters/exploitation-techniques/shellcodes
+              subsections:
+                - Reading/: reading/
+          - Shellcodes Advanced:
+              path: chapters/exploitation-techniques/shellcodes-advanced
+              subsections:
+                - Reading/: reading/
+          - Return-Oriented Programming:
+              extra:
+                - media/
+              path: chapters/exploitation-techniques/return-oriented-programming
+              subsections:
+                - Reading/: reading/
+          - Return-Oriented Programming Advanced:
+              path: chapters/exploitation-techniques/return-oriented-programming-advanced
+              subsections:
+                - Reading/: reading/
+      - Mitigation and Defensive Strategies:
+          - Defense Mechanisms:
+              path: chapters/mitigations-and-defensive-strategies/defense-mechanisms
+              subsections:
+                - Reading/: reading/
+          - Information Leaks:
+              path: chapters/mitigations-and-defensive-strategies/information-leaks
+              subsections:
+                - Reading/: reading/
+          - Bypassing Mitigations:
+              path: chapters/mitigations-and-defensive-strategies/bypassing-mitigations
+              subsections:
+                - Drills:
+                    path: drills
+                    subsections:
+                      - Tutorial Bypass/: 03-tutorial-bypass-dep-no-aslr-libc/
+                      - Challenge Bypass No ASLR/: 08-challenge-bypass-dep-no-aslr-libc/
+                      - Challenge Bypass ASLR/: 09-challenge-bypass-dep-aslr-libc/
+      - Extra:
+          - Pwntool Intro:
+              path: chapters/extra/pwntools-intro
+              subsections:
+                - Reading/: reading/
     static_assets:
-      - Exploration-tools: /build/make_assets/chapters/binary-analysis/exploration-tools/slides/_site
-      - Executables-and-processes: /build/make_assets/chapters/binary-analysis/executables-and-processes/slides/_site
+      - Exploration-Tools: /build/make_assets/chapters/binary-analysis/exploration-tools/slides/_site
+      - Executables-and-Processes: /build/make_assets/chapters/binary-analysis/executables-and-processes/slides/_site
       - Static-Analysis: /build/make_assets/chapters/binary-analysis/static-analysis/slides/_site
       - Dynamic-Analysis: /build/make_assets/chapters/binary-analysis/dynamic-analysis/slides/_site
     config_meta:
       title: Binary Security
-      url: http://open-education-hub.github.io/binary-security/
+      url: http://open-education-hub.github.io
       baseUrl: /binary-security/
       onBrokenLinks: warn
       onBrokenMarkdownLinks: warn
