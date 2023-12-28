@@ -1,0 +1,27 @@
+# Outut directory of OpenEdu Builder
+/.output/
+
+# Archive files
+*.zip
+*.gz
+*.bz2
+*.Z
+*.tgz
+*.tbz2
+*.rar
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Temporary files
+*.swp
+*.swo
+*~
+
+# System files
+.DS_Store
+Thumbs.db
