@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -11,17 +11,24 @@
     <link rel="stylesheet" href="./dist/theme/black.css" id="theme" />
     <link rel="stylesheet" href="./css/highlight/base16/zenburn.css" />
 
-
   </head>
   <body>
     <div class="reveal">
-      <div class="slides"><section  data-markdown><script type="text/template">
+      <div class="slides">
+        <section data-markdown data-separator="\r?\n---\r?\n" data-separator-vertical="\r?\n----\r?\n">
+          <textarea data-template>
+            
 
 # Exploration Tools
-</script></section></div>
+
+          </textarea>
+        </section>
+      </div>
     </div>
 
     <script src="./dist/reveal.js"></script>
+
+    <script src="./mermaid/dist/mermaid.min.js"></script>
 
     <script src="./plugin/markdown/markdown.js"></script>
     <script src="./plugin/highlight/highlight.js"></script>
@@ -50,6 +57,9 @@
         center: true,
         transition: 'default', // none/fade/slide/convex/concave/zoom
         slideNumber: true,
+        highlight: {
+          highlightOnLoad: false
+        },
         plugins: [
           RevealMarkdown,
           RevealHighlight,
@@ -62,12 +72,26 @@
       // options from URL query string
       var queryOptions = Reveal().getQueryHash() || {};
 
-      var options = extend(defaultOptions, {"background-color":"aquamarine","transition":"none","slideNumber":true,"autoAnimateDuration":0}, queryOptions);
+      var options = extend(defaultOptions, {"background-color":"aquamarine","transition":"none","slideNumber":true,"autoAnimateDuration":0,"_":["slides.md"],"static":"_site"}, queryOptions);
     </script>
 
 
     <script>
       Reveal.initialize(options);
+      Reveal.addEventListener('ready', function (event) {
+        const blocks = Reveal.getRevealElement().querySelectorAll('pre code:not(.mermaid)');
+        const hlp = Reveal.getPlugin('highlight');
+        blocks.forEach(hlp.highlightBlock);
+      });
+    </script>
+
+    <script>
+      const mermaidOptions = extend({ startOnLoad: false }, {});
+      mermaid.startOnLoad = false;
+      mermaid.initialize(mermaidOptions);
+      const cb = function (event) { mermaid.init(mermaidOptions, '.stack.present>.present pre code.mermaid'); };
+      Reveal.addEventListener('ready', cb);
+      Reveal.addEventListener('slidetransitionend', cb);
     </script>
   </body>
 </html>
