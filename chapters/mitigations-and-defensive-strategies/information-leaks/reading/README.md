@@ -240,7 +240,7 @@ Considering all of this, update the `TODO` lines of the `exploit.py` script to m
 
 Same as above, use `nm` to determine address of the `my_evil_func()` function.
 When sending your exploit to the remote server, adjust this address according to the binary running on the remote endpoint.
-The precompiled binary can be found in [the CNS public repository](/courses/cns/resources/repo "cns:resources:repo").
+The precompiled binary can be found in [the CNS public repository](https://github.com/systems-cs-pub-ro/cns/blob/master/labs/07-strings/02-info-leak/info_leak).
 
 Use the above logic to determine the `old rbp` leak and then the address of the `my_main()` return address.
 
@@ -376,7 +376,7 @@ The numeric argument states the length of the print output.
 After the plan is complete, write down the attack by filling the `TODO` lines in the `exploit.py` solution skeleton.
 
 When sending your exploit to the remote server, adjust this address according to the binary running on the remote endpoint.
-The precompiled binary can be found in [the CNS public repository](/courses/cns/resources/repo "cns:resources:repo").
+The precompiled binary can be found in [the CNS public repository](https://github.com/systems-cs-pub-ro/cns/blob/master/labs/07-strings/03-basic-format-string/basic_format_string).
 
 After you write 0x300 chars in v, you should obtain shell
 
