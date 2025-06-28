@@ -6,7 +6,18 @@
 
 #define MAX_SLOTS 32
 
-long read_int(int base);
+long read_int(int base)
+{
+	char buf[64];
+	char *endptr;
+
+	if (fgets(buf, sizeof(buf), stdin) == NULL) {
+		puts("Failed to read input!");
+		exit(1);
+	}
+
+	return strtol(buf, &endptr, base);
+}
 
 long slots[MAX_SLOTS];
 
